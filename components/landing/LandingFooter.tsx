@@ -20,12 +20,12 @@ export const LandingFooter: React.FC = () => {
                 WASTE<span className="text-emerald-400">SENSE</span>
               </span>
               <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-emerald-500/40 text-emerald-300 bg-emerald-950/40">
-                AI OS 2.4
+                OS 2.4
               </span>
             </div>
 
             <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
-              Autonomous Smart Waste Intelligence Platform engineered for municipal smart cities. Unifying IoT sensory telematics, machine-learning overflow predictions, civic grievance intake, and field operator fleet dispatch.
+              Autonomous Smart Waste Intelligence Platform engineered for municipal smart cities. Unifying IoT sensory telematics, predictive overflow forecasts, civic grievance intake, and field operator fleet dispatch.
             </p>
 
             <div className="flex items-center gap-4 text-[11px] text-slate-400">

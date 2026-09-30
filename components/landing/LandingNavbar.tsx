@@ -36,7 +36,7 @@ export const LandingNavbar: React.FC = () => {
                 WASTE<span className="text-emerald-400">SENSE</span>
               </span>
               <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded border border-emerald-500/40 text-emerald-300 bg-emerald-950/50">
-                AI
+                IoT
               </span>
             </div>
             <p className="text-[10px] text-slate-400 font-medium tracking-tight">
@@ -54,7 +54,7 @@ export const LandingNavbar: React.FC = () => {
             Lifecycle
           </a>
           <a href="#features" className="hover:text-emerald-400 transition-colors">
-            IoT & AI
+            IoT & Telemetry
           </a>
           <a href="#portals" className="hover:text-emerald-400 transition-colors">
             Role Portals
@@ -107,7 +107,7 @@ export const LandingNavbar: React.FC = () => {
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-emerald-400"
             >
-              IoT & AI Engine
+              IoT & Telemetry Engine
             </a>
             <a
               href="#portals"

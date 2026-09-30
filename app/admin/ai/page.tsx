@@ -27,13 +27,13 @@ export default function AdminAIPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black text-white tracking-tight">AI Operations & Prioritization Engine</h1>
+            <h1 className="text-2xl font-black text-white tracking-tight">Smart Operations & Prioritization Engine</h1>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 font-semibold border border-purple-500/30">
-              Autonomous Intelligence Active
+              Autonomous Priority Active
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            AI-assisted prioritization: Multi-factor condition scoring, time-to-overflow regression, and automated dispatch routing
+            Predictive prioritization: Multi-factor condition scoring, time-to-overflow regression, and automated dispatch routing
           </p>
         </div>
 

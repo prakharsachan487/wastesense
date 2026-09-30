@@ -21,7 +21,7 @@ export default function AdminSettingsPage() {
       <div className="border-b border-slate-800 pb-4">
         <h1 className="text-2xl font-black text-white tracking-tight">Platform Configuration & Parameters</h1>
         <p className="text-xs text-slate-400 mt-1">
-          Adjust digital twin telemetry jitter, AI priority thresholds, and automated dispatch rules
+          Adjust digital twin telemetry jitter, priority thresholds, and automated dispatch rules
         </p>
       </div>
 
@@ -70,7 +70,7 @@ export default function AdminSettingsPage() {
         <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
           <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
             <Cpu className="w-4 h-4 text-purple-400" />
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">AI Autonomous Dispatch Rules</h3>
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Autonomous Dispatch Rules</h3>
           </div>
 
           <div className="space-y-3">

@@ -31,7 +31,7 @@ export const AdminSidebar: React.FC = () => {
     },
     { label: 'Pickup Requests', href: '/admin/pickups', icon: CalendarCheck },
     { 
-      label: 'AI Operations', 
+      label: 'Priority Engine', 
       href: '/admin/ai', 
       icon: Cpu,
       badge: 'Score 95',

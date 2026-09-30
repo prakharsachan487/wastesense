@@ -83,7 +83,7 @@ export const SmartBinCard: React.FC<SmartBinCardProps> = ({ bin, onSimulate, onQ
             <span className="text-slate-300 font-medium">{bin.last_collection}</span>
           </div>
           <div className="p-1.5 rounded bg-slate-800/40 text-[10px] text-purple-300 border border-purple-900/30 flex items-center gap-1">
-            <span>🔮 <strong>AI Forecast:</strong> {bin.overflow_prediction}</span>
+            <span>📈 <strong>Overflow Forecast:</strong> {bin.overflow_prediction}</span>
           </div>
         </div>
       </div>

@@ -190,7 +190,7 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
               </div>
               <p className="text-[11px] text-slate-300">
                 {isOverflowRisk 
-                  ? "Bin fill level is >= 95%. Immediate overflow risk active. AI suggests creating an automated collection task."
+                  ? "Bin fill level is >= 95%. Immediate overflow risk active. System recommends creating an automated collection task."
                   : "Sensor reading has breached the 90% municipal critical threshold."}
               </p>
 

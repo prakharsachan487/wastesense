@@ -123,7 +123,7 @@ export default function CitizenAwarenessPage() {
       <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-amber-400" />
-          <h3 className="text-sm font-bold text-white">AI Segregation Assistant (Interactive Tester)</h3>
+          <h3 className="text-sm font-bold text-white">Smart Segregation Assistant (Interactive Tester)</h3>
         </div>
         <p className="text-xs text-slate-400">
           Click an item to see its verified classification and disposal guidelines:

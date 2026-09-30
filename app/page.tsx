@@ -8,9 +8,9 @@ import { LandingMetrics } from '../components/landing/LandingMetrics';
 import { LandingFooter } from '../components/landing/LandingFooter';
 
 export const metadata = {
-  title: 'WasteSense | AI-Powered Smart Waste Intelligence Platform',
+  title: 'WasteSense | Smart Waste Intelligence Platform',
   description:
-    'Autonomous municipal smart city waste intelligence platform uniting real-time IoT sensors, machine-learning overflow prediction, citizen grievance triage, and mobile fleet dispatch.',
+    'Autonomous municipal smart city waste intelligence platform uniting real-time IoT sensors, predictive overflow forecasting, citizen grievance triage, and mobile fleet dispatch.',
 };
 
 export default function HomePage() {

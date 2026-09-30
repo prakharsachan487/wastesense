@@ -54,7 +54,7 @@ export default function CitizenReportPage() {
           <div className="text-xs text-slate-300 space-y-1">
             <div><strong>Category:</strong> {category}</div>
             <div><strong>Location:</strong> {location}</div>
-            <div><strong>Status:</strong> <span className="text-sky-400 font-semibold">Submitted &bull; Under AI Review</span></div>
+            <div><strong>Status:</strong> <span className="text-sky-400 font-semibold">Submitted &bull; Under Verification</span></div>
           </div>
 
           <div className="pt-2 border-t border-slate-800 text-[11px] text-slate-400">

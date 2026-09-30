@@ -43,7 +43,7 @@ export default function AdminDashboardPage() {
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Real-time citywide situational awareness &bull; IoT Sensor Telemetry &bull; Automated AI Dispatch
+            Real-time citywide situational awareness &bull; IoT Sensor Telemetry &bull; Automated Smart Dispatch
           </p>
         </div>
 
@@ -123,7 +123,7 @@ export default function AdminDashboardPage() {
             <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
               <div className="flex items-center gap-2">
                 <Cpu className="w-4 h-4 text-purple-400" />
-                <h3 className="text-sm font-bold text-white">AI Prioritization Queue</h3>
+                <h3 className="text-sm font-bold text-white">Priority Dispatch Queue</h3>
               </div>
               <Link href="/admin/ai" className="text-xs text-emerald-400 hover:underline flex items-center gap-0.5">
                 <span>View Full Engine</span>
@@ -229,7 +229,7 @@ export default function AdminDashboardPage() {
       <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
         <div className="mb-4">
           <h2 className="text-base font-bold text-white">Geospatial Operations & Hotspot Clustering</h2>
-          <p className="text-xs text-slate-400">Click any marker to inspect real-time sensor levels, weight strain, and AI overflow forecast.</p>
+          <p className="text-xs text-slate-400">Click any marker to inspect real-time sensor levels, weight strain, and predictive overflow forecast.</p>
         </div>
         <MapPanel onSimulate={(binId) => setSimModalBin(binId)} />
       </div>

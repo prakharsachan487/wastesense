@@ -179,7 +179,7 @@ export const MapPanel: React.FC<MapPanelProps> = ({ onSimulate }) => {
                 <strong className="text-white font-mono">{selectedBin.battery}%</strong>
               </div>
               <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                <span className="text-slate-400 text-[11px] block">AI Priority</span>
+                <span className="text-slate-400 text-[11px] block">Dispatch Priority</span>
                 <strong className="text-purple-400 font-mono">{selectedBin.priority_score}/100</strong>
               </div>
             </div>
@@ -187,7 +187,7 @@ export const MapPanel: React.FC<MapPanelProps> = ({ onSimulate }) => {
             <div className="p-3 rounded-xl bg-purple-950/30 border border-purple-800/40 text-xs">
               <div className="font-bold text-purple-300 mb-1 flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" />
-                <span>AI Recommendation:</span>
+                <span>System Recommendation:</span>
               </div>
               <p className="text-[11px] text-slate-300">{selectedBin.overflow_prediction}</p>
             </div>

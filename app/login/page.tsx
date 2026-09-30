@@ -93,7 +93,7 @@ export default function LoginPage() {
                 WasteSense
               </span>
               <span className="text-[11px] font-extrabold uppercase px-2 py-0.5 rounded-md border border-white/30 text-white/90 bg-black/25 backdrop-blur-md">
-                AI
+                IoT
               </span>
             </div>
 

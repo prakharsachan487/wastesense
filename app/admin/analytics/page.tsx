@@ -102,7 +102,7 @@ export default function AdminAnalyticsPage() {
         </div>
 
         <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-          <span className="text-xs text-slate-400 font-semibold uppercase">Fuel Saved (AI Routing)</span>
+          <span className="text-xs text-slate-400 font-semibold uppercase">Fuel Saved (Dynamic Routing)</span>
           <div className="text-2xl font-mono font-black text-sky-400 mt-1">182 Liters</div>
           <span className="text-[11px] text-sky-400 font-medium">Condition-based skip logic</span>
         </div>

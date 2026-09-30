@@ -30,7 +30,7 @@ export default function AdminComplaintsPage() {
         <div className="flex items-center gap-2.5">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-950/60 border border-purple-800/40 text-purple-300 text-xs font-semibold">
             <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
-            <span>AI Automated Triage Active</span>
+            <span>Automated Triage Active</span>
           </div>
         </div>
       </div>

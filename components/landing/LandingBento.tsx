@@ -67,7 +67,7 @@ export const LandingBento: React.FC = () => {
             </div>
           </div>
 
-          {/* CARD 2: Transparent AI Decision Engine (Col span 5) */}
+          {/* CARD 2: Transparent Decision Engine (Col span 5) */}
           <div className="lg:col-span-5 p-7 rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-purple-500/40 transition-all duration-300 relative overflow-hidden group">
 
             <div className="flex items-center justify-between mb-4">
@@ -80,7 +80,7 @@ export const LandingBento: React.FC = () => {
             </div>
 
             <h3 className="text-xl sm:text-2xl font-black text-white">
-              Predictive AI Priority Engine
+              Predictive Priority Engine
             </h3>
             <p className="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">
               Transparent, audit-ready formulation rankings. No black-box guesses: priority is calculated mathematically to dispatch routes dynamically.

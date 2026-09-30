@@ -3,8 +3,8 @@ import type { Metadata } from 'next';
 import { WasteSenseProvider } from '../context/WasteSenseContext';
 
 export const metadata: Metadata = {
-  title: 'WasteSense | AI-Powered Smart Waste Intelligence Platform',
-  description: 'Closed-loop municipal waste operations platform with IoT digital twin telemetry, AI priority dispatch, and worker verification.',
+  title: 'WasteSense | Smart Waste Intelligence Platform',
+  description: 'Closed-loop municipal waste operations platform with IoT digital twin telemetry, automated priority dispatch, and worker verification.',
 };
 
 export default function RootLayout({

@@ -13,10 +13,10 @@ export const LandingRolePortals: React.FC = () => {
       icon: '👨‍💼',
       tagColor: 'text-emerald-400 border-emerald-500/40 bg-emerald-950/40',
       buttonBg: 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-950',
-      description: 'Central command authority with citywide situational awareness, digital twin telemetry calibration, and automated AI dispatch.',
+      description: 'Central command authority with citywide situational awareness, digital twin telemetry calibration, and automated smart dispatch.',
       features: [
         'Real-time 20-node IoT telemetry & fire alerts',
-        'Transparent multi-factor AI priority engine',
+        'Transparent multi-factor priority engine',
         'Citizen grievance triage & fleet dispatch',
         'Geospatial hotspot clustering & heatmaps',
         'Comprehensive audit logs & diversion analytics'
