@@ -2,62 +2,96 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { useWasteSense } from '../../context/WasteSenseContext';
-import { ArrowLeft, ArrowRight, Eye, EyeOff, HelpCircle, Sparkles, Shield } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, Shield, User, Truck, Sparkles, CheckCircle2 } from 'lucide-react';
 import { UserRole } from '../../types';
 
 export default function LoginPage() {
   const router = useRouter();
   const { loginAsRole } = useWasteSense();
 
-  const [nameOrEmail, setNameOrEmail] = useState('Operations Officer');
+  const [selectedRole, setSelectedRole] = useState<UserRole>('admin');
+  const [email, setEmail] = useState('admin@wastesense.gov.in');
   const [password, setPassword] = useState('••••••••••••');
   const [showPassword, setShowPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState<'signin' | 'demo'>('signin');
 
-  const handleDemoLogin = (role: UserRole) => {
-    loginAsRole(role);
-    if (role === 'admin') router.push('/admin/dashboard');
-    else if (role === 'citizen') router.push('/citizen/dashboard');
-    else if (role === 'worker') router.push('/worker/dashboard');
+  const roleConfigs: Record<UserRole, {
+    title: string;
+    subtitle: string;
+    defaultEmail: string;
+    badge: string;
+    icon: string;
+    targetRoute: string;
+    themeColor: string;
+  }> = {
+    admin: {
+      title: 'Admin Command Center',
+      subtitle: 'Citywide situational awareness, digital-twin telemetry, and automated dispatch operations.',
+      defaultEmail: 'admin@wastesense.gov.in',
+      badge: 'MUNICIPAL OPERATIONS',
+      icon: '👨‍💼',
+      targetRoute: '/admin/dashboard',
+      themeColor: 'border-emerald-500/60 bg-emerald-500/10 text-emerald-400'
+    },
+    citizen: {
+      title: 'Citizen Service Portal',
+      subtitle: 'Report urban waste issues, schedule doorstep bulk collection, and track resolution tickets.',
+      defaultEmail: 'citizen@wastesense.org',
+      badge: 'PUBLIC RESIDENT ACCESS',
+      icon: '🧑',
+      targetRoute: '/citizen/dashboard',
+      themeColor: 'border-sky-500/60 bg-sky-500/10 text-sky-400'
+    },
+    worker: {
+      title: 'Sanitation Fleet Portal',
+      subtitle: 'Assigned route navigation, mobile task execution, and verified photographic resolution.',
+      defaultEmail: 'rahul.sharma@wastesense.ops',
+      badge: 'FIELD OPERATOR ACCESS',
+      icon: '👷',
+      targetRoute: '/worker/dashboard',
+      themeColor: 'border-amber-500/60 bg-amber-500/10 text-amber-400'
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const currentConfig = roleConfigs[selectedRole];
+
+  const handleRoleTabChange = (role: UserRole) => {
+    setSelectedRole(role);
+    setEmail(roleConfigs[role].defaultEmail);
+  };
+
+  const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const query = nameOrEmail.toLowerCase();
-    if (query.includes('citizen')) {
-      handleDemoLogin('citizen');
-    } else if (query.includes('worker') || query.includes('rahul')) {
-      handleDemoLogin('worker');
-    } else {
-      handleDemoLogin('admin');
-    }
+    loginAsRole(selectedRole);
+    router.push(currentConfig.targetRoute);
+  };
+
+  const handleQuickEnter = (role: UserRole) => {
+    loginAsRole(role);
+    router.push(roleConfigs[role].targetRoute);
   };
 
   return (
     <div className="min-h-screen bg-[#07090E] text-slate-100 flex items-center justify-center p-4 sm:p-8 relative overflow-hidden font-sans">
-      {/* Warm Ambient Glow behind the hero image (matching the sunset aesthetic from reference) */}
+      {/* Ambient Sunset / Emerald Glow */}
       <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-amber-600/15 via-rose-500/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 right-1/4 w-[400px] h-[400px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Main Container */}
       <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
         
-        {/* LEFT COLUMN: Visual Showcase Card (Styled exactly like reference) */}
+        {/* LEFT COLUMN: Visual Showcase Card */}
         <div className="lg:col-span-6 w-full flex justify-center">
           <div className="relative w-full max-w-[430px] aspect-[3/4] rounded-[32px] overflow-hidden border border-white/10 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] group">
-            {/* Background Waste Management Smart City Image */}
             <img
               src="/images/smart-waste-hero.jpg"
               alt="WasteSense Smart City Operations"
               className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
             />
 
-            {/* Subtle Gradient Overlays for Readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/40 pointer-events-none" />
 
-            {/* Top-Left Logo / Badge (Gen AI style from reference) */}
+            {/* Top-Left Logo / Badge */}
             <div className="absolute top-6 left-6 flex items-center gap-2">
               <span className="text-xl font-bold tracking-tight text-white drop-shadow-md">
                 WasteSense
@@ -82,152 +116,162 @@ export default function LoginPage() {
                 Sense &bull; Predict &bull; Prioritize &bull; Collect
               </p>
               <div className="mt-3 flex items-center justify-between text-[10px] text-white/50 border-t border-white/15 pt-2">
-                <span>Simulated IoT &bull; Smart City Core</span>
+                <span>Role-Isolated Architecture</span>
                 <span>Hackathon 2026</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Modern Sleek Form (Styled like reference) */}
-        <div className="lg:col-span-6 w-full max-w-[460px] mx-auto space-y-7">
+        {/* RIGHT COLUMN: Dedicated Role Portals Login */}
+        <div className="lg:col-span-6 w-full max-w-[460px] mx-auto space-y-6">
           
-          {/* Headline */}
+          {/* Header & Role Indicator */}
           <div>
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
-              Sign In to WasteSense <br className="hidden sm:block" />
-              Intelligence Hub
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-bold tracking-wider uppercase mb-2.5 bg-black/40 border-white/15 text-slate-300">
+              <span>{currentConfig.icon}</span>
+              <span>{currentConfig.badge}</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight">
+              {currentConfig.title}
             </h1>
-            <p className="text-xs text-slate-400 mt-2">
-              Access real-time smart bin telemetry, automated AI dispatch, and verified municipal collection workflows.
+            <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+              {currentConfig.subtitle}
             </p>
           </div>
 
-          {/* Top Control Pill Row */}
-          <div className="flex items-center justify-between">
+          {/* 3 Dedicated Role Selection Tabs */}
+          <div className="grid grid-cols-3 gap-1.5 bg-[#121620] p-1.5 rounded-2xl border border-white/10">
             <button
               type="button"
-              onClick={() => router.push('/admin/dashboard')}
-              className="w-10 h-10 rounded-full bg-[#161B26] hover:bg-[#1E2536] border border-white/10 flex items-center justify-center text-slate-300 hover:text-white transition active:scale-95"
-              title="Quick Bypass to Dashboard"
+              onClick={() => handleRoleTabChange('admin')}
+              className={`py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                selectedRole === 'admin'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
             >
-              <ArrowLeft className="w-4 h-4" />
+              <span>👨‍💼</span>
+              <span>Admin</span>
             </button>
 
-            <div className="flex items-center gap-2 text-xs text-slate-400">
-              <span>Already configured?</span>
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('admin')}
-                className="px-3 py-1 rounded-lg border border-white/15 hover:border-white/30 text-white font-medium bg-[#161B26] hover:bg-[#1E2536] transition"
-              >
-                Log in
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => handleRoleTabChange('citizen')}
+              className={`py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                selectedRole === 'citizen'
+                  ? 'bg-sky-600 text-white shadow-md shadow-sky-950'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <span>🧑</span>
+              <span>Citizen</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleRoleTabChange('worker')}
+              className={`py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                selectedRole === 'worker'
+                  ? 'bg-amber-600 text-white shadow-md shadow-amber-950'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <span>👷</span>
+              <span>Worker</span>
+            </button>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3.5">
-            {/* Field 1: Name / Operator ID (Highlighted with subtle glow like reference) */}
-            <div className="relative group">
+          <form onSubmit={handleLoginSubmit} className="space-y-3.5">
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                {selectedRole === 'admin' ? 'Administrator Email / ID' :
+                 selectedRole === 'citizen' ? 'Citizen Registered Email / Phone' :
+                 'Operator Badge ID / Mobile'}
+              </label>
               <input
                 type="text"
-                value={nameOrEmail}
-                onChange={(e) => setNameOrEmail(e.target.value)}
-                placeholder="Operator ID or Email"
-                className="w-full bg-[#121620]/90 border border-emerald-500/50 focus:border-emerald-400 text-white text-sm rounded-2xl px-5 py-3.5 outline-none transition shadow-[0_0_15px_rgba(16,185,129,0.12)] font-medium"
-              />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-emerald-400/80">
-                Active
-              </span>
-            </div>
-
-            {/* Field 2: Email */}
-            <div className="relative">
-              <input
-                type="email"
-                defaultValue="admin@wastesense.gov.in"
-                placeholder="Email address"
-                className="w-full bg-[#121620]/70 border border-white/10 focus:border-white/25 text-slate-300 text-sm rounded-2xl px-5 py-3.5 outline-none transition font-medium"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-[#121620]/90 border border-white/15 focus:border-emerald-500 text-white text-xs rounded-xl px-4 py-3 outline-none transition font-medium"
+                required
               />
             </div>
 
-            {/* Field 3: Password */}
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full bg-[#121620]/70 border border-white/10 focus:border-white/25 text-slate-300 text-sm rounded-2xl px-5 py-3.5 pr-20 outline-none transition font-medium"
-              />
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-slate-400">
+            <div>
+              <div className="flex justify-between items-center mb-1.5">
+                <label className="text-xs font-semibold text-slate-300">Password / Security Key</label>
+                <span className="text-[11px] text-slate-400">Demo preset loaded</span>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-[#121620]/90 border border-white/15 focus:border-emerald-500 text-white text-xs rounded-xl px-4 py-3 pr-10 outline-none transition font-medium"
+                  required
+                />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="hover:text-slate-200 transition"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
-                <HelpCircle className="w-4 h-4 hover:text-slate-200 cursor-pointer" />
               </div>
             </div>
 
-            {/* Primary Submit Button (Capsule with circle arrow like reference) */}
             <button
               type="submit"
-              className="w-full mt-2 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-slate-200 to-slate-100 hover:from-white hover:to-slate-200 text-slate-950 font-bold text-sm shadow-[0_10px_25px_rgba(255,255,255,0.1)] transition-all flex items-center justify-between active:scale-[0.99] group"
+              className="w-full mt-2 py-3 px-5 rounded-xl bg-gradient-to-r from-slate-200 to-slate-100 hover:from-white hover:to-slate-200 text-slate-950 font-black text-xs shadow-lg transition flex items-center justify-between active:scale-[0.99] group"
             >
-              <span>Enter Operations Center</span>
-              <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
-                <ArrowRight className="w-4 h-4" />
+              <span>Sign In as {selectedRole.toUpperCase()}</span>
+              <div className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+                <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </button>
           </form>
 
-          {/* 1-Click Hackathon Role Access (Clean Dark Pills) */}
-          <div className="pt-2 border-t border-white/10 space-y-2.5">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
+          {/* Instant 1-Click Demo Shortcut for Judges */}
+          <div className="pt-2 border-t border-white/10 space-y-2">
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Direct Hackathon Role Demonstrator:</span>
+              <span>Judge 1-Click Direct Access:</span>
             </div>
 
-            <div className="grid grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={() => handleDemoLogin('admin')}
-                className="py-2.5 px-3 rounded-xl bg-[#121620] hover:bg-[#181E2C] border border-white/10 hover:border-emerald-500/50 text-left transition group"
+                onClick={() => handleQuickEnter('admin')}
+                className="py-2 px-2.5 rounded-xl bg-[#121620] hover:bg-[#181E2C] border border-emerald-500/30 text-left transition"
               >
-                <div className="text-base mb-0.5">👨‍💼</div>
-                <div className="text-xs font-bold text-white group-hover:text-emerald-300">Admin</div>
-                <div className="text-[10px] text-slate-400">Command Center</div>
+                <div className="text-xs font-bold text-white">👨‍💼 Enter Admin</div>
+                <div className="text-[9px] text-slate-400">Command Center</div>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleDemoLogin('citizen')}
-                className="py-2.5 px-3 rounded-xl bg-[#121620] hover:bg-[#181E2C] border border-white/10 hover:border-sky-500/50 text-left transition group"
+                onClick={() => handleQuickEnter('citizen')}
+                className="py-2 px-2.5 rounded-xl bg-[#121620] hover:bg-[#181E2C] border border-sky-500/30 text-left transition"
               >
-                <div className="text-base mb-0.5">🧑</div>
-                <div className="text-xs font-bold text-white group-hover:text-sky-300">Citizen</div>
-                <div className="text-[10px] text-slate-400">Public Portal</div>
+                <div className="text-xs font-bold text-white">🧑 Enter Citizen</div>
+                <div className="text-[9px] text-slate-400">Public Portal</div>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleDemoLogin('worker')}
-                className="py-2.5 px-3 rounded-xl bg-[#121620] hover:bg-[#181E2C] border border-white/10 hover:border-amber-500/50 text-left transition group"
+                onClick={() => handleQuickEnter('worker')}
+                className="py-2 px-2.5 rounded-xl bg-[#121620] hover:bg-[#181E2C] border border-amber-500/30 text-left transition"
               >
-                <div className="text-base mb-0.5">👷</div>
-                <div className="text-xs font-bold text-white group-hover:text-amber-300">Worker</div>
-                <div className="text-[10px] text-slate-400">Field Route</div>
+                <div className="text-xs font-bold text-white">👷 Enter Worker</div>
+                <div className="text-[9px] text-slate-400">Field Route</div>
               </button>
             </div>
           </div>
 
-          {/* Bottom Legal / Disclaimer Text (from reference) */}
-          <p className="text-[11px] text-slate-400 leading-relaxed text-center sm:text-left">
-            By signing in, you access the WasteSense Smart City Cloud &bull; Simulated IoT Digital Twin Architecture.
+          <p className="text-[10px] text-slate-400 text-center">
+            Role-Based Isolation Active &bull; Users cannot see or access other roles' administrative panels.
           </p>
 
         </div>

@@ -28,13 +28,10 @@ export default function AdminComplaintsPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <Link
-            href="/citizen/report"
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-950 transition"
-          >
-            <PlusCircle className="w-3.5 h-3.5" />
-            <span>Test Citizen Intake Form</span>
-          </Link>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-950/60 border border-purple-800/40 text-purple-300 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+            <span>AI Automated Triage Active</span>
+          </div>
         </div>
       </div>
 

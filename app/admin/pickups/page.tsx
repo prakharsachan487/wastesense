@@ -30,7 +30,7 @@ export default function AdminPickupsPage() {
             <div className="flex justify-between items-start">
               <div>
                 <span className="font-mono text-xs font-bold text-white">{p.request_id}</span>
-                <h3 className="text-base font-bold text-emerald-400 mt-0.5">{p.customer}</h3>
+                <h3 className="text-base font-bold text-emerald-400 mt-0.5">{p.user_name}</h3>
               </div>
               <StatusBadge status={p.status} />
             </div>

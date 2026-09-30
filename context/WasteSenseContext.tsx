@@ -12,6 +12,8 @@ import {
 
 interface WasteSenseContextType {
   currentUser: User;
+  isLoggedIn: boolean;
+  isAuthReady: boolean;
   setCurrentUser: (user: User) => void;
   loginAsRole: (role: UserRole) => void;
   logout: () => void;
@@ -86,6 +88,8 @@ const WasteSenseContext = createContext<WasteSenseContextType | undefined>(undef
 
 export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(DEMO_USERS.admin);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthReady, setIsAuthReady] = useState(false);
   const [bins, setBins] = useState<SmartBin[]>(INITIAL_BINS);
   const [complaints, setComplaints] = useState<Complaint[]>(INITIAL_COMPLAINTS);
   const [tasks, setTasks] = useState<CollectionTask[]>(INITIAL_TASKS);
@@ -98,22 +102,30 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     try {
       const savedUser = localStorage.getItem('ws_user');
-      if (savedUser) setCurrentUser(JSON.parse(savedUser));
+      if (savedUser) {
+        setCurrentUser(JSON.parse(savedUser));
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
     } catch {
-      // fallback
+      setIsLoggedIn(false);
+    } finally {
+      setIsAuthReady(true);
     }
   }, []);
 
   const loginAsRole = (role: UserRole) => {
     const user = DEMO_USERS[role];
     setCurrentUser(user);
+    setIsLoggedIn(true);
     try {
       localStorage.setItem('ws_user', JSON.stringify(user));
     } catch {}
   };
 
   const logout = () => {
-    setCurrentUser(DEMO_USERS.citizen);
+    setIsLoggedIn(false);
     try {
       localStorage.removeItem('ws_user');
     } catch {}
@@ -394,6 +406,8 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     <WasteSenseContext.Provider
       value={{
         currentUser,
+        isLoggedIn,
+        isAuthReady,
         setCurrentUser,
         loginAsRole,
         logout,
