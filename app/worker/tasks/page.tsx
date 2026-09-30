@@ -14,16 +14,16 @@ export default function WorkerTasksPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">Today's Assigned Task Queue</h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <h1 className="text-2xl font-black text-[#0F172A] tracking-tight">Today's Assigned Task Queue</h1>
+          <p className="text-xs text-slate-500 mt-1">
             Complete route sequence for Truck #04 &bull; Rahul Sharma
           </p>
         </div>
         <Link
           href="/worker/dashboard"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-300 hover:text-white"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-700 hover:bg-slate-50 shadow-xs transition"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Dashboard</span>

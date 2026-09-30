@@ -36,9 +36,9 @@ export default function WorkerLayout({
   // While checking auth state or redirecting unauthorized users
   if (!isAuthReady || !isLoggedIn || currentUser.role !== 'worker') {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400">
-        <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-        <p className="text-xs tracking-wider uppercase font-semibold text-slate-500">
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center text-slate-500">
+        <div className="w-8 h-8 border-2 border-[#004A80] border-t-transparent rounded-full animate-spin mb-3"></div>
+        <p className="text-xs tracking-wider uppercase font-semibold text-slate-500 font-mono">
           Verifying Worker Fleet Session...
         </p>
       </div>
@@ -46,11 +46,11 @@ export default function WorkerLayout({
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+    <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A] font-satoshi">
       <Header />
       <div className="flex-1 flex overflow-hidden">
         <WorkerNav />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-950">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-[#F8FAFC]">
           <div className="max-w-5xl mx-auto">
             {children}
           </div>

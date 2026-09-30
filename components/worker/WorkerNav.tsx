@@ -25,7 +25,7 @@ export const WorkerNav: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-slate-900/95 border-r border-slate-800 flex flex-col justify-between shrink-0 min-h-[calc(100vh-80px)]">
+    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 min-h-[calc(100vh-80px)]">
       <div className="py-4 px-3 space-y-1">
         <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
           Field Operations
@@ -39,14 +39,14 @@ export const WorkerNav: React.FC = () => {
             <Link
               key={item.label}
               href={item.href}
-              className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all group ${
+              className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
                 isActive
-                  ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  ? 'bg-[#F0F9FF] text-[#004A80] border border-[#BAE6FD] font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-[#0F172A] hover:bg-[#F8FAFC]'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200'}`} />
+                <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-[#004A80]' : 'text-slate-400 group-hover:text-slate-600'}`} />
                 <span>{item.label}</span>
               </div>
 
@@ -60,12 +60,12 @@ export const WorkerNav: React.FC = () => {
         })}
       </div>
 
-      <div className="p-3.5 m-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs">
-        <div className="flex items-center justify-between font-bold text-white mb-1">
+      <div className="p-3.5 m-3 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] text-xs">
+        <div className="flex items-center justify-between font-bold text-[#004A80] mb-1">
           <span>Truck #04</span>
-          <span className="text-emerald-400">84% Fuel</span>
+          <span className="text-[#0077CC]">84% Fuel</span>
         </div>
-        <p className="text-[11px] text-slate-400">Operator: Rahul Sharma &bull; Zone A Lead</p>
+        <p className="text-[11px] text-slate-600">Operator: Rahul Sharma &bull; Zone A Lead</p>
       </div>
     </aside>
   );

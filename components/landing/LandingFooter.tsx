@@ -6,20 +6,20 @@ import { Shield, Lock, Award, Heart } from 'lucide-react';
 
 export const LandingFooter: React.FC = () => {
   return (
-    <footer className="bg-[#05070B] border-t border-slate-800/80 pt-16 pb-12 text-slate-400 text-xs">
+    <footer className="bg-[#0F172A] border-t border-slate-800 pt-16 pb-12 text-slate-400 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-slate-800/80">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-slate-800">
           
           {/* Col 1: Brand & Municipal Attribution (5 cols) */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
+              <div className="w-8 h-8 rounded-lg bg-[#0077CC] flex items-center justify-center text-white font-bold">
                 <Shield className="w-4 h-4" />
               </div>
               <span className="text-base font-black tracking-wider text-white">
-                WASTE<span className="text-emerald-400">SENSE</span>
+                WASTE<span className="text-[#0EA5E9]">SENSE</span>
               </span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-emerald-500/40 text-emerald-300 bg-emerald-950/40">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-[#BAE6FD]/30 text-[#0EA5E9] bg-[#004A80]/50">
                 OS 2.4
               </span>
             </div>
@@ -30,11 +30,11 @@ export const LandingFooter: React.FC = () => {
 
             <div className="flex items-center gap-4 text-[11px] text-slate-400">
               <span className="flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-emerald-400" />
+                <Lock className="w-3.5 h-3.5 text-[#0EA5E9]" />
                 <span>256-Bit SSL Encrypted</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <Award className="w-3.5 h-3.5 text-sky-400" />
+                <Award className="w-3.5 h-3.5 text-[#0077CC]" />
                 <span>Smart Cities Mission</span>
               </span>
             </div>
@@ -44,10 +44,10 @@ export const LandingFooter: React.FC = () => {
           <div className="md:col-span-2 space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-wider">Platform</h4>
             <ul className="space-y-2">
-              <li><a href="#architecture" className="hover:text-emerald-400 transition-colors">Architecture</a></li>
-              <li><a href="#lifecycle" className="hover:text-emerald-400 transition-colors">4-Stage Lifecycle</a></li>
-              <li><a href="#features" className="hover:text-emerald-400 transition-colors">IoT Telemetry</a></li>
-              <li><a href="#impact" className="hover:text-emerald-400 transition-colors">Operational Impact</a></li>
+              <li><a href="#architecture" className="hover:text-[#0EA5E9] transition-colors">Architecture</a></li>
+              <li><a href="#lifecycle" className="hover:text-[#0EA5E9] transition-colors">4-Stage Lifecycle</a></li>
+              <li><a href="#features" className="hover:text-[#0EA5E9] transition-colors">IoT Telemetry</a></li>
+              <li><a href="#impact" className="hover:text-[#0EA5E9] transition-colors">Operational Impact</a></li>
             </ul>
           </div>
 
@@ -55,10 +55,10 @@ export const LandingFooter: React.FC = () => {
           <div className="md:col-span-2 space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-wider">Role Access</h4>
             <ul className="space-y-2">
-              <li><Link href="/login" className="hover:text-emerald-400 transition-colors">Admin Command</Link></li>
-              <li><Link href="/login" className="hover:text-emerald-400 transition-colors">Citizen Services</Link></li>
-              <li><Link href="/login" className="hover:text-emerald-400 transition-colors">Sanitation Fleet</Link></li>
-              <li><Link href="/login" className="hover:text-emerald-400 transition-colors">Node Calibration</Link></li>
+              <li><Link href="/login" className="hover:text-[#0EA5E9] transition-colors">Admin Command</Link></li>
+              <li><Link href="/login" className="hover:text-[#0EA5E9] transition-colors">Citizen Services</Link></li>
+              <li><Link href="/login" className="hover:text-[#0EA5E9] transition-colors">Sanitation Fleet</Link></li>
+              <li><Link href="/login" className="hover:text-[#0EA5E9] transition-colors">Node Calibration</Link></li>
             </ul>
           </div>
 
@@ -69,7 +69,7 @@ export const LandingFooter: React.FC = () => {
               Department of Urban Sanitation & Digital Municipal Administration.<br />
               Central Control Headquarters &bull; Zone A-F Operations.
             </p>
-            <div className="pt-1 text-[11px] text-emerald-400 font-mono">
+            <div className="pt-1 text-[11px] text-[#0EA5E9] font-mono">
               Emergency Dispatch Helpline: 1800-WASTE-SENSE
             </div>
           </div>

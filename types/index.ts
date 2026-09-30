@@ -42,10 +42,12 @@ export type ComplaintCategory =
 
 export type ComplaintStatus = 
   | 'Submitted'
-  | 'Under Review'
   | 'Assigned'
+  | 'En Route'
   | 'In Progress'
-  | 'Resolved';
+  | 'Under Review'
+  | 'Resolved'
+  | 'Rework';
 
 export type PriorityLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
@@ -65,15 +67,23 @@ export interface Complaint {
   category: ComplaintCategory;
   description: string;
   image?: string;
+  before_image?: string;
+  after_image?: string;
   location: string;
+  zone?: string;
   latitude?: number;
   longitude?: number;
+  accuracy_meters?: number;
   priority: PriorityLevel;
   status: ComplaintStatus;
   assigned_worker?: string;
+  assigned_worker_id?: string;
   assigned_vehicle?: string;
+  geofence_verified?: boolean;
+  rework_reason?: string;
   created_at: string;
   updated_at: string;
+  resolved_at?: string;
   timeline: ComplaintTimelineStep[];
 }
 
@@ -92,7 +102,14 @@ export interface PickupRequest {
   created_at: string;
 }
 
-export type TaskStatus = 'Pending' | 'Assigned' | 'In Progress' | 'Completed' | 'Verified';
+export type TaskStatus = 
+  | 'Pending' 
+  | 'Assigned' 
+  | 'En Route' 
+  | 'In Progress' 
+  | 'Under Review' 
+  | 'Completed' 
+  | 'Rework';
 
 export interface CollectionTask {
   id: string;
@@ -102,6 +119,8 @@ export interface CollectionTask {
   title: string;
   location: string;
   zone: string;
+  target_lat?: number;
+  target_lng?: number;
   priority: PriorityLevel;
   priority_score: number;
   worker_id: string;
@@ -113,6 +132,15 @@ export interface CollectionTask {
   before_fill?: number;
   after_fill?: number;
   proof_photo?: string;
+  arrived_at?: string;
+  arrival_lat?: number;
+  arrival_lng?: number;
+  arrival_distance_m?: number;
+  proof_lat?: number;
+  proof_lng?: number;
+  proof_accuracy?: number;
+  proof_timestamp?: string;
+  rework_reason?: string;
   created_time: string;
   due_time: string;
   completed_at?: string;

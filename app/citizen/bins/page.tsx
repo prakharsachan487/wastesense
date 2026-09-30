@@ -17,9 +17,9 @@ export default function CitizenBinsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-800 pb-4">
-        <h1 className="text-2xl font-black text-white tracking-tight">Nearby Smart Containers & Capacity</h1>
-        <p className="text-xs text-slate-400 mt-1">
+      <div className="border-b border-slate-200 pb-4">
+        <h1 className="text-2xl font-black text-[#0F172A] tracking-tight">Nearby Smart Containers & Capacity</h1>
+        <p className="text-xs text-slate-500 mt-1">
           Check live container capacity before stepping out to deposit segregated recyclables or organic waste
         </p>
       </div>
@@ -31,7 +31,7 @@ export default function CitizenBinsPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Filter by location or waste stream..."
-          className="w-full bg-slate-900 border border-slate-800 text-white text-xs rounded-xl pl-9 pr-3 py-2.5 outline-none focus:border-emerald-500"
+          className="w-full bg-white border border-slate-200 text-[#0F172A] text-xs rounded-xl pl-9 pr-3 py-2.5 outline-none focus:border-[#0077CC] focus:ring-1 focus:ring-[#0077CC] shadow-xs"
         />
       </div>
 
@@ -42,38 +42,38 @@ export default function CitizenBinsPage() {
           const approxDistance = (0.2 + (index * 0.15)).toFixed(1);
 
           return (
-            <div key={bin.bin_id} className="p-4 rounded-xl bg-slate-900 border border-slate-800 shadow-md space-y-3">
+            <div key={bin.bin_id} className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-3">
               <div className="flex justify-between items-start">
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-bold text-white text-sm">{bin.bin_id}</span>
+                    <span className="font-mono font-bold text-[#0F172A] text-sm">{bin.bin_id}</span>
                     <StatusBadge status={bin.status} size="sm" />
                   </div>
-                  <h4 className="text-xs font-semibold text-slate-200 mt-1">{bin.location}</h4>
-                  <p className="text-[11px] text-slate-400">{bin.zone}</p>
+                  <h4 className="text-xs font-semibold text-[#0F172A] mt-1">{bin.location}</h4>
+                  <p className="text-[11px] text-slate-500">{bin.zone}</p>
                 </div>
-                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+                <span className="text-[10px] font-bold text-[#0077CC] bg-[#F0F9FF] px-2 py-0.5 rounded border border-[#BAE6FD]">
                   {approxDistance} km away
                 </span>
               </div>
 
               <div>
                 <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span className="text-slate-400">Current Volume</span>
-                  <span className={`font-mono ${isCritical ? 'text-rose-400 font-bold' : 'text-slate-200'}`}>
+                  <span className="text-slate-600">Current Volume</span>
+                  <span className={`font-mono ${isCritical ? 'text-rose-600 font-bold' : 'text-[#0F172A]'}`}>
                     {bin.fill_level}%
                   </span>
                 </div>
-                <div className="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
                   <div
-                    className={`h-full ${isCritical ? 'bg-rose-500' : isHigh ? 'bg-amber-500' : 'bg-emerald-500'} transition-all`}
+                    className={`h-full ${isCritical ? 'bg-rose-500' : isHigh ? 'bg-amber-500' : 'bg-[#0077CC]'} transition-all`}
                     style={{ width: `${bin.fill_level}%` }}
                   />
                 </div>
               </div>
 
-              <div className="text-[11px] text-slate-400 pt-2 border-t border-slate-950 flex items-center justify-between">
-                <span>Waste Stream: <strong className="text-white">{bin.waste_type}</strong></span>
+              <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex items-center justify-between">
+                <span>Waste Stream: <strong className="text-[#0F172A]">{bin.waste_type}</strong></span>
                 <span className="text-[10px] text-slate-400">Emptied {bin.last_collection}</span>
               </div>
             </div>

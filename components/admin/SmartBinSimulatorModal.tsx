@@ -58,20 +58,20 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
   const isOverflowRisk = fillLevel >= 95;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="bg-white border border-slate-200 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden text-[#0F172A]">
         {/* Modal Header */}
-        <div className="p-4 bg-slate-800/80 border-b border-slate-700 flex items-center justify-between">
+        <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+            <div className="p-2 rounded-lg bg-[#F0F9FF] text-[#0077CC] border border-[#BAE6FD]">
               <Sliders className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Smart Bin Telemetry & Calibration</h3>
-              <p className="text-xs text-slate-400">Configure real-time sensor telemetry and threshold triggers</p>
+              <h3 className="text-base font-bold text-[#0F172A]">Smart Bin Telemetry & Calibration</h3>
+              <p className="text-xs text-slate-500">Configure real-time sensor telemetry and threshold triggers</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white p-1 rounded-lg">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -79,11 +79,11 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
         <div className="p-5 space-y-4 max-h-[80vh] overflow-y-auto">
           {/* Target Bin Selection */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Select Target Smart Bin</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Select Target Smart Bin</label>
             <select
               value={selectedBinId}
               onChange={(e) => handleBinSelect(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 text-white rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full bg-slate-50 border border-slate-200 text-[#0F172A] rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-[#0077CC] outline-none"
             >
               {bins.map(b => (
                 <option key={b.bin_id} value={b.bin_id}>
@@ -95,12 +95,12 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
 
           {/* Quick Preset Buttons */}
           <div>
-            <div className="text-xs font-semibold text-slate-400 mb-2">Telemetry Presets:</div>
+            <div className="text-xs font-semibold text-slate-500 mb-2">Telemetry Presets:</div>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => handleApplyPreset(18, 1.4, 25.0, 95)}
-                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-950/60 border border-emerald-700/50 text-emerald-300 text-xs font-semibold hover:bg-emerald-900/60 transition"
+                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold hover:bg-emerald-100 transition"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Normal (18%)</span>
@@ -109,7 +109,7 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
               <button
                 type="button"
                 onClick={() => handleApplyPreset(76, 6.2, 28.0, 88)}
-                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-amber-950/60 border border-amber-700/50 text-amber-300 text-xs font-semibold hover:bg-amber-900/60 transition"
+                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold hover:bg-amber-100 transition"
               >
                 <AlertTriangle className="w-3.5 h-3.5" />
                 <span>Warning (76%)</span>
@@ -118,7 +118,7 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
               <button
                 type="button"
                 onClick={() => handleApplyPreset(95, 8.5, 29.5, 87)}
-                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-rose-950/70 border border-rose-600/60 text-rose-300 text-xs font-semibold hover:bg-rose-900/70 transition shadow-sm shadow-rose-950"
+                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold hover:bg-rose-100 transition"
               >
                 <Flame className="w-3.5 h-3.5" />
                 <span>Critical (95%)</span>
@@ -130,8 +130,8 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
           <div className="space-y-3.5 pt-2">
             <div>
               <div className="flex justify-between text-xs font-semibold mb-1">
-                <span className="text-slate-300">Ultrasonic Fill Level Sensor</span>
-                <span className={`font-mono text-sm ${fillLevel >= 90 ? 'text-rose-400 font-bold' : 'text-slate-300'}`}>
+                <span className="text-slate-700">Ultrasonic Fill Level Sensor</span>
+                <span className={`font-mono text-sm ${fillLevel >= 90 ? 'text-rose-600 font-bold' : 'text-slate-800'}`}>
                   {fillLevel}%
                 </span>
               </div>
@@ -141,14 +141,14 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
                 max="100"
                 value={fillLevel}
                 onChange={(e) => setFillLevel(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#0077CC]"
               />
             </div>
 
             <div>
               <div className="flex justify-between text-xs font-semibold mb-1">
-                <span className="text-slate-300">Load Cell Weight (Strain Gauge)</span>
-                <span className="font-mono text-slate-300">{weight} kg</span>
+                <span className="text-slate-700">Load Cell Weight (Strain Gauge)</span>
+                <span className="font-mono text-slate-800">{weight} kg</span>
               </div>
               <input
                 type="range"
@@ -157,14 +157,14 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
                 step="0.1"
                 value={weight}
                 onChange={(e) => setWeight(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500"
+                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#0EA5E9]"
               />
             </div>
 
             <div>
               <div className="flex justify-between text-xs font-semibold mb-1">
-                <span className="text-slate-300">Internal Thermistor (°C)</span>
-                <span className="font-mono text-slate-300">{temperature}°C</span>
+                <span className="text-slate-700">Internal Thermistor (°C)</span>
+                <span className="font-mono text-slate-800">{temperature}°C</span>
               </div>
               <input
                 type="range"
@@ -173,22 +173,22 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
                 step="0.5"
                 value={temperature}
                 onChange={(e) => setTemperature(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500"
               />
             </div>
           </div>
 
           {/* AI Risk Detection Feedback */}
           {isCritical && (
-            <div className="p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/40 space-y-2">
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 space-y-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-rose-300 text-xs font-bold">
-                  <AlertTriangle className="w-4 h-4 text-rose-400" />
+                <div className="flex items-center gap-2 text-rose-700 text-xs font-bold">
+                  <AlertTriangle className="w-4 h-4 text-rose-600" />
                   <span>CRITICAL OVERFLOW THRESHOLD EXCEEDED</span>
                 </div>
                 <PriorityBadge priority="CRITICAL" score={95} />
               </div>
-              <p className="text-[11px] text-slate-300">
+              <p className="text-[11px] text-rose-800">
                 {isOverflowRisk 
                   ? "Bin fill level is >= 95%. Immediate overflow risk active. System recommends creating an automated collection task."
                   : "Sensor reading has breached the 90% municipal critical threshold."}
@@ -199,10 +199,10 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
                   type="button"
                   onClick={handleCreateTaskFromModal}
                   disabled={taskCreated}
-                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-900/40 transition active:scale-95 disabled:bg-emerald-700"
+                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition active:scale-95 disabled:bg-emerald-600"
                 >
                   <Zap className="w-3.5 h-3.5" />
-                  <span>{taskCreated ? '✓ Task Created & Dispatched to Rahul!' : '⚡ Create Collection Task (Auto-Assign)'}</span>
+                  <span>{taskCreated ? 'Task Created & Dispatched to Rahul!' : 'Create Collection Task (Auto-Assign)'}</span>
                 </button>
               )}
             </div>
@@ -210,18 +210,18 @@ export const SmartBinSimulatorModal: React.FC<ModalProps> = ({ onClose, targetBi
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 bg-slate-950 border-t border-slate-800 flex justify-end gap-2.5">
+        <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-2.5">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition"
+            className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200 transition"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handlePublish}
-            className="px-4 py-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/30 transition active:scale-95"
+            className="px-4 py-2 rounded-lg text-xs font-bold bg-[#0077CC] hover:bg-[#004A80] text-white shadow-sm transition active:scale-95"
           >
             Update Node Telemetry
           </button>

@@ -21,7 +21,7 @@ export const CitizenSidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-slate-900/95 border-r border-slate-800 flex flex-col justify-between shrink-0 min-h-[calc(100vh-80px)]">
+    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 min-h-[calc(100vh-80px)]">
       <div className="py-4 px-3 space-y-1">
         <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
           Citizen Services
@@ -35,19 +35,19 @@ export const CitizenSidebar: React.FC = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all group ${
+              className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
                 isActive
-                  ? 'bg-emerald-600/15 text-emerald-400 border border-emerald-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  ? 'bg-[#F0F9FF] text-[#0EA5E9] border border-[#BAE6FD] font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-[#0F172A] hover:bg-[#F8FAFC]'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-emerald-400' : 'text-slate-400 group-hover:text-slate-200'}`} />
+                <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-[#0EA5E9]' : 'text-slate-400 group-hover:text-slate-600'}`} />
                 <span>{item.label}</span>
               </div>
 
               {item.badge && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#E0F2FE] text-[#0077CC]">
                   {item.badge}
                 </span>
               )}
@@ -56,9 +56,9 @@ export const CitizenSidebar: React.FC = () => {
         })}
       </div>
 
-      <div className="p-3 m-3 rounded-xl bg-gradient-to-br from-emerald-950/40 to-slate-900 border border-emerald-800/30 text-xs">
-        <div className="font-bold text-emerald-300 mb-1">🌱 Green City Mission</div>
-        <p className="text-[11px] text-slate-400">Earn 50 Eco-Credits each time your reported waste issue is collected and verified.</p>
+      <div className="p-3.5 m-3 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] text-xs text-[#004A80]">
+        <div className="font-bold text-[#0077CC] mb-1">Municipal Ward 12</div>
+        <p className="text-[11px] text-slate-600">Reports are auto-assigned to active zone sanitation units with real-time GPS tracking.</p>
       </div>
     </aside>
   );

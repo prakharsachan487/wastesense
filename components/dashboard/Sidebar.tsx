@@ -47,7 +47,7 @@ export const AdminSidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-slate-900/95 border-r border-slate-800 flex flex-col justify-between shrink-0 min-h-[calc(100vh-80px)]">
+    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 min-h-[calc(100vh-80px)]">
       <div className="py-4 px-3 space-y-1">
         <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
           Command Center
@@ -61,14 +61,14 @@ export const AdminSidebar: React.FC = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all group ${
+              className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
                 isActive
-                  ? 'bg-emerald-600/15 text-emerald-400 border border-emerald-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  ? 'bg-[#F0F9FF] text-[#0077CC] border border-[#BAE6FD] font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-[#0F172A] hover:bg-[#F8FAFC]'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-emerald-400' : 'text-slate-400 group-hover:text-slate-200'}`} />
+                <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-[#0077CC]' : 'text-slate-400 group-hover:text-slate-600'}`} />
                 <span>{item.label}</span>
               </div>
 
@@ -83,15 +83,15 @@ export const AdminSidebar: React.FC = () => {
       </div>
 
       {/* IoT Gateway Network Status */}
-      <div className="p-3 m-3 rounded-xl bg-slate-950/70 border border-slate-800 text-xs text-slate-400">
-        <div className="flex items-center justify-between font-semibold text-slate-300 mb-1">
+      <div className="p-3.5 m-3 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] text-xs text-[#004A80]">
+        <div className="flex items-center justify-between font-bold text-[#004A80] mb-1">
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-[#0077CC] animate-pulse"></span>
             IoT Gateway Network
           </span>
-          <span className="text-[10px] text-emerald-400 font-mono">ONLINE</span>
+          <span className="text-[10px] text-[#0077CC] font-mono font-bold">ONLINE</span>
         </div>
-        <p className="text-[11px] text-slate-400">20 active sensor nodes connected across 6 urban sectors.</p>
+        <p className="text-[11px] text-slate-600">20 active sensor nodes connected across 6 urban sectors.</p>
       </div>
     </aside>
   );

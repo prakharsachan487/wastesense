@@ -42,25 +42,25 @@ export default function WorkerDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Mobile-Friendly Profile Header */}
-      <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-900 border border-amber-600/30 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-5 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-2xl font-black shadow-lg">
-            👷
+          <div className="w-12 h-12 rounded-xl bg-[#0077CC] text-white flex items-center justify-center text-2xl font-black shadow-sm">
+            W
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold text-white">{currentUser.name}</h1>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+              <h1 className="text-lg font-bold text-[#0F172A]">{currentUser.name}</h1>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
                 ACTIVE SHIFT
               </span>
             </div>
-            <p className="text-xs text-slate-400">Assigned Vehicle: <strong className="text-white">Truck #04 (DL-1Z-9404)</strong> &bull; Commercial Sector</p>
+            <p className="text-xs text-slate-600">Assigned Vehicle: <strong className="text-[#0F172A]">Truck #04 (DL-1Z-9404)</strong> &bull; Commercial Sector</p>
           </div>
         </div>
 
         <Link
           href="/worker/tasks"
-          className="self-start sm:self-auto px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
+          className="self-start sm:self-auto px-4 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0077CC] text-xs font-semibold flex items-center gap-1.5 transition shadow-xs"
         >
           <span>View All Route Queue</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -69,37 +69,37 @@ export default function WorkerDashboardPage() {
 
       {/* 4 Top Field Metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <span className="text-[11px] text-slate-400 font-semibold uppercase">Assigned Tasks</span>
-          <div className="text-2xl font-mono font-bold text-white mt-1">{assignedTasks.length}</div>
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
+          <span className="text-[11px] text-slate-500 font-semibold uppercase">Assigned Tasks</span>
+          <div className="text-2xl font-mono font-bold text-[#0F172A] mt-1">{assignedTasks.length}</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <span className="text-[11px] text-slate-400 font-semibold uppercase">Critical Tasks</span>
-          <div className="text-2xl font-mono font-bold text-rose-400 mt-1">{criticalTasks.length}</div>
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
+          <span className="text-[11px] text-slate-500 font-semibold uppercase">Critical Tasks</span>
+          <div className="text-2xl font-mono font-bold text-rose-600 mt-1">{criticalTasks.length}</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <span className="text-[11px] text-slate-400 font-semibold uppercase">In Progress</span>
-          <div className="text-2xl font-mono font-bold text-amber-400 mt-1">{inProgressTasks.length}</div>
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
+          <span className="text-[11px] text-slate-500 font-semibold uppercase">In Progress</span>
+          <div className="text-2xl font-mono font-bold text-amber-600 mt-1">{inProgressTasks.length}</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <span className="text-[11px] text-slate-400 font-semibold uppercase">Completed Today</span>
-          <div className="text-2xl font-mono font-bold text-emerald-400 mt-1">{completedToday}</div>
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
+          <span className="text-[11px] text-slate-500 font-semibold uppercase">Completed Today</span>
+          <div className="text-2xl font-mono font-bold text-emerald-600 mt-1">{completedToday}</div>
         </div>
       </div>
 
       {/* Priority Field Work Order */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl space-y-4">
-        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-800 pb-3">
+      <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 pb-3">
           <div>
-            <span className="text-[10px] font-black text-rose-400 tracking-wider uppercase">
+            <span className="text-[10px] font-black text-rose-600 tracking-wider uppercase">
               HIGH-PRIORITY ACTIVE DISPATCH
             </span>
-            <h2 className="text-xl font-black text-white mt-0.5">{activeTask.title}</h2>
-            <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <h2 className="text-xl font-black text-[#0F172A] mt-0.5">{activeTask.title}</h2>
+            <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+              <MapPin className="w-3.5 h-3.5 text-[#0077CC] shrink-0" />
               <span>{activeTask.location} ({activeTask.zone})</span>
             </div>
           </div>
@@ -110,22 +110,22 @@ export default function WorkerDashboardPage() {
         </div>
 
         {/* Telemetry Status Before Collection */}
-        <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div>
-            <span className="text-slate-400 text-[11px]">Reported Fill Level:</span>
-            <div className="font-mono text-base font-bold text-rose-400">{activeTask.before_fill || 94}% CRITICAL</div>
+            <span className="text-slate-500 text-[11px]">Reported Fill Level:</span>
+            <div className="font-mono text-base font-bold text-rose-600">{activeTask.before_fill || 94}% CRITICAL</div>
           </div>
           <div>
-            <span className="text-slate-400 text-[11px]">Recommended Action:</span>
-            <div className="text-white font-medium">Empty immediately & replace liner</div>
+            <span className="text-slate-500 text-[11px]">Recommended Action:</span>
+            <div className="text-[#0F172A] font-medium">Empty immediately & replace liner</div>
           </div>
           <div>
-            <span className="text-slate-400 text-[11px]">SLA Due Time:</span>
-            <div className="text-amber-300 font-medium">{activeTask.due_time}</div>
+            <span className="text-slate-500 text-[11px]">SLA Due Time:</span>
+            <div className="text-amber-700 font-medium">{activeTask.due_time}</div>
           </div>
         </div>
 
-        <p className="text-xs text-slate-300 bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+        <p className="text-xs text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-200">
           <strong>Field Instructions:</strong> {activeTask.instructions}
         </p>
 
@@ -134,7 +134,7 @@ export default function WorkerDashboardPage() {
           {activeTask.status === 'Assigned' && (
             <button
               onClick={() => handleStartTask(activeTask.id)}
-              className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-950 transition flex items-center justify-center gap-2 active:scale-95"
+              className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-2 active:scale-95"
             >
               <Navigation className="w-4 h-4" />
               <span>Start Collection &bull; Mark En Route</span>
@@ -144,7 +144,7 @@ export default function WorkerDashboardPage() {
           {activeTask.status === 'In Progress' && (
             <button
               onClick={() => setShowCompleteModal(true)}
-              className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-lg shadow-emerald-950 transition flex items-center justify-center gap-2 active:scale-95 animate-pulse"
+              className="w-full py-3 rounded-xl bg-[#0077CC] hover:bg-[#004A80] text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-2 active:scale-95"
             >
               <CheckCircle2 className="w-4 h-4" />
               <span>Complete Collection &bull; Submit Photographic Proof</span>
@@ -152,20 +152,20 @@ export default function WorkerDashboardPage() {
           )}
 
           {activeTask.status === 'Completed' && (
-            <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-center space-y-2">
-              <span className="text-emerald-400 font-bold text-sm block">✓ Collection Completed & Synchronized with Municipal Operations</span>
-              <p className="text-xs text-slate-300">
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
+              <span className="text-emerald-700 font-bold text-sm block">Collection Completed & Synchronized with Municipal Operations</span>
+              <p className="text-xs text-slate-600">
                 Bin {activeTask.bin_id} fill dropped from <strong>{activeTask.before_fill || 95}%</strong> down to <strong>{activeTask.after_fill || 18}%</strong>. Telemetry reset confirmed.
               </p>
               {activeTask.proof_photo && (
-                <div className="mt-2 max-w-xs mx-auto rounded-xl overflow-hidden border border-emerald-500/40 shadow-lg">
+                <div className="mt-2 max-w-xs mx-auto rounded-xl overflow-hidden border border-emerald-300 shadow-sm bg-white">
                   <img 
                     src={activeTask.proof_photo.startsWith('data:image') ? activeTask.proof_photo : '/images/smart-waste-hero.jpg'} 
                     alt="Uploaded Proof" 
                     className="w-full h-32 object-cover" 
                   />
-                  <div className="bg-slate-950 p-1.5 text-[10px] text-emerald-400 font-mono">
-                    ✓ Verified Resolution Proof Attached
+                  <div className="bg-slate-50 p-1.5 text-[10px] text-emerald-700 font-mono border-t border-slate-200">
+                    Verified Resolution Proof Attached
                   </div>
                 </div>
               )}

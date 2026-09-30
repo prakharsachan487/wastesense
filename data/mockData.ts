@@ -1129,7 +1129,7 @@ export const INITIAL_PICKUPS: PickupRequest[] = [
 export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   {
     id: "n-1",
-    title: "🚨 Critical Fill Surge: Bin B-102",
+    title: "Critical Fill Surge: Bin B-102",
     message: "Ultrasonic sensor reported 94% capacity at Central Market. AI priority elevated to CRITICAL.",
     type: "alert",
     timestamp: "10 mins ago",
@@ -1138,7 +1138,7 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   },
   {
     id: "n-2",
-    title: "📋 New Citizen Complaint WS-2026-1042",
+    title: "New Citizen Complaint WS-2026-1042",
     message: "Overflowing bin reported in Central Market. Geotag linked to Bin B-102.",
     type: "warning",
     timestamp: "45 mins ago",
@@ -1147,7 +1147,7 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   },
   {
     id: "n-3",
-    title: "🚛 Task Assigned: TSK-1042",
+    title: "Task Assigned: TSK-1042",
     message: "You have been dispatched to Bin B-102 at Central Market. Target arrival within 35 mins.",
     type: "info",
     timestamp: "10 mins ago",
@@ -1156,7 +1156,7 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   },
   {
     id: "n-4",
-    title: "✅ Collection Verified: Bin B-087",
+    title: "Collection Verified: Bin B-087",
     message: "Worker Anita Verma completed emptying and uploaded verified photo. Fill level reset to 14%.",
     type: "success",
     timestamp: "1h 10m ago",

@@ -7,24 +7,18 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        satoshi: ['Satoshi', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+      },
       colors: {
-        wastesense: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
-        },
         brand: {
-          dark: '#0B0F19',
-          card: '#111827',
-          surface: '#1E293B',
-          border: 'rgba(255, 255, 255, 0.08)',
-          accent: '#0ea5e9'
-        }
+          blue: '#0077CC',
+          'light-blue': '#0EA5E9',
+          'dark-blue': '#004A80',
+          black: '#0F172A',
+          white: '#FFFFFF',
+          'light-grey': '#F8FAFC',
+        },
       },
     },
   },

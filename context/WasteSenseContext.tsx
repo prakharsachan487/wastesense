@@ -17,6 +17,7 @@ import {
   subscribeToBinsRealtime 
 } from '../lib/supabaseService';
 import { isSupabaseConfigured } from '../lib/supabaseClient';
+import { detectZoneFromLocation, isWithinGeofence } from '../lib/geoUtils';
 
 interface WasteSenseContextType {
   currentUser: User;
@@ -41,7 +42,10 @@ interface WasteSenseContextType {
   tasks: CollectionTask[];
   createTask: (binId: string, workerId: string, vehicleId: string, priority?: CollectionTask['priority']) => CollectionTask;
   updateTaskStatus: (taskId: string, status: CollectionTask['status']) => void;
-  completeTaskWithProof: (taskId: string, afterFill: number, proofPhotoName?: string) => void;
+  completeTaskWithProof: (taskId: string, afterFill?: number, proofPhotoName?: string) => void;
+  workerAcceptTask: (taskId: string) => void;
+  workerArriveAtSite: (taskId: string, currentLat: number, currentLng: number, accuracy?: number) => { success: boolean; distanceMeters: number };
+  workerSubmitProof: (taskId: string, afterPhoto: string, proofLat: number, proofLng: number, accuracy?: number) => { success: boolean; status: 'PASS' | 'FAIL'; reason?: string; distanceMeters?: number };
 
   // Workers & Vehicles
   workers: WorkerProfile[];
@@ -69,7 +73,7 @@ const DEMO_USERS: Record<UserRole, User> = {
     name: 'Chief Operations Officer',
     email: 'admin@wastesense.gov.in',
     role: 'admin',
-    avatar: '👨‍💼',
+    avatar: 'A',
     zone: 'Headquarters Command Center'
   },
   citizen: {
@@ -77,7 +81,7 @@ const DEMO_USERS: Record<UserRole, User> = {
     name: 'Amitabh Sen',
     email: 'citizen@wastesense.org',
     role: 'citizen',
-    avatar: '🧑',
+    avatar: 'C',
     phone: '+91 98112-90123',
     zone: 'Sector 12, Central Market'
   },
@@ -86,7 +90,7 @@ const DEMO_USERS: Record<UserRole, User> = {
     name: 'Rahul Sharma',
     email: 'rahul.s@wastesense.ops',
     role: 'worker',
-    avatar: '👷',
+    avatar: 'W',
     phone: '+91 98112-40192',
     zone: 'Zone A - Commercial'
   }
@@ -219,7 +223,7 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     // Trigger notification if critical
     if (fill >= 90) {
       addNotification({
-        title: `🚨 Critical Alert: Bin ${binId}`,
+        title: `Critical Alert: Bin ${binId}`,
         message: `IoT sensor reached ${fill}% fill level. Automated dispatch required.`,
         type: 'alert',
         target_role: 'admin'
@@ -231,7 +235,7 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const simulateSurgeB102 = () => {
     updateBinTelemetry('B-102', 95, 8.5, 29.5);
     addNotification({
-      title: '🚨 CRITICAL OVERFLOW SURGE: Bin B-102',
+      title: 'CRITICAL OVERFLOW SURGE: Bin B-102',
       message: 'Fill reached 95% at Central Market. Priority elevated to CRITICAL (Score 95).',
       type: 'alert',
       target_role: 'all'
@@ -242,43 +246,90 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     updateBinTelemetry(binId, 18, 1.4, 25.0);
   };
 
-  // 3. CREATE COMPLAINT
+  // 3. CREATE COMPLAINT (Auto-Assignment & Linked Task Generation)
   const createComplaint = (data: Partial<Complaint>): Complaint => {
     const randomCode = Math.floor(1000 + Math.random() * 9000);
     const complaintId = `WS-2026-${randomCode}`;
+    const detectedZone = data.zone || detectZoneFromLocation(data.location || 'Central Market');
+
+    // Auto-assignment: Find active worker and vehicle for this zone
+    const assignedWorker = workers.find(w => w.zone === detectedZone) || workers[0];
+    const assignedVehicle = vehicles.find(v => v.zone === detectedZone) || vehicles[0];
+
+    const lat = data.latitude || 28.6139;
+    const lng = data.longitude || 77.2090;
+
     const newComplaint: Complaint = {
       id: `c-${Date.now()}`,
       complaint_id: complaintId,
-      user_name: currentUser.name || 'Anonymous Citizen',
+      user_name: currentUser.name || 'Resident Citizen',
       user_phone: currentUser.phone || '+91 98112-90123',
       category: data.category || 'Overflowing Bin',
-      description: data.description || 'Citizen reported waste issue.',
+      description: data.description || 'Citizen reported municipal waste issue.',
       location: data.location || 'Central Market, Sector 12',
-      latitude: data.latitude || 28.6139,
-      longitude: data.longitude || 77.2090,
+      zone: detectedZone,
+      latitude: lat,
+      longitude: lng,
+      accuracy_meters: data.accuracy_meters || 12,
       priority: data.priority || 'HIGH',
-      status: 'Submitted',
-      image: data.image,
+      status: 'Assigned',
+      assigned_worker: assignedWorker.name,
+      assigned_worker_id: assignedWorker.id,
+      assigned_vehicle: assignedVehicle.name,
+      image: data.image || data.before_image || '/images/incident-garbage.jpg',
+      before_image: data.image || data.before_image || '/images/incident-garbage.jpg',
       created_at: 'Just now',
       updated_at: 'Just now',
       timeline: [
-        { step: 'Submitted', timestamp: 'Just now', description: 'Citizen ticket logged in system', completed: true },
-        { step: 'Under Review', timestamp: 'Pending', description: 'AI validating sensor and geotag', completed: false },
-        { step: 'Assigned', timestamp: 'Pending', description: 'Sanitation team allocation', completed: false },
-        { step: 'In Progress', timestamp: 'Pending', description: 'Collection vehicle dispatched', completed: false },
-        { step: 'Resolved', timestamp: 'Pending', description: 'Emptied and verified', completed: false }
+        { step: 'Submitted', timestamp: 'Just now', description: 'Citizen ticket logged with GPS coordinates', completed: true },
+        { step: `Assigned: ${assignedWorker.name}`, timestamp: 'Just now', description: `Auto-assigned to ${assignedWorker.name} (${assignedVehicle.name})`, completed: true },
+        { step: 'En Route', timestamp: 'Pending', description: 'Worker en route to location', completed: false },
+        { step: 'Arrived & In Progress', timestamp: 'Pending', description: 'Worker at site within 100m geofence', completed: false },
+        { step: 'Resolved & Verified', timestamp: 'Pending', description: 'After-photo & GPS proof validated', completed: false }
       ]
     };
 
+    // Auto-spawn collection work order for assigned worker
+    const taskNum = Math.floor(1000 + Math.random() * 9000);
+    const newTask: CollectionTask = {
+      id: `task-${Date.now()}`,
+      task_code: `TSK-${taskNum}`,
+      complaint_id: complaintId,
+      title: `Citizen Ticket ${complaintId}: ${newComplaint.category}`,
+      location: newComplaint.location,
+      zone: detectedZone,
+      target_lat: lat,
+      target_lng: lng,
+      priority: newComplaint.priority,
+      priority_score: 90,
+      worker_id: assignedWorker.id,
+      worker_name: assignedWorker.name,
+      vehicle_id: assignedVehicle.id,
+      vehicle_name: assignedVehicle.name,
+      status: 'Assigned',
+      instructions: `Citizen reported: "${newComplaint.description}". Verify arrival via GPS geofence, clear site, and photograph cleaned site.`,
+      before_fill: 90,
+      created_time: 'Just now',
+      due_time: 'In 45 mins'
+    };
+
     setComplaints(prev => [newComplaint, ...prev]);
+    setTasks(prev => [newTask, ...prev]);
 
     // Background async insert to Supabase if configured
     insertSupabaseComplaint(newComplaint).catch(() => {});
 
     addNotification({
-      title: `📝 New Complaint ${complaintId}`,
-      message: `${newComplaint.category} reported at ${newComplaint.location}.`,
-      type: 'warning',
+      title: `Work Order Auto-Assigned: ${newTask.task_code}`,
+      message: `Assigned to ${assignedWorker.name} (${assignedVehicle.name}) for ${newComplaint.location}.`,
+      type: 'info',
+      target_role: 'worker'
+    });
+
+    addNotification({
+      title: `Complaint Registered: ${complaintId}`,
+      message: `${newComplaint.category} reported at ${newComplaint.location}. Auto-assigned to ${assignedWorker.name}.`,
+      type: 'info',
       target_role: 'admin'
     });
 
@@ -289,12 +340,12 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setComplaints(prev => prev.map(c => {
       if (c.id !== id && c.complaint_id !== id) return c;
 
-      const steps = ['Submitted', 'Under Review', 'Assigned', 'In Progress', 'Resolved'];
+      const steps = ['Submitted', 'Assigned', 'En Route', 'In Progress', 'Resolved'];
       const targetIdx = steps.indexOf(status);
 
       const updatedTimeline = c.timeline.map((step, idx) => ({
         ...step,
-        completed: idx <= targetIdx,
+        completed: idx <= targetIdx || step.completed,
         timestamp: idx === targetIdx ? 'Just now' : step.timestamp
       }));
 
@@ -308,7 +359,7 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }));
   };
 
-  // 4. CREATE TASK
+  // 4. CREATE TASK (Manual Admin Dispatch if needed)
   const createTask = (
     binId: string, 
     workerId: string, 
@@ -327,6 +378,8 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       title: `Collection Order: Bin ${binId} (${bin?.location || 'Designated Point'})`,
       location: bin?.location || 'Central Market, Sector 12',
       zone: bin?.zone || 'Zone A',
+      target_lat: bin?.latitude || 28.6139,
+      target_lng: bin?.longitude || 77.2090,
       priority,
       priority_score: bin?.priority_score || 85,
       worker_id: worker.id,
@@ -334,7 +387,7 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       vehicle_id: vehicle.id,
       vehicle_name: vehicle.name,
       status: 'Assigned',
-      instructions: `Urgent collection for ${binId}. Empty container, inspect sensor battery, and photograph clean container.`,
+      instructions: `Collection order for ${binId}. Empty container, inspect sensor, and photograph clean container.`,
       before_fill: bin?.fill_level || 90,
       created_time: 'Just now',
       due_time: 'In 45 mins'
@@ -343,7 +396,7 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setTasks(prev => [newTask, ...prev]);
 
     addNotification({
-      title: `🚛 Task Dispatched: ${newTask.task_code}`,
+      title: `Task Dispatched: ${newTask.task_code}`,
       message: `Assigned to ${worker.name} (${vehicle.name}) for Bin ${binId}.`,
       type: 'info',
       target_role: 'worker'
@@ -359,39 +412,196 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }));
   };
 
-  // 5. COMPLETE TASK WITH PROOF (Closed-loop feedback!)
-  const completeTaskWithProof = (taskId: string, afterFill = 18, proofPhotoName = 'proof_resolution.jpg') => {
-    const task = tasks.find(t => t.id === taskId || t.task_code === taskId);
-    if (!task) return;
+  // 5. WORKER WORKFLOW: ACCEPT TASK (EN ROUTE)
+  const workerAcceptTask = (taskId: string) => {
+    setTasks(prev => prev.map(t => {
+      if (t.id !== taskId && t.task_code !== taskId) return t;
+      return { ...t, status: 'En Route' };
+    }));
 
-    // Update task
+    const task = tasks.find(t => t.id === taskId || t.task_code === taskId);
+    if (task?.complaint_id) {
+      updateComplaintStatus(task.complaint_id, 'En Route');
+    }
+
+    addNotification({
+      title: `Worker En Route`,
+      message: `${task?.worker_name || 'Worker'} is en route for ${task?.location || 'task'}.`,
+      type: 'info',
+      target_role: 'all'
+    });
+  };
+
+  // 6. WORKER WORKFLOW: ARRIVE AT SITE & GEOFENCE VERIFICATION (IN PROGRESS)
+  const workerArriveAtSite = (
+    taskId: string, 
+    currentLat: number, 
+    currentLng: number, 
+    accuracy: number = 10
+  ): { success: boolean; distanceMeters: number } => {
+    const task = tasks.find(t => t.id === taskId || t.task_code === taskId);
+    if (!task) return { success: false, distanceMeters: 999 };
+
+    const targetLat = task.target_lat || 28.6139;
+    const targetLng = task.target_lng || 77.2090;
+    const { within, distanceMeters } = isWithinGeofence(targetLat, targetLng, currentLat, currentLng, 100);
+
     setTasks(prev => prev.map(t => {
       if (t.id !== taskId && t.task_code !== taskId) return t;
       return {
         ...t,
-        status: 'Completed',
-        after_fill: afterFill,
-        proof_photo: proofPhotoName,
-        completed_at: 'Just now'
+        status: 'In Progress',
+        arrived_at: 'Just now',
+        arrival_lat: currentLat,
+        arrival_lng: currentLng,
+        arrival_distance_m: distanceMeters
       };
     }));
 
-    // Reset Bin
-    if (task.bin_id) {
-      resetBinToClean(task.bin_id);
-    }
-
-    // Resolve associated complaint if present
-    if (task.bin_id === 'B-102') {
-      updateComplaintStatus('WS-2026-1042', 'Resolved');
+    if (task.complaint_id) {
+      setComplaints(prev => prev.map(c => {
+        if (c.complaint_id !== task.complaint_id && c.id !== task.complaint_id) return c;
+        const updatedTimeline = c.timeline.map((step) => {
+          if (step.step.includes('Arrived') || step.step.includes('In Progress')) {
+            return { ...step, completed: true, timestamp: 'Just now', description: `Geofence verified (${distanceMeters}m from site)` };
+          }
+          if (step.step === 'En Route') {
+            return { ...step, completed: true };
+          }
+          return step;
+        });
+        return {
+          ...c,
+          status: 'In Progress',
+          geofence_verified: true,
+          updated_at: 'Just now',
+          timeline: updatedTimeline
+        };
+      }));
     }
 
     addNotification({
-      title: `✅ Collection Verified: ${task.task_code}`,
-      message: `Worker ${task.worker_name} completed collection. Bin ${task.bin_id} fill dropped to ${afterFill}%. Closed loop complete.`,
-      type: 'success',
-      target_role: 'all'
+      title: `Worker Arrived on Site`,
+      message: `${task.worker_name} arrived at ${task.location} (${distanceMeters}m from target). Geofence verified.`,
+      type: 'info',
+      target_role: 'admin'
     });
+
+    return { success: within || distanceMeters <= 100, distanceMeters };
+  };
+
+  // 7. WORKER WORKFLOW: SUBMIT PROOF & AUTO-VALIDATION (PASS / FAIL)
+  const workerSubmitProof = (
+    taskId: string, 
+    afterPhoto: string, 
+    proofLat: number, 
+    proofLng: number, 
+    accuracy: number = 8
+  ): { success: boolean; status: 'PASS' | 'FAIL'; reason?: string; distanceMeters?: number } => {
+    const task = tasks.find(t => t.id === taskId || t.task_code === taskId);
+    if (!task) return { success: false, status: 'FAIL', reason: 'Task not found' };
+
+    const targetLat = task.target_lat || 28.6139;
+    const targetLng = task.target_lng || 77.2090;
+    const { within, distanceMeters } = isWithinGeofence(targetLat, targetLng, proofLat, proofLng, 100);
+
+    const hasPhoto = Boolean(afterPhoto && afterPhoto.trim().length > 0);
+
+    // AUTO-VALIDATION PASS: photo is present AND within geofence radius
+    if (hasPhoto && (within || distanceMeters <= 100)) {
+      setTasks(prev => prev.map(t => {
+        if (t.id !== taskId && t.task_code !== taskId) return t;
+        return {
+          ...t,
+          status: 'Completed',
+          after_fill: 15,
+          proof_photo: afterPhoto,
+          proof_lat: proofLat,
+          proof_lng: proofLng,
+          proof_accuracy: accuracy,
+          proof_timestamp: 'Just now',
+          completed_at: 'Just now'
+        };
+      }));
+
+      if (task.bin_id) {
+        resetBinToClean(task.bin_id);
+      }
+
+      if (task.complaint_id) {
+        setComplaints(prev => prev.map(c => {
+          if (c.complaint_id !== task.complaint_id && c.id !== task.complaint_id) return c;
+          const updatedTimeline = c.timeline.map(st => {
+            if (st.step.includes('Resolved') || st.step.includes('Verified')) {
+              return { 
+                ...st, 
+                completed: true, 
+                timestamp: 'Just now', 
+                description: `Resolution verified: photo + GPS within ${distanceMeters}m.` 
+              };
+            }
+            return { ...st, completed: true };
+          });
+          return {
+            ...c,
+            status: 'Resolved',
+            after_image: afterPhoto,
+            resolved_at: 'Just now',
+            updated_at: 'Just now',
+            timeline: updatedTimeline
+          };
+        }));
+      }
+
+      addNotification({
+        title: `Validation Passed: ${task.task_code}`,
+        message: `Task completed and verified by GPS (within ${distanceMeters}m). Closed loop complete.`,
+        type: 'success',
+        target_role: 'all'
+      });
+
+      return { success: true, status: 'PASS', distanceMeters };
+    } else {
+      // AUTO-VALIDATION FAIL: Missing photo or outside 100m geofence
+      const failReason = !hasPhoto
+        ? 'Resolution photo is required for validation.'
+        : `GPS location mismatch: Device is ${distanceMeters}m away from reported site (Maximum allowed is 100m).`;
+
+      setTasks(prev => prev.map(t => {
+        if (t.id !== taskId && t.task_code !== taskId) return t;
+        return {
+          ...t,
+          status: 'Rework',
+          rework_reason: failReason
+        };
+      }));
+
+      if (task.complaint_id) {
+        setComplaints(prev => prev.map(c => {
+          if (c.complaint_id !== task.complaint_id && c.id !== task.complaint_id) return c;
+          return {
+            ...c,
+            status: 'Rework',
+            rework_reason: failReason,
+            updated_at: 'Just now'
+          };
+        }));
+      }
+
+      addNotification({
+        title: `Validation Failed: ${task.task_code}`,
+        message: `Task flagged for Rework: ${failReason}`,
+        type: 'alert',
+        target_role: 'worker'
+      });
+
+      return { success: false, status: 'FAIL', reason: failReason, distanceMeters };
+    }
+  };
+
+  // Backwards compatibility adapter
+  const completeTaskWithProof = (taskId: string, afterFill = 18, proofPhotoName = 'proof_resolution.jpg') => {
+    workerSubmitProof(taskId, proofPhotoName, 28.6139, 77.2090, 8);
   };
 
   // 6. PICKUP REQUESTS
@@ -414,7 +624,7 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setPickups(prev => [newReq, ...prev]);
 
     addNotification({
-      title: `📅 Scheduled Pickup: ${newReq.request_id}`,
+      title: `Scheduled Pickup: ${newReq.request_id}`,
       message: `Pickup scheduled for ${newReq.preferred_date} (${newReq.waste_type}).`,
       type: 'info',
       target_role: 'admin'
@@ -463,6 +673,9 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         createTask,
         updateTaskStatus,
         completeTaskWithProof,
+        workerAcceptTask,
+        workerArriveAtSite,
+        workerSubmitProof,
         workers,
         vehicles,
         pickups,

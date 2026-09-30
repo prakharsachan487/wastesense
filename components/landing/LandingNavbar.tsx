@@ -20,46 +20,46 @@ export const LandingNavbar: React.FC = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#07090E]/85 backdrop-blur-xl border-b border-white/10 shadow-2xl py-3.5'
+          ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-sm py-3.5'
           : 'bg-transparent py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-600 to-sky-600 flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-105">
+          <div className="w-10 h-10 rounded-2xl bg-[#0077CC] flex items-center justify-center text-white shadow-md shadow-[#0077CC]/20 transition-transform group-hover:scale-105">
             <Shield className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-black tracking-wider text-white">
-                WASTE<span className="text-emerald-400">SENSE</span>
+              <span className="text-lg font-black tracking-wider text-[#0F172A]">
+                WASTE<span className="text-[#0077CC]">SENSE</span>
               </span>
-              <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded border border-emerald-500/40 text-emerald-300 bg-emerald-950/50">
+              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full border border-[#BAE6FD] text-[#0077CC] bg-[#F0F9FF]">
                 IoT
               </span>
             </div>
-            <p className="text-[10px] text-slate-400 font-medium tracking-tight">
+            <p className="text-[10px] text-slate-500 font-medium tracking-tight">
               Smart Waste Intelligence Platform
             </p>
           </div>
         </Link>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-slate-300">
-          <a href="#architecture" className="hover:text-emerald-400 transition-colors">
-            Architecture
+        <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-slate-600">
+          <a href="#overview" className="hover:text-[#0077CC] transition-colors">
+            Overview
           </a>
-          <a href="#lifecycle" className="hover:text-emerald-400 transition-colors">
+          <a href="#lifecycle" className="hover:text-[#0077CC] transition-colors">
             Lifecycle
           </a>
-          <a href="#features" className="hover:text-emerald-400 transition-colors">
+          <a href="#features" className="hover:text-[#0077CC] transition-colors">
             IoT & Telemetry
           </a>
-          <a href="#portals" className="hover:text-emerald-400 transition-colors">
+          <a href="#portals" className="hover:text-[#0077CC] transition-colors">
             Role Portals
           </a>
-          <a href="#impact" className="hover:text-emerald-400 transition-colors">
+          <a href="#impact" className="hover:text-[#0077CC] transition-colors">
             City Impact
           </a>
         </nav>
@@ -68,7 +68,7 @@ export const LandingNavbar: React.FC = () => {
         <div className="hidden sm:flex items-center gap-3">
           <Link
             href="/login"
-            className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md transition-all active:scale-95"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#0077CC] hover:bg-[#004A80] text-white text-xs font-bold shadow-md shadow-[#0077CC]/20 transition-all active:scale-95"
           >
             <span>Login</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -78,7 +78,7 @@ export const LandingNavbar: React.FC = () => {
         {/* Mobile Hamburger */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+          className="md:hidden p-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-[#0077CC]"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -86,48 +86,48 @@ export const LandingNavbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#07090E]/95 backdrop-blur-2xl border-b border-slate-800 px-6 py-5 space-y-4 animate-in slide-in-from-top-2">
-          <nav className="flex flex-col gap-3 text-sm font-semibold text-slate-300">
+        <div className="md:hidden bg-white/95 backdrop-blur-2xl border-b border-slate-200 px-6 py-5 space-y-4 shadow-xl animate-in slide-in-from-top-2">
+          <nav className="flex flex-col gap-3 text-sm font-semibold text-slate-700">
             <a
-              href="#architecture"
+              href="#overview"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-1 hover:text-emerald-400"
+              className="py-1 hover:text-[#0077CC]"
             >
-              Architecture
+              Overview
             </a>
             <a
               href="#lifecycle"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-1 hover:text-emerald-400"
+              className="py-1 hover:text-[#0077CC]"
             >
               Lifecycle
             </a>
             <a
               href="#features"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-1 hover:text-emerald-400"
+              className="py-1 hover:text-[#0077CC]"
             >
               IoT & Telemetry Engine
             </a>
             <a
               href="#portals"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-1 hover:text-emerald-400"
+              className="py-1 hover:text-[#0077CC]"
             >
               Role Portals
             </a>
             <a
               href="#impact"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-1 hover:text-emerald-400"
+              className="py-1 hover:text-[#0077CC]"
             >
               City Impact
             </a>
           </nav>
-          <div className="pt-3 border-t border-slate-800">
+          <div className="pt-3 border-t border-slate-200">
             <Link
               href="/login"
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 text-white font-bold text-xs"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-[#0077CC] text-white font-bold text-xs shadow-md"
             >
               <span>Login</span>
               <ArrowRight className="w-4 h-4" />

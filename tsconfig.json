@@ -36,7 +36,6 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "SmartWaste_Intelligence_Platform"
+    "node_modules"
   ]
 }

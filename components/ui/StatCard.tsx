@@ -22,28 +22,37 @@ export const StatCard: React.FC<StatCardProps> = ({
   variant = 'default'
 }) => {
   const borderVariants = {
-    rose: 'hover:border-rose-500/40 bg-gradient-to-br from-rose-950/20 via-slate-900/60 to-slate-900',
-    amber: 'hover:border-amber-500/40 bg-gradient-to-br from-amber-950/20 via-slate-900/60 to-slate-900',
-    emerald: 'hover:border-emerald-500/40 bg-gradient-to-br from-emerald-950/20 via-slate-900/60 to-slate-900',
-    sky: 'hover:border-sky-500/40 bg-gradient-to-br from-sky-950/20 via-slate-900/60 to-slate-900',
-    indigo: 'hover:border-indigo-500/40 bg-gradient-to-br from-indigo-950/20 via-slate-900/60 to-slate-900',
-    default: 'hover:border-slate-700 bg-slate-900/80'
+    rose: 'border-rose-200 bg-white hover:border-rose-300',
+    amber: 'border-amber-200 bg-white hover:border-amber-300',
+    emerald: 'border-emerald-200 bg-white hover:border-emerald-300',
+    sky: 'border-[#BAE6FD] bg-white hover:border-[#0EA5E9]',
+    indigo: 'border-indigo-200 bg-white hover:border-indigo-300',
+    default: 'border-slate-200/90 bg-white hover:border-[#0077CC]'
   };
 
   const textColors = {
-    rose: 'text-rose-400',
-    amber: 'text-amber-400',
-    emerald: 'text-emerald-400',
-    sky: 'text-sky-400',
-    indigo: 'text-indigo-400',
-    default: 'text-white'
+    rose: 'text-rose-600',
+    amber: 'text-amber-600',
+    emerald: 'text-emerald-600',
+    sky: 'text-[#0077CC]',
+    indigo: 'text-[#004A80]',
+    default: 'text-[#0F172A]'
+  };
+
+  const iconBg = {
+    rose: 'bg-rose-50 text-rose-600 border-rose-200',
+    amber: 'bg-amber-50 text-amber-600 border-amber-200',
+    emerald: 'bg-emerald-50 text-emerald-600 border-emerald-200',
+    sky: 'bg-[#F0F9FF] text-[#0077CC] border-[#BAE6FD]',
+    indigo: 'bg-[#F0F9FF] text-[#004A80] border-[#BAE6FD]',
+    default: 'bg-[#F0F9FF] text-[#0077CC] border-[#BAE6FD]'
   };
 
   return (
-    <div className={`p-5 rounded-xl border border-slate-800 backdrop-blur-md transition-all duration-200 shadow-lg ${borderVariants[variant]}`}>
+    <div className={`p-5 rounded-2xl border transition-all duration-200 shadow-xs hover:shadow-md ${borderVariants[variant]}`}>
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{title}</span>
-        <div className="p-2.5 rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/60">
+        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{title}</span>
+        <div className={`p-2.5 rounded-xl border ${iconBg[variant]}`}>
           {icon}
         </div>
       </div>
@@ -53,19 +62,19 @@ export const StatCard: React.FC<StatCardProps> = ({
           {value}
         </div>
         {badge && (
-          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+          <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#F0F9FF] text-[#0077CC] border border-[#BAE6FD]">
             {badge}
           </span>
         )}
       </div>
 
       {(subtitle || change) && (
-        <div className="mt-2.5 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/80 pt-2.5">
+        <div className="mt-3 flex items-center justify-between text-xs text-slate-500 border-t border-slate-100 pt-2.5">
           <span>{subtitle}</span>
           {change && (
-            <span className={`font-medium ${
-              changeType === 'positive' ? 'text-emerald-400' :
-              changeType === 'negative' ? 'text-rose-400' : 'text-slate-400'
+            <span className={`font-bold ${
+              changeType === 'positive' ? 'text-emerald-600' :
+              changeType === 'negative' ? 'text-rose-600' : 'text-slate-600'
             }`}>
               {change}
             </span>

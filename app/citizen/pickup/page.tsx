@@ -30,24 +30,24 @@ export default function CitizenPickupPage() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-800 pb-4">
-        <h1 className="text-2xl font-black text-white tracking-tight">Doorstep Bulk Waste & E-Waste Pickup</h1>
-        <p className="text-xs text-slate-400 mt-1">
+      <div className="border-b border-slate-200 pb-4">
+        <h1 className="text-2xl font-black text-[#0F172A] tracking-tight">Doorstep Bulk Waste & E-Waste Pickup</h1>
+        <p className="text-xs text-slate-500 mt-1">
           Schedule dedicated municipal electric van collection for bulky furniture, yard prunings, and e-waste
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Booking Form */}
-        <form onSubmit={handleSubmit} className="lg:col-span-2 p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">Book a Pickup Slot</h3>
+        <form onSubmit={handleSubmit} className="lg:col-span-2 p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+          <h3 className="text-sm font-bold text-[#0F172A] uppercase tracking-wider">Book a Pickup Slot</h3>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Waste Stream Classification</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Waste Stream Classification</label>
             <select
               value={wasteType}
               onChange={(e) => setWasteType(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 text-white text-xs rounded-xl px-3 py-2.5 outline-none focus:border-emerald-500"
+              className="w-full bg-slate-50 border border-slate-200 text-[#0F172A] text-xs rounded-xl px-3 py-2.5 outline-none focus:border-[#0077CC]"
             >
               <option value="Bulk Recyclable Cardboard & Plastics">Bulk Recyclable Cardboard & Plastics</option>
               <option value="Electronic Waste (Batteries, PCs, Chargers)">Electronic Waste (Batteries, PCs, Chargers)</option>
@@ -58,23 +58,23 @@ export default function CitizenPickupPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Pickup Address / Doorstep</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Pickup Address / Doorstep</label>
             <input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 text-white text-xs rounded-xl px-3 py-2.5 outline-none focus:border-emerald-500"
+              className="w-full bg-slate-50 border border-slate-200 text-[#0F172A] text-xs rounded-xl px-3 py-2.5 outline-none focus:border-[#0077CC]"
               required
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Preferred Date</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Preferred Date</label>
               <select
                 value={preferredDate}
                 onChange={(e) => setPreferredDate(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 text-white text-xs rounded-xl px-3 py-2.5 outline-none"
+                className="w-full bg-slate-50 border border-slate-200 text-[#0F172A] text-xs rounded-xl px-3 py-2.5 outline-none focus:border-[#0077CC]"
               >
                 <option value="Today Afternoon">Today Afternoon</option>
                 <option value="Tomorrow">Tomorrow</option>
@@ -84,11 +84,11 @@ export default function CitizenPickupPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Time Window</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Time Window</label>
               <select
                 value={preferredTime}
                 onChange={(e) => setPreferredTime(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 text-white text-xs rounded-xl px-3 py-2.5 outline-none"
+                className="w-full bg-slate-50 border border-slate-200 text-[#0F172A] text-xs rounded-xl px-3 py-2.5 outline-none focus:border-[#0077CC]"
               >
                 <option value="09:00 - 11:00">Morning (09:00 - 11:00)</option>
                 <option value="11:00 - 13:00">Noon (11:00 - 13:00)</option>
@@ -99,26 +99,26 @@ export default function CitizenPickupPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Special Notes for Driver</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Special Notes for Driver</label>
             <textarea
               rows={2}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g. Items stacked near elevator, please bring hand truck..."
-              className="w-full bg-slate-950 border border-slate-700 text-white text-xs rounded-xl p-3 outline-none"
+              className="w-full bg-slate-50 border border-slate-200 text-[#0F172A] text-xs rounded-xl p-3 outline-none focus:border-[#0077CC]"
             />
           </div>
 
           <div className="flex items-center justify-between pt-2">
             {submitted && (
-              <span className="text-xs text-emerald-400 font-bold flex items-center gap-1">
+              <span className="text-xs text-emerald-600 font-bold flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Pickup appointment confirmed!</span>
               </span>
             )}
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-950 transition active:scale-95 ml-auto"
+              className="px-6 py-2.5 rounded-xl bg-[#0077CC] hover:bg-[#004A80] text-white text-xs font-bold shadow-sm transition active:scale-95 ml-auto"
             >
               Confirm Doorstep Pickup
             </button>
@@ -127,21 +127,21 @@ export default function CitizenPickupPage() {
 
         {/* Existing Pickup Bookings */}
         <div className="space-y-4">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">Your Pickup Schedule</h3>
+          <h3 className="text-sm font-bold text-[#0F172A] uppercase tracking-wider">Your Pickup Schedule</h3>
           <div className="space-y-3">
             {pickups.map(p => (
-              <div key={p.id} className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+              <div key={p.id} className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
                 <div className="flex justify-between items-start">
-                  <span className="font-mono text-xs font-bold text-white">{p.request_id}</span>
+                  <span className="font-mono text-xs font-bold text-[#0F172A]">{p.request_id}</span>
                   <StatusBadge status={p.status} size="sm" />
                 </div>
-                <h4 className="text-xs font-semibold text-emerald-300">{p.waste_type}</h4>
-                <div className="text-[11px] text-slate-400 flex items-center gap-1">
+                <h4 className="text-xs font-semibold text-[#0077CC]">{p.waste_type}</h4>
+                <div className="text-[11px] text-slate-500 flex items-center gap-1">
                   <Clock className="w-3 h-3 text-slate-400" />
                   <span>{p.preferred_date} &bull; {p.preferred_time}</span>
                 </div>
-                <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-950">
-                  Assigned Unit: <strong className="text-white">{p.assigned_unit || 'Pending Dispatch'}</strong>
+                <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100">
+                  Assigned Unit: <strong className="text-[#0F172A]">{p.assigned_unit || 'Pending Dispatch'}</strong>
                 </div>
               </div>
             ))}

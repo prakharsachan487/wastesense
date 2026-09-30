@@ -1,6 +1,7 @@
 import React from 'react';
 import { LandingNavbar } from '../components/landing/LandingNavbar';
 import { LandingHero } from '../components/landing/LandingHero';
+import { LandingProblemSolution } from '../components/landing/LandingProblemSolution';
 import { LandingLifecycle } from '../components/landing/LandingLifecycle';
 import { LandingBento } from '../components/landing/LandingBento';
 import { LandingRolePortals } from '../components/landing/LandingRolePortals';
@@ -15,10 +16,11 @@ export const metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#06080F] text-slate-100 flex flex-col font-sans selection:bg-emerald-500/30 selection:text-emerald-300">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-satoshi selection:bg-[#0077CC] selection:text-white">
       <LandingNavbar />
       <main className="flex-1">
         <LandingHero />
+        <LandingProblemSolution />
         <LandingLifecycle />
         <LandingBento />
         <LandingRolePortals />

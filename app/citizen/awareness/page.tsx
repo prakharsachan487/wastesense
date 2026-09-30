@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BookOpen, CheckCircle2, AlertTriangle, Sparkles } from 'lucide-react';
+import { BookOpen, CheckCircle2, AlertTriangle, Sparkles, Leaf, Package, AlertOctagon, Monitor, Lightbulb } from 'lucide-react';
 
 export default function CitizenAwarenessPage() {
   const [selectedItem, setSelectedItem] = useState('banana_peel');
@@ -41,9 +41,9 @@ export default function CitizenAwarenessPage() {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      <div className="border-b border-slate-800 pb-4">
-        <h1 className="text-2xl font-black text-white tracking-tight">Waste Segregation & Civic Awareness Guide</h1>
-        <p className="text-xs text-slate-400 mt-1">
+      <div className="border-b border-slate-200 pb-4">
+        <h1 className="text-2xl font-black text-[#0F172A] tracking-tight">Waste Segregation & Civic Awareness Guide</h1>
+        <p className="text-xs text-slate-500 mt-1">
           Proper segregation at source reduces municipal landfill dumping by up to 65%
         </p>
       </div>
@@ -51,81 +51,89 @@ export default function CitizenAwarenessPage() {
       {/* 4 Colored Waste Stream Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* 1. Green Bin - Wet Waste */}
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/40 shadow-xl space-y-3">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">🍏</span>
+            <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200">
+              <Leaf className="w-6 h-6" />
+            </div>
             <div>
-              <span className="text-xs font-bold text-emerald-400 tracking-wider uppercase">Green Bin</span>
-              <h3 className="text-base font-bold text-white">Wet & Biodegradable Waste</h3>
+              <span className="text-xs font-bold text-emerald-600 tracking-wider uppercase">Green Bin</span>
+              <h3 className="text-base font-bold text-[#0F172A]">Wet & Biodegradable Waste</h3>
             </div>
           </div>
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-slate-600">
             Kitchen scraps, fruit & vegetable peels, eggshells, leftover food, tea leaves, and garden leaves.
           </p>
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400">
-            <strong>Where it goes:</strong> Converted at decentralized biomethanation plants into clean cooking gas and nutrient-rich organic compost.
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600">
+            <strong className="text-[#0F172A]">Where it goes:</strong> Converted at decentralized biomethanation plants into clean cooking gas and nutrient-rich organic compost.
           </div>
         </div>
 
         {/* 2. Blue Bin - Dry Recyclables */}
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-sky-950/40 via-slate-900 to-slate-900 border border-sky-500/40 shadow-xl space-y-3">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">📦</span>
+            <div className="p-2.5 rounded-xl bg-[#F0F9FF] text-[#0077CC] border border-[#BAE6FD]">
+              <Package className="w-6 h-6" />
+            </div>
             <div>
-              <span className="text-xs font-bold text-sky-400 tracking-wider uppercase">Blue Bin</span>
-              <h3 className="text-base font-bold text-white">Dry & Recyclable Materials</h3>
+              <span className="text-xs font-bold text-[#0077CC] tracking-wider uppercase">Blue Bin</span>
+              <h3 className="text-base font-bold text-[#0F172A]">Dry & Recyclable Materials</h3>
             </div>
           </div>
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-slate-600">
             Cardboard boxes, paper, plastic containers, beverage cans, glass bottles, and tin foil.
           </p>
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400">
-            <strong>Where it goes:</strong> Sorted at municipal Material Recovery Facilities (MRF) and reprocessed into industrial raw materials.
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600">
+            <strong className="text-[#0F172A]">Where it goes:</strong> Sorted at municipal Material Recovery Facilities (MRF) and reprocessed into industrial raw materials.
           </div>
         </div>
 
         {/* 3. Red Bin - Hazardous */}
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900 to-slate-900 border border-rose-500/40 shadow-xl space-y-3">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">☣️</span>
+            <div className="p-2.5 rounded-xl bg-rose-50 text-rose-600 border border-rose-200">
+              <AlertOctagon className="w-6 h-6" />
+            </div>
             <div>
-              <span className="text-xs font-bold text-rose-400 tracking-wider uppercase">Red Bin</span>
-              <h3 className="text-base font-bold text-white">Domestic Hazardous Waste</h3>
+              <span className="text-xs font-bold text-rose-600 tracking-wider uppercase">Red Bin</span>
+              <h3 className="text-base font-bold text-[#0F172A]">Domestic Hazardous Waste</h3>
             </div>
           </div>
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-slate-600">
             Expired medications, paint cans, solvent bottles, mosquito repellents, thermometers, and sanitizing chemicals.
           </p>
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400">
-            <strong>Where it goes:</strong> Handled by certified HazMat collection vehicles for safe neutral incineration.
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600">
+            <strong className="text-[#0F172A]">Where it goes:</strong> Handled by certified HazMat collection vehicles for safe neutral incineration.
           </div>
         </div>
 
         {/* 4. Orange Bin - E-Waste */}
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-950/40 via-slate-900 to-slate-900 border border-amber-500/40 shadow-xl space-y-3">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">💻</span>
+            <div className="p-2.5 rounded-xl bg-amber-50 text-amber-600 border border-amber-200">
+              <Monitor className="w-6 h-6" />
+            </div>
             <div>
-              <span className="text-xs font-bold text-amber-400 tracking-wider uppercase">Orange Bin</span>
-              <h3 className="text-base font-bold text-white">Electronic Waste (E-Waste)</h3>
+              <span className="text-xs font-bold text-amber-600 tracking-wider uppercase">Orange Bin</span>
+              <h3 className="text-base font-bold text-[#0F172A]">Electronic Waste (E-Waste)</h3>
             </div>
           </div>
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-slate-600">
             Mobile chargers, dead batteries, discarded PCBs, obsolete cellphones, earphones, and cables.
           </p>
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400">
-            <strong>Where it goes:</strong> Refurbishing centers and precious rare-earth extraction facilities.
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600">
+            <strong className="text-[#0F172A]">Where it goes:</strong> Refurbishing centers and precious rare-earth extraction facilities.
           </div>
         </div>
       </div>
 
       {/* Interactive AI Segregation Helper Widget */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
+      <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-amber-400" />
-          <h3 className="text-sm font-bold text-white">Smart Segregation Assistant (Interactive Tester)</h3>
+          <Sparkles className="w-5 h-5 text-[#0077CC]" />
+          <h3 className="text-sm font-bold text-[#0F172A]">Smart Segregation Assistant (Interactive Tester)</h3>
         </div>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-slate-500">
           Click an item to see its verified classification and disposal guidelines:
         </p>
 
@@ -133,45 +141,45 @@ export default function CitizenAwarenessPage() {
           <button
             onClick={() => setSelectedItem('banana_peel')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-              selectedItem === 'banana_peel' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300'
+              selectedItem === 'banana_peel' ? 'bg-[#0077CC] text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
-            🍌 Banana Peels
+            Banana Peels
           </button>
           <button
             onClick={() => setSelectedItem('plastic_bottle')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-              selectedItem === 'plastic_bottle' ? 'bg-sky-600 text-white' : 'bg-slate-800 text-slate-300'
+              selectedItem === 'plastic_bottle' ? 'bg-[#0077CC] text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
-            🧴 Plastic PET Bottle
+            Plastic PET Bottle
           </button>
           <button
             onClick={() => setSelectedItem('battery')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-              selectedItem === 'battery' ? 'bg-amber-600 text-white' : 'bg-slate-800 text-slate-300'
+              selectedItem === 'battery' ? 'bg-[#0077CC] text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
-            🔋 Lithium Battery
+            Lithium Battery
           </button>
           <button
             onClick={() => setSelectedItem('sanitary')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-              selectedItem === 'sanitary' ? 'bg-rose-600 text-white' : 'bg-slate-800 text-slate-300'
+              selectedItem === 'sanitary' ? 'bg-[#0077CC] text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
-            🧪 Paint & Solvents
+            Paint & Solvents
           </button>
         </div>
 
         {active && (
-          <div className={`p-4 rounded-xl border ${active.colorClass} space-y-1.5`}>
+          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-1.5">
             <div className="flex justify-between items-center">
-              <span className="font-bold text-sm text-white">{active.name}</span>
-              <span className="font-bold text-xs uppercase px-2 py-0.5 rounded bg-black/40">{active.binColor}</span>
+              <span className="font-bold text-sm text-[#0F172A]">{active.name}</span>
+              <span className="font-bold text-xs uppercase px-2 py-0.5 rounded bg-white border border-slate-200 text-[#0077CC]">{active.binColor}</span>
             </div>
-            <p className="text-xs text-slate-200"><strong>Stream:</strong> {active.stream}</p>
-            <p className="text-xs text-slate-300 pt-1 border-t border-white/10">💡 {active.tip}</p>
+            <p className="text-xs text-slate-700"><strong className="text-[#0F172A]">Stream:</strong> {active.stream}</p>
+            <p className="text-xs text-slate-600 pt-1 border-t border-slate-200"><Lightbulb className="w-3 h-3 text-amber-500 inline mr-1" />{active.tip}</p>
           </div>
         )}
       </div>
