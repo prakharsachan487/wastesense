@@ -18,7 +18,7 @@ export default function CitizenLayout({
     if (!isAuthReady) return;
 
     if (!isLoggedIn) {
-      router.replace('/login');
+      router.replace('/');
       return;
     }
 
@@ -28,7 +28,7 @@ export default function CitizenLayout({
       } else if (currentUser.role === 'worker') {
         router.replace('/worker/dashboard');
       } else {
-        router.replace('/login');
+        router.replace('/');
       }
     }
   }, [currentUser, isLoggedIn, isAuthReady, router]);

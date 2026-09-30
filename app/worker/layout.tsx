@@ -18,7 +18,7 @@ export default function WorkerLayout({
     if (!isAuthReady) return;
 
     if (!isLoggedIn) {
-      router.replace('/login');
+      router.replace('/');
       return;
     }
 
@@ -28,7 +28,7 @@ export default function WorkerLayout({
       } else if (currentUser.role === 'citizen') {
         router.replace('/citizen/dashboard');
       } else {
-        router.replace('/login');
+        router.replace('/');
       }
     }
   }, [currentUser, isLoggedIn, isAuthReady, router]);

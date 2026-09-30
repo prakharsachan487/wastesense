@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    router.push('/login');
+    router.push('/');
   };
 
   return (
@@ -144,11 +144,11 @@ export const Header: React.FC = () => {
               <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">{currentUser.role}</div>
             </div>
 
-            {/* Logout button returning directly to /login */}
+            {/* Logout button returning directly to landing page */}
             <button
               onClick={handleLogout}
               className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-rose-950/60 hover:text-rose-400 text-slate-400 border border-slate-700 transition flex items-center gap-1 text-xs"
-              title="Logout session"
+              title="Exit to Landing Page"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span className="hidden md:inline font-semibold">Exit</span>
