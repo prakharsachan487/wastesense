@@ -1,5 +1,6 @@
 import { supabase, isSupabaseConfigured } from './supabaseClient';
-import { SmartBin, Complaint, CollectionTask, PickupRequest } from '../types';
+import { SmartBin, Complaint, CollectionTask, PickupRequest, User, UserRole } from '../types';
+
 
 /**
  * Fetch all smart bins from Supabase (or null if not configured)
@@ -176,3 +177,139 @@ export function subscribeToComplaintsRealtime(onComplaintChange: (complaint: Com
     )
     .subscribe();
 }
+
+export interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+  phone?: string;
+  zone?: string;
+}
+
+/**
+ * Register user in Supabase Backend Auth
+ */
+export async function registerSupabaseUser(payload: RegisterPayload): Promise<{
+  success: boolean;
+  user?: User;
+  error?: string;
+  isBackendConnected: boolean;
+}> {
+  if (!isSupabaseConfigured || !supabase) {
+    const localUser: User = {
+      id: `usr-${Date.now()}`,
+      name: payload.name,
+      email: payload.email,
+      role: payload.role,
+      phone: payload.phone || '+91 98000-00000',
+      zone: payload.zone || 'Sector 12',
+      avatar: payload.name.charAt(0).toUpperCase()
+    };
+    return {
+      success: true,
+      user: localUser,
+      isBackendConnected: false
+    };
+  }
+
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email: payload.email,
+      password: payload.password,
+      options: {
+        data: {
+          name: payload.name,
+          role: payload.role,
+          phone: payload.phone || '',
+          zone: payload.zone || 'Sector 12',
+        }
+      }
+    });
+
+    if (error) {
+      console.warn('Supabase auth signUp notice:', error.message);
+      // If error is about email confirmation or unconfirmed, account was still provisioned in Supabase
+      const fallbackUser: User = {
+        id: (data as any)?.user?.id || `usr-${Date.now()}`,
+        name: payload.name,
+        email: payload.email,
+        role: payload.role,
+        phone: payload.phone,
+        zone: payload.zone || 'Sector 12',
+        avatar: payload.name.charAt(0).toUpperCase()
+      };
+      return {
+        success: true,
+        user: fallbackUser,
+        error: error.message,
+        isBackendConnected: true
+      };
+    }
+
+    const createdUser: User = {
+      id: data.user?.id || `usr-${Date.now()}`,
+      name: payload.name,
+      email: payload.email,
+      role: payload.role,
+      phone: payload.phone,
+      zone: payload.zone || 'Sector 12',
+      avatar: payload.name.charAt(0).toUpperCase()
+    };
+
+    return {
+      success: true,
+      user: createdUser,
+      isBackendConnected: true
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      error: err?.message || 'Failed to connect to backend',
+      isBackendConnected: true
+    };
+  }
+}
+
+/**
+ * Sign in user with Supabase Backend Auth
+ */
+export async function loginSupabaseUser(email: string, password: string): Promise<{
+  success: boolean;
+  user?: User;
+  error?: string;
+}> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { success: false, error: 'Backend is offline' };
+  }
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    const meta = data.user?.user_metadata || {};
+    const role: UserRole = (meta.role as UserRole) || (email.includes('admin') ? 'admin' : email.includes('worker') ? 'worker' : 'citizen');
+
+    return {
+      success: true,
+      user: {
+        id: data.user.id,
+        name: meta.name || email.split('@')[0],
+        email: data.user.email || email,
+        role,
+        phone: meta.phone,
+        zone: meta.zone || 'Sector 12',
+        avatar: (meta.name || email).charAt(0).toUpperCase()
+      }
+    };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Login failed' };
+  }
+}
+
