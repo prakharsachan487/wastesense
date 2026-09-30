@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Shield, ArrowRight, Menu, X, Sparkles, Activity } from 'lucide-react';
+import { Shield, ArrowRight, Menu, X } from 'lucide-react';
 
 export const LandingNavbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -66,16 +66,11 @@ export const LandingNavbar: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="hidden sm:flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-emerald-500/30 text-[11px] font-semibold text-emerald-400">
-            <Activity className="w-3.5 h-3.5 animate-pulse text-emerald-400" />
-            <span>20 Nodes Online</span>
-          </div>
-
           <Link
             href="/login"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-950/80 transition-all hover:shadow-emerald-600/30 active:scale-95"
+            className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-950/80 transition-all hover:shadow-emerald-600/30 active:scale-95"
           >
-            <span>Launch Platform</span>
+            <span>Login</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -134,7 +129,7 @@ export const LandingNavbar: React.FC = () => {
               href="/login"
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 text-white font-bold text-xs"
             >
-              <span>Launch Platform</span>
+              <span>Login</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
