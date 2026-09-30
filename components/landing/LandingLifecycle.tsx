@@ -59,9 +59,6 @@ export const LandingLifecycle: React.FC = () => {
 
   return (
     <section id="lifecycle" className="py-24 bg-[#080B12] relative overflow-hidden border-t border-b border-white/5">
-      {/* Background Glow */}
-      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-900 border border-emerald-500/40 text-[11px] font-bold text-emerald-400 uppercase tracking-widest mb-3">
@@ -87,7 +84,7 @@ export const LandingLifecycle: React.FC = () => {
                 onClick={() => setActiveStep(idx)}
                 className={`p-6 rounded-2xl border transition-all cursor-pointer relative flex flex-col justify-between group ${
                   isSelected
-                    ? 'bg-slate-900/90 border-emerald-500/60 shadow-xl shadow-emerald-950/50 scale-[1.02]'
+                    ? 'bg-slate-900/90 border-emerald-500/60 shadow-lg scale-[1.02]'
                     : 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/40'
                 }`}
               >

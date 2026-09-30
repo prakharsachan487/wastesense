@@ -34,10 +34,10 @@ export const Header: React.FC = () => {
             href={role === 'admin' ? '/admin/dashboard' : role === 'citizen' ? '/citizen/dashboard' : '/worker/dashboard'} 
             className="flex items-center gap-2.5 group"
           >
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-lg transition-transform group-hover:scale-105 ${
-              role === 'admin' ? 'bg-gradient-to-tr from-emerald-600 via-teal-600 to-sky-600 shadow-emerald-900/30' :
-              role === 'citizen' ? 'bg-gradient-to-tr from-sky-600 to-indigo-600 shadow-sky-900/30' :
-              'bg-gradient-to-tr from-amber-600 to-orange-600 shadow-amber-900/30'
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-105 ${
+              role === 'admin' ? 'bg-gradient-to-tr from-emerald-600 via-teal-600 to-sky-600' :
+              role === 'citizen' ? 'bg-gradient-to-tr from-sky-600 to-indigo-600' :
+              'bg-gradient-to-tr from-amber-600 to-orange-600'
             }`}>
               <Shield className="w-4 h-4" />
             </div>

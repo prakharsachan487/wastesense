@@ -27,7 +27,7 @@ export const LandingNavbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-600 to-sky-600 flex items-center justify-center text-white shadow-lg shadow-emerald-950/60 transition-transform group-hover:scale-105">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-600 to-sky-600 flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-105">
             <Shield className="w-5 h-5" />
           </div>
           <div>
@@ -68,7 +68,7 @@ export const LandingNavbar: React.FC = () => {
         <div className="hidden sm:flex items-center gap-3">
           <Link
             href="/login"
-            className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-950/80 transition-all hover:shadow-emerald-600/30 active:scale-95"
+            className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md transition-all active:scale-95"
           >
             <span>Login</span>
             <ArrowRight className="w-3.5 h-3.5" />

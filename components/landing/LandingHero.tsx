@@ -3,22 +3,16 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, ShieldCheck, Cpu, Zap, Activity, Navigation, CheckCircle2 } from 'lucide-react';
-import { BorderBeam } from '../ui/BorderBeam';
 
 export const LandingHero: React.FC = () => {
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
-      {/* Ambient Radial Gradient Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-emerald-600/20 via-teal-500/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/3 right-10 w-[450px] h-[450px] bg-sky-500/10 rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute top-1/2 left-10 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
-
       {/* Grid Pattern Background */}
       <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         {/* Top Operational Status Pill */}
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/40 shadow-lg shadow-emerald-950/40 text-xs font-semibold text-slate-200 mb-8 backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-slate-900 border border-emerald-500/40 shadow-md text-xs font-semibold text-slate-200 mb-8 backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-500">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -46,7 +40,7 @@ export const LandingHero: React.FC = () => {
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="/login"
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-sm shadow-xl shadow-emerald-950/80 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group"
+            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-sm shadow-md transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group"
           >
             <span>Launch Live Platform</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -87,13 +81,10 @@ export const LandingHero: React.FC = () => {
           </div>
         </div>
 
-        {/* HERO SHOWCASE: High-Tech Holographic Visual with Border Beam */}
+        {/* HERO SHOWCASE: High-Tech Visual */}
         <div className="mt-16 relative max-w-6xl mx-auto">
-          {/* Outer Glowing Border Frame */}
-          <div className="relative rounded-[28px] md:rounded-[36px] p-2 bg-gradient-to-b from-white/15 to-transparent border border-white/10 shadow-[0_30px_100px_-20px_rgba(16,185,129,0.25)] group">
-            
-            {/* Animated Border Beam from Skiper UI */}
-            <BorderBeam size={350} duration={14} colorFrom="#10b981" colorTo="#06b6d4" borderWidth={2} />
+          {/* Crisp Clean Border Frame (No Glow) */}
+          <div className="relative rounded-[28px] md:rounded-[36px] p-2 border border-slate-800 bg-slate-900/50 shadow-2xl group">
 
             <div className="relative rounded-[24px] md:rounded-[30px] overflow-hidden bg-slate-950 aspect-[16/9] w-full border border-slate-800">
               <img

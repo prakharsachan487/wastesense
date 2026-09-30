@@ -29,7 +29,6 @@ export const LandingBento: React.FC = () => {
           
           {/* CARD 1: IoT Smart Bin Telemetry (Col span 7) */}
           <div className="lg:col-span-7 p-7 rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/40 transition-all duration-300 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none" />
             
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 rounded-2xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-400">
@@ -70,7 +69,6 @@ export const LandingBento: React.FC = () => {
 
           {/* CARD 2: Transparent AI Decision Engine (Col span 5) */}
           <div className="lg:col-span-5 p-7 rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-purple-500/40 transition-all duration-300 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-purple-500/10 rounded-full blur-[70px] pointer-events-none" />
 
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 rounded-2xl bg-purple-950/60 border border-purple-500/30 text-purple-400">
