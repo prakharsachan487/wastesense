@@ -9,6 +9,14 @@ import {
   INITIAL_BINS, INITIAL_COMPLAINTS, INITIAL_TASKS, 
   INITIAL_WORKERS, INITIAL_VEHICLES, INITIAL_PICKUPS, INITIAL_NOTIFICATIONS 
 } from '../data/mockData';
+import { 
+  getSupabaseBins, 
+  getSupabaseComplaints, 
+  updateSupabaseBinTelemetry, 
+  insertSupabaseComplaint, 
+  subscribeToBinsRealtime 
+} from '../lib/supabaseService';
+import { isSupabaseConfigured } from '../lib/supabaseClient';
 
 interface WasteSenseContextType {
   currentUser: User;
@@ -115,6 +123,33 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   }, []);
 
+  // Supabase Database Connection & Realtime Sync (if configured)
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    getSupabaseBins().then((remoteBins) => {
+      if (remoteBins && remoteBins.length > 0) {
+        setBins(remoteBins);
+      }
+    });
+
+    getSupabaseComplaints().then((remoteComplaints) => {
+      if (remoteComplaints && remoteComplaints.length > 0) {
+        setComplaints(remoteComplaints);
+      }
+    });
+
+    const channel = subscribeToBinsRealtime((updatedBin) => {
+      setBins((prev) =>
+        prev.map((b) => (b.bin_id.toLowerCase() === updatedBin.bin_id.toLowerCase() ? { ...b, ...updatedBin } : b))
+      );
+    });
+
+    return () => {
+      channel?.unsubscribe();
+    };
+  }, []);
+
   const loginAsRole = (role: UserRole) => {
     const user = DEMO_USERS[role];
     setCurrentUser(user);
@@ -178,6 +213,9 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       };
     }));
 
+    // Background async update to Supabase if configured
+    updateSupabaseBinTelemetry(binId, fill, weight, temp, battery).catch(() => {});
+
     // Trigger notification if critical
     if (fill >= 90) {
       addNotification({
@@ -233,6 +271,9 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
 
     setComplaints(prev => [newComplaint, ...prev]);
+
+    // Background async insert to Supabase if configured
+    insertSupabaseComplaint(newComplaint).catch(() => {});
 
     addNotification({
       title: `📝 New Complaint ${complaintId}`,
