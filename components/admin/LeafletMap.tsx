@@ -1,11 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { SmartBin, Vehicle } from '../../types';
-import { 
-  Search, Crosshair, Layers, TrafficCone, Compass, 
-  MapPin, Truck, AlertTriangle, CheckCircle2, Sparkles, Navigation 
-} from 'lucide-react';
+import { Truck } from 'lucide-react';
 
 interface LeafletMapProps {
   bins: SmartBin[];
@@ -23,19 +20,6 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<Record<string, any>>({});
-  const layersGroupRef = useRef<{
-    streetsTile?: any;
-    satelliteTile?: any;
-    zonePolygon?: any;
-    hotspotCircle?: any;
-    locateMarker?: any;
-  }>({});
-
-  const [mapType, setMapType] = useState<'streets' | 'satellite'>('streets');
-  const [showOverlays, setShowOverlays] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isLocating, setIsLocating] = useState(false);
-  const [locateStatus, setLocateStatus] = useState<string | null>(null);
 
   // Initialize Leaflet Map once
   useEffect(() => {
@@ -47,7 +31,7 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
 
       const L = await import('leaflet');
 
-      // Center around Sector 12 / Central Market (28.6139, 77.2090)
+      // Center around municipal district (Central Market / Sector 12: 28.6145, 77.2095)
       const map = L.map(mapContainerRef.current, {
         center: [28.6145, 77.2095],
         zoom: 14,
@@ -57,96 +41,13 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
 
       mapInstanceRef.current = map;
 
-      // 1. Street Tiles (OpenStreetMap Standard)
-      const streetsTile = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      // Clean OpenStreetMap standard street tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors &bull; WasteSense Operations',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors &bull; WasteSense IoT Grid',
       }).addTo(map);
 
-      // 2. Satellite Tiles (ESRI World Imagery)
-      const satelliteTile = L.tileLayer(
-        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        {
-          maxZoom: 18,
-          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-        }
-      );
-
-      layersGroupRef.current.streetsTile = streetsTile;
-      layersGroupRef.current.satelliteTile = satelliteTile;
-
-      // 3. Zone Polygon: Zone A Commercial & High-Density Pedestrian Corridor (Green Polygon matching screenshot)
-      const zoneCoords: [number, number][] = [
-        [28.6185, 77.2045],
-        [28.6198, 77.2155],
-        [28.6115, 77.2165],
-        [28.6095, 77.2065],
-      ];
-      const zonePolygon = L.polygon(zoneCoords, {
-        color: '#16a34a', // Emerald Green outline
-        weight: 2,
-        fillColor: '#22c55e',
-        fillOpacity: 0.28,
-        dashArray: '4, 6',
-      }).addTo(map);
-
-      zonePolygon.bindTooltip(
-        '<div class="font-bold text-xs text-emerald-800">Zone A &bull; Commercial Sanitation Grid</div><div class="text-[10px] text-slate-600">Active High-Priority IoT Patrol</div>',
-        { sticky: true }
-      );
-
-      // 4. Hotspot Circle: Central Commercial Square (Purple circle matching screenshot)
-      const hotspotCircle = L.circle([28.6139, 77.2090], {
-        radius: 420,
-        color: '#7e22ce', // Purple
-        weight: 2.5,
-        fillColor: '#a855f7',
-        fillOpacity: 0.22,
-      }).addTo(map);
-
-      hotspotCircle.bindTooltip(
-        '<div class="font-bold text-xs text-purple-900">Hotspot H-01 &bull; Central Commercial Hub</div><div class="text-[10px] text-purple-700">Surge Radius: 420m &bull; LoRaWAN Node B-102 Focus</div>',
-        { sticky: true }
-      );
-
-      // 5. Default Dropped Orange Pin (matching screenshot at Hoxton / Transit Node)
-      const pinHtml = `
-        <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
-          <div style="
-            width: 26px;
-            height: 26px;
-            background: #d97706;
-            border: 3px solid #ffffff;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          ">
-            <div style="width: 8px; height: 8px; background: #ffffff; border-radius: 50%; transform: rotate(45deg);"></div>
-          </div>
-        </div>
-      `;
-
-      const defaultPinIcon = L.divIcon({
-        html: pinHtml,
-        className: 'custom-dropped-pin',
-        iconSize: [28, 38],
-        iconAnchor: [14, 36],
-      });
-
-      const defaultPinMarker = L.marker([28.6225, 77.2185], { icon: defaultPinIcon }).addTo(map);
-      defaultPinMarker.bindTooltip(
-        '<div class="font-bold text-xs text-amber-900">Transit Terminal Hub</div><div class="text-[10px] text-slate-600">Active Sensor Node Corridor</div>',
-        { sticky: true }
-      );
-
-      layersGroupRef.current.zonePolygon = zonePolygon;
-      layersGroupRef.current.hotspotCircle = hotspotCircle;
-      layersGroupRef.current.locateMarker = defaultPinMarker;
-
-      // Invalidate map size after rendering container
+      // Force proper container layout calculation
       setTimeout(() => {
         if (isMounted && map) {
           map.invalidateSize();
@@ -176,37 +77,37 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
       Object.values(markersRef.current).forEach((m: any) => m.remove());
       markersRef.current = {};
 
-      // Render Smart Bins
+      // 1. Render all real WasteSense Smart Bins
       bins.forEach((b) => {
         const isSelected = b.bin_id === selectedBinId;
-        const isCrit = b.status === 'CRITICAL';
-        const isHigh = b.status === 'HIGH';
+        const isCrit = b.status === 'CRITICAL' || b.fill_level >= 90;
+        const isHigh = b.status === 'HIGH' || (b.fill_level >= 75 && b.fill_level < 90);
 
         const badgeBg = isCrit ? '#e11d48' : isHigh ? '#f59e0b' : '#10b981';
         const ringBorder = isSelected ? '#0077CC' : '#ffffff';
-        const scaleStyle = isSelected ? 'transform: scale(1.25); z-index: 999;' : '';
+        const scale = isSelected ? 'scale(1.2)' : 'scale(1)';
+        const zIndex = isSelected ? 999 : isCrit ? 500 : 100;
 
-        // Custom HTML Marker matching high-tech municipal pin
         const customHtml = `
-          <div class="ws-map-pin" style="${scaleStyle} display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+          <div class="ws-map-bin-pin" style="transform: ${scale}; z-index: ${zIndex}; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s ease;">
             <div style="
               background: ${badgeBg};
               color: #ffffff;
-              font-family: monospace;
-              font-weight: 900;
-              font-size: 10px;
-              padding: 2px 6px;
+              font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+              font-weight: 800;
+              font-size: 11px;
+              padding: 2.5px 7px;
               border-radius: 9999px;
               border: 2px solid ${ringBorder};
-              box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+              box-shadow: 0 4px 10px rgba(0,0,0,0.28);
               display: flex;
               align-items: center;
-              gap: 3px;
+              gap: 4px;
               white-space: nowrap;
             ">
               ${isCrit ? '<span style="width: 6px; height: 6px; border-radius: 50%; background: #ffffff; animation: pulse 1.5s infinite;"></span>' : ''}
               <span>${b.bin_id}</span>
-              <span style="opacity: 0.9; font-size: 9px;">${b.fill_level}%</span>
+              <span style="opacity: 0.95; font-size: 10px;">${b.fill_level}%</span>
             </div>
             <div style="
               width: 0;
@@ -221,45 +122,44 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
 
         const icon = L.divIcon({
           html: customHtml,
-          className: 'custom-bin-icon',
-          iconSize: [60, 32],
-          iconAnchor: [30, 30],
-          popupAnchor: [0, -28],
+          className: 'custom-bin-pin-icon',
+          iconSize: [64, 34],
+          iconAnchor: [32, 32],
+          popupAnchor: [0, -30],
         });
 
         const marker = L.marker([b.latitude, b.longitude], { icon }).addTo(map);
 
-        // Popup content with direct inspect action
-        const popupContent = `
-          <div style="font-family: system-ui, sans-serif; min-width: 190px; padding: 4px;">
+        const popupHtml = `
+          <div style="font-family: system-ui, -apple-system, sans-serif; min-width: 180px; padding: 2px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
               <strong style="font-size: 14px; font-family: monospace; color: #0f172a;">${b.bin_id}</strong>
-              <span style="font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 9999px; background: ${badgeBg}20; color: ${badgeBg};">
+              <span style="font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 9999px; background: ${badgeBg}20; color: ${badgeBg};">
                 ${b.status} (${b.fill_level}%)
               </span>
             </div>
-            <div style="font-size: 11px; color: #475569; font-weight: 500; margin-bottom: 4px;">${b.location}</div>
-            <div style="font-size: 10px; color: #64748b; margin-bottom: 8px;">${b.overflow_prediction}</div>
-            <button id="ws-btn-${b.bin_id}" style="
+            <div style="font-size: 11px; color: #334155; font-weight: 600; margin-bottom: 2px;">${b.location}</div>
+            <div style="font-size: 10px; color: #64748b; margin-bottom: 6px;">${b.zone} &bull; ${b.waste_type}</div>
+            <button id="ws-btn-inspect-${b.bin_id}" style="
               width: 100%;
               background: #0077CC;
               color: white;
               border: none;
-              padding: 6px 10px;
-              border-radius: 8px;
+              padding: 5px 8px;
+              border-radius: 6px;
               font-size: 11px;
-              font-weight: bold;
+              font-weight: 700;
               cursor: pointer;
             ">
-              Select & Inspect Node
+              Inspect Telemetry
             </button>
           </div>
         `;
 
-        marker.bindPopup(popupContent);
+        marker.bindPopup(popupHtml);
 
         marker.on('popupopen', () => {
-          const btn = document.getElementById(`ws-btn-${b.bin_id}`);
+          const btn = document.getElementById(`ws-btn-inspect-${b.bin_id}`);
           if (btn) {
             btn.onclick = () => {
               onSelectBin(b.bin_id);
@@ -275,16 +175,17 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
         markersRef.current[`bin-${b.bin_id}`] = marker;
       });
 
-      // Render Sanitation Vehicles
+      // 2. Render all real WasteSense Fleet Vehicles
+      const vehicleCoords: [number, number][] = [
+        [28.6165, 77.2085],
+        [28.6225, 77.2140],
+        [28.6110, 77.2040],
+        [28.6180, 77.2185],
+        [28.6265, 77.2080],
+      ];
+
       vehicles.forEach((v, idx) => {
-        const vCoords: [number, number][] = [
-          [28.6162, 77.2085],
-          [28.6235, 77.2130],
-          [28.6110, 77.2040],
-          [28.6180, 77.2180],
-          [28.6270, 77.2090],
-        ];
-        const coords = vCoords[idx % vCoords.length];
+        const coords = vehicleCoords[idx % vehicleCoords.length];
 
         const truckHtml = `
           <div style="
@@ -292,9 +193,9 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
             color: #ffffff;
             border: 2px solid #ffffff;
             border-radius: 8px;
-            padding: 3px 6px;
+            padding: 2.5px 6px;
             font-size: 10px;
-            font-weight: bold;
+            font-weight: 700;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
@@ -309,16 +210,21 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
 
         const icon = L.divIcon({
           html: truckHtml,
-          className: 'custom-truck-icon',
-          iconSize: [70, 24],
-          iconAnchor: [35, 12],
+          className: 'custom-vehicle-truck-icon',
+          iconSize: [68, 24],
+          iconAnchor: [34, 12],
+          popupAnchor: [0, -14],
         });
 
         const vMarker = L.marker(coords, { icon }).addTo(map);
-        vMarker.bindTooltip(
-          `<div class="font-bold text-xs">${v.name} (${v.plate})</div><div class="text-[10px]">Driver: ${v.assigned_driver} &bull; Route: Commercial Corridor</div>`,
-          { sticky: true }
-        );
+        vMarker.bindPopup(`
+          <div style="font-family: system-ui, sans-serif; font-size: 11px; padding: 2px;">
+            <strong style="color: #0077CC; font-size: 12px;">${v.name} (${v.plate})</strong>
+            <div style="color: #334155; margin-top: 3px;">Driver: <strong>${v.assigned_driver}</strong></div>
+            <div style="color: #64748b; font-size: 10px;">Status: ${v.status} &bull; Load: ${v.current_load_pct}%</div>
+          </div>
+        `);
+
         markersRef.current[`veh-${v.id}`] = vMarker;
       });
     }
@@ -326,291 +232,55 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
     updateMarkers();
   }, [bins, vehicles, selectedBinId, onSelectBin]);
 
-  // Center/Fly to selected bin when selectedBinId changes
+  // Smooth camera pan to selected bin
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
     const targetBin = bins.find((b) => b.bin_id === selectedBinId);
     if (targetBin) {
-      map.flyTo([targetBin.latitude, targetBin.longitude], 15, { duration: 1.2 });
+      map.flyTo([targetBin.latitude, targetBin.longitude], 15, { duration: 1.0 });
     }
   }, [selectedBinId, bins]);
 
-  // Toggle Map Layer (Streets vs Satellite)
-  const handleToggleMapType = (type: 'streets' | 'satellite') => {
-    const map = mapInstanceRef.current;
-    if (!map) return;
-    const { streetsTile, satelliteTile } = layersGroupRef.current;
-    setMapType(type);
-
-    if (type === 'satellite') {
-      if (streetsTile) map.removeLayer(streetsTile);
-      if (satelliteTile) map.addLayer(satelliteTile);
-    } else {
-      if (satelliteTile) map.removeLayer(satelliteTile);
-      if (streetsTile) map.addLayer(streetsTile);
-    }
-  };
-
-  // Toggle Zones & Hotspots Overlay
-  const handleToggleOverlays = () => {
-    const map = mapInstanceRef.current;
-    if (!map) return;
-    const { zonePolygon, hotspotCircle } = layersGroupRef.current;
-    const nextState = !showOverlays;
-    setShowOverlays(nextState);
-
-    if (nextState) {
-      if (zonePolygon) map.addLayer(zonePolygon);
-      if (hotspotCircle) map.addLayer(hotspotCircle);
-    } else {
-      if (zonePolygon) map.removeLayer(zonePolygon);
-      if (hotspotCircle) map.removeLayer(hotspotCircle);
-    }
-  };
-
-  // "Locate Me" Button: Pan to Real User Location with Custom Pin (Matching Screenshot)
-  const handleLocateMe = async () => {
-    const map = mapInstanceRef.current;
-    if (!map) return;
-    const L = await import('leaflet');
-
-    setIsLocating(true);
-    setLocateStatus('Detecting device GPS...');
-
-    if (typeof window !== 'undefined' && 'geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          const accuracy = pos.coords.accuracy || 20;
-
-          // Remove previous locate marker
-          if (layersGroupRef.current.locateMarker) {
-            layersGroupRef.current.locateMarker.remove();
-          }
-
-          // Orange dropped pin icon matching the user's reference screenshot!
-          const pinHtml = `
-            <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
-              <div style="
-                width: 24px;
-                height: 24px;
-                background: #ea580c;
-                border: 3px solid #ffffff;
-                border-radius: 50% 50% 50% 0;
-                transform: rotate(-45deg);
-                box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              ">
-                <div style="width: 7px; height: 7px; background: #ffffff; border-radius: 50%; transform: rotate(45deg);"></div>
-              </div>
-              <div style="
-                margin-top: 4px;
-                background: #ea580c;
-                color: #ffffff;
-                font-size: 10px;
-                font-weight: 800;
-                padding: 1px 6px;
-                border-radius: 9999px;
-                white-space: nowrap;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-              ">
-                You Are Here
-              </div>
-            </div>
-          `;
-
-          const pinIcon = L.divIcon({
-            html: pinHtml,
-            className: 'custom-locate-pin',
-            iconSize: [30, 42],
-            iconAnchor: [15, 40],
-          });
-
-          const locMarker = L.marker([lat, lng], { icon: pinIcon }).addTo(map);
-          const circle = L.circle([lat, lng], {
-            radius: Math.min(accuracy, 200),
-            color: '#ea580c',
-            fillColor: '#f97316',
-            fillOpacity: 0.15,
-            weight: 1.5,
-          }).addTo(map);
-
-          layersGroupRef.current.locateMarker = L.layerGroup([locMarker, circle]).addTo(map);
-
-          map.flyTo([lat, lng], 16, { duration: 1.5 });
-          setIsLocating(false);
-          setLocateStatus(`Locked: ${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E`);
-          setTimeout(() => setLocateStatus(null), 4000);
-        },
-        () => {
-          setIsLocating(false);
-          // Graceful fallback to Central Market Node B-102
-          map.flyTo([28.6139, 77.2090], 15, { duration: 1.2 });
-          setLocateStatus('Location denied. Centered on Central Market Node B-102');
-          setTimeout(() => setLocateStatus(null), 4000);
-        },
-        { enableHighAccuracy: true, timeout: 8000 }
-      );
-    } else {
-      setIsLocating(false);
-      setLocateStatus('Geolocation not supported');
-    }
-  };
-
-  // Search input handler
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return;
-
-    // Search matching bin
-    const matchedBin = bins.find(
-      (b) =>
-        b.bin_id.toLowerCase().includes(query) ||
-        b.location.toLowerCase().includes(query) ||
-        b.zone.toLowerCase().includes(query)
-    );
-
-    if (matchedBin) {
-      onSelectBin(matchedBin.bin_id);
-      const marker = markersRef.current[`bin-${matchedBin.bin_id}`];
-      if (marker && mapInstanceRef.current) {
-        mapInstanceRef.current.flyTo([matchedBin.latitude, matchedBin.longitude], 16, { duration: 1.2 });
-        setTimeout(() => marker.openPopup(), 1300);
-      }
-    }
-  };
-
   return (
-    <div className="relative w-full h-[540px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 flex flex-col">
-      {/* 1. Header Bar matching screenshot: "Advanced Map Example" */}
-      <div className="bg-[#0B0F19] text-white px-4 py-2 flex items-center justify-between text-xs font-semibold shrink-0 select-none z-10 border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <span className="font-bold tracking-wide text-slate-100 text-sm">Advanced Map Example</span>
-          <span className="text-[10px] text-slate-400 font-mono hidden md:inline">&bull; Real-time OpenStreetMap Geospatial Mesh</span>
-        </div>
-        <div className="flex items-center gap-3 text-[11px] text-slate-300">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-slate-300 font-medium">IoT Mesh Connected</span>
+    <div className="relative w-full h-[540px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100">
+      {/* 1. Leaflet Interactive Map Container */}
+      <div ref={mapContainerRef} className="w-full h-full z-0" />
+
+      {/* 2. Top-Right: Clean Live Fleet & Telemetry Status Badge */}
+      <div className="absolute top-3 right-3 z-[400] flex items-center gap-3 px-3 py-1.5 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-sm text-xs font-semibold text-slate-700">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[11px] font-mono text-slate-800">
+            {bins.length} Active Bins Monitored
           </span>
+        </div>
+        <div className="w-[1px] h-3.5 bg-slate-200" />
+        <div className="flex items-center gap-1 text-[11px] text-[#0077CC]">
+          <Truck className="w-3.5 h-3.5" />
+          <span>{vehicles.length} Trucks</span>
         </div>
       </div>
 
-      {/* Map Body Area */}
-      <div className="relative flex-1 w-full min-h-[480px]">
-        {/* Leaflet Map DOM */}
-        <div ref={mapContainerRef} className="w-full h-full z-0" />
-
-        {/* 2. Top-Left: Search Bar with Blue Button (Matching Screenshot - below zoom controls) */}
-        <div className="absolute top-[80px] left-3 z-[400] flex items-center shadow-md rounded-xl overflow-hidden bg-white border border-slate-300 max-w-[240px] sm:max-w-xs w-full">
-          <form onSubmit={handleSearchSubmit} className="flex items-center w-full">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search B-102, Central Market..."
-              className="w-full pl-3 pr-2 py-2 text-xs text-[#0F172A] outline-none font-medium bg-transparent"
-            />
-            <button
-              type="submit"
-              className="px-3 py-2 bg-[#0077CC] hover:bg-[#004A80] text-white flex items-center justify-center transition"
-              title="Search Map"
-            >
-              <Search className="w-4 h-4" />
-            </button>
-          </form>
-        </div>
-
-        {/* 3. Top-Right: Control Pill Bar (Locate Me | Satellite | Traffic) (Matching Screenshot) */}
-        <div className="absolute top-3 right-3 z-[400] flex items-center gap-1 p-1 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md text-xs font-semibold text-slate-700">
-          {/* Locate Me */}
-          <button
-            onClick={handleLocateMe}
-            disabled={isLocating}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
-              isLocating
-                ? 'bg-rose-50 text-rose-700'
-                : 'hover:bg-slate-100 text-slate-700 active:scale-95'
-            }`}
-            title="Pan to device live location"
-          >
-            <span className="text-rose-500 font-bold text-sm">📍</span>
-            <span className="hidden sm:inline">Locate Me</span>
-          </button>
-
-          <div className="w-[1px] h-4 bg-slate-200" />
-
-          {/* Satellite vs Streets Toggle */}
-          <button
-            onClick={() => handleToggleMapType(mapType === 'streets' ? 'satellite' : 'streets')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
-              mapType === 'satellite'
-                ? 'bg-[#0077CC] text-white shadow-xs'
-                : 'hover:bg-slate-100 text-slate-700'
-            }`}
-            title="Toggle Satellite imagery"
-          >
-            <span className="text-blue-500 text-xs">🛰️</span>
-            <span className="hidden sm:inline">{mapType === 'satellite' ? 'Satellite' : 'Streets'}</span>
-          </button>
-
-          <div className="w-[1px] h-4 bg-slate-200" />
-
-          {/* Traffic / Zones Toggle */}
-          <button
-            onClick={handleToggleOverlays}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
-              showOverlays
-                ? 'bg-purple-50 text-purple-700 border border-purple-200'
-                : 'hover:bg-slate-100 text-slate-400'
-            }`}
-            title="Toggle Municipal Sector Polygons & Hotspots"
-          >
-            <span className="text-purple-600 text-xs">🚦</span>
-            <span className="hidden sm:inline">Traffic</span>
-          </button>
-        </div>
-
-        {/* 4. Locate Status Floating Notification Banner */}
-        {locateStatus && (
-          <div className="absolute top-16 right-3 z-[400] px-3.5 py-1.5 rounded-xl bg-[#0F172A]/90 backdrop-blur-md text-white text-[11px] font-mono font-semibold shadow-lg flex items-center gap-2 animate-in fade-in">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>{locateStatus}</span>
-          </div>
-        )}
-
-        {/* 5. Bottom-Left Operational Legend */}
-        <div className="absolute bottom-3 left-3 z-[400] p-2.5 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-lg text-[10px] space-y-1 hidden sm:block">
-          <div className="font-extrabold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-[#0077CC]" />
-            <span>Geospatial Mesh Overlay</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-600" />
-            <span className="font-bold text-rose-700">Critical (&ge;90% Fill)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-            <span className="font-bold text-amber-700">High Priority (&ge;75%)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-            <span className="font-bold text-emerald-700">Normal / Emptied</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple-600" />
-            <span className="font-bold text-purple-800">Hotspot Circle Radius</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs">🚛</span>
-            <span className="font-bold text-[#0077CC]">Compactor Truck En Route</span>
-          </div>
-        </div>
+      {/* 3. Bottom-Left: Clean Operational Legend */}
+      <div className="absolute bottom-3 left-3 z-[400] px-3 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-sm text-[11px] flex flex-wrap items-center gap-3 font-semibold text-slate-700">
+        <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Legend:</span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-xs" />
+          <span>Critical (&ge;90%)</span>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+          <span>High (&ge;75%)</span>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+          <span>Normal</span>
+        </span>
+        <span className="flex items-center gap-1.5 text-[#0077CC]">
+          <span>🚛</span>
+          <span>Fleet Compactor</span>
+        </span>
       </div>
     </div>
   );
