@@ -9,6 +9,7 @@ import {
   ClipboardList, AlertTriangle, CheckCircle2, Clock, Truck, 
   MapPin, Camera, Navigation, ArrowRight, Check 
 } from 'lucide-react';
+import { CompleteTaskModal } from '../../../components/worker/CompleteTaskModal';
 
 export default function WorkerDashboardPage() {
   const { tasks, updateTaskStatus, completeTaskWithProof, currentUser } = useWasteSense();
@@ -151,85 +152,38 @@ export default function WorkerDashboardPage() {
           )}
 
           {activeTask.status === 'Completed' && (
-            <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-center space-y-1">
+            <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-center space-y-2">
               <span className="text-emerald-400 font-bold text-sm block">✓ Collection Completed & Synchronized with Municipal Operations</span>
               <p className="text-xs text-slate-300">
-                Bin B-102 fill dropped from <strong>95%</strong> down to <strong>18%</strong>. Telemetry reset confirmed.
+                Bin {activeTask.bin_id} fill dropped from <strong>{activeTask.before_fill || 95}%</strong> down to <strong>{activeTask.after_fill || 18}%</strong>. Telemetry reset confirmed.
               </p>
+              {activeTask.proof_photo && (
+                <div className="mt-2 max-w-xs mx-auto rounded-xl overflow-hidden border border-emerald-500/40 shadow-lg">
+                  <img 
+                    src={activeTask.proof_photo.startsWith('data:image') ? activeTask.proof_photo : '/images/smart-waste-hero.jpg'} 
+                    alt="Uploaded Proof" 
+                    className="w-full h-32 object-cover" 
+                  />
+                  <div className="bg-slate-950 p-1.5 text-[10px] text-emerald-400 font-mono">
+                    ✓ Verified Resolution Proof Attached
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
 
-      {/* Completion Modal */}
-      {showCompleteModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl space-y-4">
-            <h3 className="text-base font-bold text-white">Complete & Verify Collection</h3>
-            <p className="text-xs text-slate-400">
-              Submit proof of emptying for <strong>{activeTask.bin_id} ({activeTask.location})</strong>.
-            </p>
-
-            <form onSubmit={handleCompleteSubmit} className="space-y-4">
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs flex justify-between items-center">
-                <span className="text-slate-400">Initial Overflow Reading:</span>
-                <span className="font-mono text-rose-400 font-bold">95% (Critical)</span>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Post-Collection Fill Level (%)
-                </label>
-                <input
-                  type="number"
-                  min="5"
-                  max="30"
-                  value={proofFill}
-                  onChange={(e) => setProofFill(Number(e.target.value))}
-                  className="w-full bg-slate-950 border border-slate-700 text-white rounded-xl px-3 py-2.5 text-xs font-mono outline-none"
-                  required
-                />
-                <span className="text-[10px] text-slate-400">Baseline clean fill level is set to 18%.</span>
-              </div>
-
-              {/* Photo Upload Simulation */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Upload Photo Verification Proof</label>
-                <button
-                  type="button"
-                  onClick={() => setPhotoUploaded(!photoUploaded)}
-                  className={`w-full p-4 rounded-xl border border-dashed text-center transition ${
-                    photoUploaded 
-                      ? 'border-emerald-500 bg-emerald-950/20 text-emerald-300' 
-                      : 'border-slate-700 bg-slate-950 text-slate-400 hover:border-slate-500'
-                  }`}
-                >
-                  <Camera className="w-6 h-6 mx-auto mb-1.5" />
-                  <span className="text-xs font-bold block">
-                    {photoUploaded ? '✓ Photo Attached: clean_bin_b102.jpg' : 'Click to take/attach photo proof'}
-                  </span>
-                  <span className="text-[10px] text-slate-400">GPS & Timestamp embedded</span>
-                </button>
-              </div>
-
-              <div className="flex justify-end gap-2.5 pt-2 border-t border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setShowCompleteModal(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition"
-                >
-                  Submit & Resolve Ticket
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {/* Real Photographic Completion Modal */}
+      {showCompleteModal && activeTask && (
+        <CompleteTaskModal
+          task={activeTask}
+          onClose={() => setShowCompleteModal(false)}
+          onComplete={(taskId, postFill, proofPhoto) => {
+            completeTaskWithProof(taskId, postFill, proofPhoto);
+            setActiveTask(prev => prev ? { ...prev, status: 'Completed', after_fill: postFill, proof_photo: proofPhoto } : prev);
+          }}
+        />
       )}
     </div>
   );

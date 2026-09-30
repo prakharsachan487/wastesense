@@ -86,8 +86,28 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         )}
 
         {task.status === 'Completed' && (
-          <div className="w-full text-center py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
-            ✓ Collection Verified & Closed (18% Reset)
+          <div className="w-full space-y-2">
+            <div className="w-full text-center py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
+              ✓ Collection Verified & Closed ({task.after_fill || 18}% Reset)
+            </div>
+            {task.proof_photo && (
+              <div className="rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-950 p-2 flex items-center gap-3">
+                <img
+                  src={task.proof_photo.startsWith('data:image') ? task.proof_photo : '/images/smart-waste-hero.jpg'}
+                  alt="Verified Proof"
+                  className="w-12 h-12 rounded-lg object-cover border border-slate-700 shrink-0"
+                />
+                <div className="min-w-0">
+                  <div className="text-[11px] font-bold text-white flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                    <span>Photo Proof Verified</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 block truncate">
+                    GPS Geotag: {task.location}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

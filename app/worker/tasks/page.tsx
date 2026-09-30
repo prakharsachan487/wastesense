@@ -1,13 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useWasteSense } from '../../../context/WasteSenseContext';
 import { TaskCard } from '../../../components/admin/TaskCard';
+import { CompleteTaskModal } from '../../../components/worker/CompleteTaskModal';
+import { CollectionTask } from '../../../types';
 import { ArrowLeft } from 'lucide-react';
 
 export default function WorkerTasksPage() {
   const { tasks, updateTaskStatus, completeTaskWithProof } = useWasteSense();
+  const [selectedTaskForComplete, setSelectedTaskForComplete] = useState<CollectionTask | null>(null);
 
   return (
     <div className="space-y-6">
@@ -33,11 +36,22 @@ export default function WorkerTasksPage() {
             key={task.id}
             task={task}
             onStatusChange={(taskId, status) => updateTaskStatus(taskId, status)}
-            onCompleteClick={(t) => completeTaskWithProof(t.id, 18, 'verified_collection.jpg')}
+            onCompleteClick={(t) => setSelectedTaskForComplete(t)}
             isWorkerPortal
           />
         ))}
       </div>
+
+      {selectedTaskForComplete && (
+        <CompleteTaskModal
+          task={selectedTaskForComplete}
+          onClose={() => setSelectedTaskForComplete(null)}
+          onComplete={(taskId, postFill, proofPhoto) => {
+            completeTaskWithProof(taskId, postFill, proofPhoto);
+            setSelectedTaskForComplete(null);
+          }}
+        />
+      )}
     </div>
   );
 }

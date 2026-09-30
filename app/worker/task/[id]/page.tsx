@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useWasteSense } from '../../../../context/WasteSenseContext';
@@ -8,7 +8,7 @@ import { PriorityBadge } from '../../../../components/ui/PriorityBadge';
 import { StatusBadge } from '../../../../components/ui/StatusBadge';
 import { 
   ArrowLeft, MapPin, Camera, CheckCircle2, Clock, 
-  Truck, Navigation, AlertTriangle 
+  Truck, Navigation, AlertTriangle, UploadCloud, X 
 } from 'lucide-react';
 
 export default function WorkerTaskDetailPage() {
@@ -20,8 +20,30 @@ export default function WorkerTaskDetailPage() {
   const task = tasks.find(t => t.id === taskId || t.task_code === taskId) || tasks[0];
 
   const [afterFill, setAfterFill] = useState(18);
-  const [photoName, setPhotoName] = useState('bin_b102_after_collection.jpg');
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageName, setImageName] = useState<string>('');
   const [submitted, setSubmitted] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageName(file.name);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setImageName('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleStart = () => {
     updateTaskStatus(task.id, 'In Progress');
@@ -29,11 +51,12 @@ export default function WorkerTaskDetailPage() {
 
   const handleComplete = (e: React.FormEvent) => {
     e.preventDefault();
-    completeTaskWithProof(task.id, afterFill, photoName);
+    const photoToSubmit = imagePreview || 'verified_collection.jpg';
+    completeTaskWithProof(task.id, afterFill, photoToSubmit);
     setSubmitted(true);
     setTimeout(() => {
       router.push('/worker/dashboard');
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -123,26 +146,97 @@ export default function WorkerTaskDetailPage() {
                 <span className="text-[10px] text-slate-400">Baseline clean fill level after emptying is 18%.</span>
               </div>
 
-              <div className="p-4 rounded-xl border border-dashed border-emerald-500/50 bg-emerald-950/20 text-center">
-                <Camera className="w-6 h-6 text-emerald-400 mx-auto mb-1" />
-                <span className="text-xs font-bold text-white block">Proof Evidence: {photoName}</span>
-                <span className="text-[10px] text-emerald-300">Timestamp and GPS stamp verified</span>
+              {/* Real Camera & Photo Input */}
+              <div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+
+                {!imagePreview ? (
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-2xl p-6 text-center cursor-pointer bg-slate-950/60 hover:bg-slate-950 transition-all group"
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mx-auto mb-2.5 group-hover:scale-105 transition-transform">
+                      <UploadCloud className="w-6 h-6" />
+                    </div>
+                    <span className="text-xs font-bold text-white block">
+                      Click to open Camera or Upload Photo
+                    </span>
+                    <span className="text-[11px] text-slate-400 mt-1 block">
+                      Takes live camera snapshot on mobile &bull; JPG, PNG up to 10MB
+                    </span>
+                  </div>
+                ) : (
+                  <div className="relative rounded-2xl overflow-hidden border border-emerald-500/40 bg-slate-950 p-2 space-y-2">
+                    <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-slate-900 border border-slate-800">
+                      <img
+                        src={imagePreview}
+                        alt="Collection Proof"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-2 left-2 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md text-[10px] font-mono font-bold text-emerald-400 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>VERIFIED PROOF ATTACHED</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/75 text-slate-300 hover:text-white hover:bg-rose-950/80 transition"
+                        title="Remove Photo"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between px-1 text-[11px] text-slate-300">
+                      <span className="truncate max-w-[200px] font-mono text-slate-400">{imageName}</span>
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="text-emerald-400 hover:underline font-semibold"
+                      >
+                        Retake / Change Photo
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <button
                 type="submit"
                 disabled={submitted}
-                className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-lg transition active:scale-95"
+                className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-lg transition active:scale-95 flex items-center justify-center gap-2"
               >
-                {submitted ? '✓ Verified! Updating Command Center...' : 'Submit Proof & Complete Task'}
+                <CheckCircle2 className="w-4 h-4" />
+                <span>{submitted ? '✓ Verified! Updating Command Center...' : 'Submit Photographic Proof & Complete'}</span>
               </button>
             </form>
           )}
 
           {task.status === 'Completed' && (
-            <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-center text-xs">
-              <span className="text-emerald-400 font-bold block mb-1">✓ Task Completed & Closed</span>
-              <span className="text-slate-300">Emptied from 95% down to {task.after_fill || 18}%. Verified by Command Center.</span>
+            <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-center text-xs space-y-3">
+              <div>
+                <span className="text-emerald-400 font-bold block mb-1">✓ Task Completed & Closed</span>
+                <span className="text-slate-300">Emptied from 95% down to {task.after_fill || 18}%. Verified by Command Center.</span>
+              </div>
+              {task.proof_photo && (
+                <div className="max-w-xs mx-auto rounded-xl overflow-hidden border border-emerald-500/40 shadow-lg">
+                  <img 
+                    src={task.proof_photo.startsWith('data:image') ? task.proof_photo : '/images/smart-waste-hero.jpg'} 
+                    alt="Uploaded Proof" 
+                    className="w-full h-32 object-cover" 
+                  />
+                  <div className="bg-slate-950 p-1.5 text-[10px] text-emerald-400 font-mono">
+                    ✓ Verified Resolution Proof Attached
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

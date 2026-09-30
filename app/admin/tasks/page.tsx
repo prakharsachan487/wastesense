@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useWasteSense } from '../../../context/WasteSenseContext';
 import { TaskCard } from '../../../components/admin/TaskCard';
+import { CompleteTaskModal } from '../../../components/worker/CompleteTaskModal';
 import { CollectionTask } from '../../../types';
 import { ClipboardList, PlusCircle, CheckCircle2, UserCheck, Truck } from 'lucide-react';
 
@@ -15,19 +16,11 @@ export default function AdminTasksPage() {
   const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0].id);
 
   const [completingTask, setCompletingTask] = useState<CollectionTask | null>(null);
-  const [proofFill, setProofFill] = useState(18);
 
   const handleCreateTask = (e: React.FormEvent) => {
     e.preventDefault();
     createTask(selectedBin, selectedWorker, selectedVehicle, 'CRITICAL');
     setShowCreateModal(false);
-  };
-
-  const handleVerifyComplete = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!completingTask) return;
-    completeTaskWithProof(completingTask.id, proofFill, 'verified_photo.jpg');
-    setCompletingTask(null);
   };
 
   return (
@@ -142,62 +135,14 @@ export default function AdminTasksPage() {
 
       {/* Completion & Verification Dialog */}
       {completingTask && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl">
-            <h3 className="text-base font-bold text-white mb-1">Verify Collection Resolution</h3>
-            <p className="text-xs text-slate-400 mb-4">
-              Confirm physical emptying for <strong>{completingTask.task_code} ({completingTask.bin_id})</strong>.
-            </p>
-
-            <form onSubmit={handleVerifyComplete} className="space-y-4">
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Before Fill Level:</span>
-                  <span className="font-mono text-rose-400 font-bold">{completingTask.before_fill || 95}%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Operator:</span>
-                  <span className="text-white font-semibold">{completingTask.worker_name}</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Post-Collection Fill Level (%)</label>
-                <input
-                  type="number"
-                  min="0"
-                  max="30"
-                  value={proofFill}
-                  onChange={(e) => setProofFill(Number(e.target.value))}
-                  className="w-full bg-slate-950 border border-slate-700 text-white rounded-lg px-3 py-2 text-xs outline-none font-mono"
-                />
-                <span className="text-[10px] text-slate-400">Standard clean baseline is 15-20%.</span>
-              </div>
-
-              <div className="border border-dashed border-slate-700 rounded-xl p-4 text-center bg-slate-950/60">
-                <div className="text-2xl mb-1">📷</div>
-                <span className="text-xs font-semibold text-white block">Proof Photo Attached</span>
-                <span className="text-[10px] text-emerald-400">Geotag and timestamp signed automatically</span>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setCompletingTask(null)}
-                  className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition"
-                >
-                  Verify & Flush Telemetry
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <CompleteTaskModal
+          task={completingTask}
+          onClose={() => setCompletingTask(null)}
+          onComplete={(taskId, postFill, proofPhoto) => {
+            completeTaskWithProof(taskId, postFill, proofPhoto);
+            setCompletingTask(null);
+          }}
+        />
       )}
     </div>
   );
