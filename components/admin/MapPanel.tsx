@@ -66,28 +66,34 @@ export const MapPanel: React.FC<MapPanelProps> = ({ onSimulate }) => {
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-xs" /> &ge;90% Critical</span>
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> &ge;75% High</span>
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Normal</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> Hotspot</span>
+            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#087FD1]" /> High Density Area</span>
           </div>
         </div>
 
         {/* Grid Canvas Background */}
-        <div className="w-full h-[440px] bg-slate-100 rounded-xl relative border border-slate-200 overflow-hidden bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:16px_16px]">
+        <div 
+          className="w-full h-[440px] bg-[#F7FAFC] rounded-xl relative border border-[#E2E8F0] overflow-hidden"
+          style={{
+            backgroundImage: `radial-gradient(#CBD5E1 1.2px, transparent 1.2px)`,
+            backgroundSize: '18px 18px',
+          }}
+        >
           {/* Simulated Sector outlines */}
-          <div className="absolute top-4 left-6 text-[10px] font-mono font-bold text-slate-700 border border-slate-200 bg-white/90 shadow-xs px-2 py-0.5 rounded">ZONE C - MEDICAL</div>
-          <div className="absolute top-4 right-8 text-[10px] font-mono font-bold text-slate-700 border border-slate-200 bg-white/90 shadow-xs px-2 py-0.5 rounded">ZONE A - TRANSIT</div>
-          <div className="absolute bottom-6 left-6 text-[10px] font-mono font-bold text-slate-700 border border-slate-200 bg-white/90 shadow-xs px-2 py-0.5 rounded">ZONE F - INDUSTRIAL</div>
-          <div className="absolute bottom-6 right-8 text-[10px] font-mono font-bold text-slate-700 border border-slate-200 bg-white/90 shadow-xs px-2 py-0.5 rounded">ZONE E - WATERFRONT</div>
+          <div className="absolute top-4 left-6 text-[10px] font-mono font-bold text-slate-600 border border-slate-200 bg-white/95 shadow-xs px-2.5 py-1 rounded-lg">ZONE C &bull; MEDICAL</div>
+          <div className="absolute top-4 right-8 text-[10px] font-mono font-bold text-slate-600 border border-slate-200 bg-white/95 shadow-xs px-2.5 py-1 rounded-lg">ZONE A &bull; TRANSIT</div>
+          <div className="absolute bottom-6 left-6 text-[10px] font-mono font-bold text-slate-600 border border-slate-200 bg-white/95 shadow-xs px-2.5 py-1 rounded-lg">ZONE F &bull; INDUSTRIAL</div>
+          <div className="absolute bottom-6 right-8 text-[10px] font-mono font-bold text-slate-600 border border-slate-200 bg-white/95 shadow-xs px-2.5 py-1 rounded-lg">ZONE E &bull; WATERFRONT</div>
 
-          {/* Hotspot Circles */}
+          {/* Area Density Clusters */}
           {hotspots.map(h => (
             <div
               key={h.id}
               className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
               style={{ left: `${h.x}%`, top: `${h.y}%` }}
-              title={`Hotspot: ${h.name} (${h.incidents} complaints)`}
+              title={`Corridor: ${h.name} (${h.incidents} active reports)`}
             >
-              <div className="w-14 h-14 rounded-full bg-purple-500/20 border border-purple-400 animate-ping opacity-60 absolute" />
-              <div className="w-8 h-8 rounded-full bg-purple-600/50 border border-purple-300 flex items-center justify-center text-[10px] font-bold text-white shadow-md">
+              <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-300 animate-ping opacity-60 absolute" />
+              <div className="w-8 h-8 rounded-full bg-white border border-amber-400 flex items-center justify-center text-[10px] font-extrabold text-amber-800 shadow-sm">
                 {h.incidents}
               </div>
             </div>
@@ -101,9 +107,9 @@ export const MapPanel: React.FC<MapPanelProps> = ({ onSimulate }) => {
               style={{ left: `${25 + i * 14}%`, top: `${35 + (i % 2) * 20}%` }}
               title={`${v.name} (${v.type}) - ${v.assigned_driver}`}
             >
-              <div className="p-1 rounded-lg bg-[#0077CC] text-white shadow-md border border-[#0EA5E9] text-[10px] flex items-center gap-1 font-semibold">
-                <Truck className="w-3 h-3" />
-                <span className="font-bold">{v.name}</span>
+              <div className="p-1.5 rounded-xl bg-[#087FD1] text-white shadow-md border border-white text-[10px] flex items-center gap-1.5 font-bold">
+                <Truck className="w-3.5 h-3.5" />
+                <span>{v.name}</span>
               </div>
             </div>
           ))}
@@ -111,22 +117,22 @@ export const MapPanel: React.FC<MapPanelProps> = ({ onSimulate }) => {
           {/* Smart Bin Markers */}
           {bins.map(b => {
             const coords = binCoordinates[b.bin_id] || { x: 50, y: 50 };
-            const isCritical = b.status === 'CRITICAL';
-            const isHigh = b.status === 'HIGH';
+            const isCritical = b.status === 'CRITICAL' || b.fill_level >= 90;
+            const isHigh = b.status === 'HIGH' || (b.fill_level >= 75 && b.fill_level < 90);
             const isSelected = selectedBin?.bin_id === b.bin_id;
 
-            let color = 'bg-emerald-500 border-white';
-            if (isCritical) color = 'bg-rose-500 border-white shadow-rose-500/60 shadow-md animate-pulse';
-            else if (isHigh) color = 'bg-amber-500 border-white';
-            else if (b.fill_level >= 60) color = 'bg-yellow-400 border-white';
+            let color = 'bg-[#10B981] border-white';
+            if (isCritical) color = 'bg-[#EF4444] border-white shadow-sm animate-pulse';
+            else if (isHigh) color = 'bg-[#F59E0B] border-white';
+            else if (b.fill_level >= 60) color = 'bg-amber-400 border-white';
 
             return (
               <button
                 key={b.bin_id}
                 onClick={() => setSelectedBin(b)}
                 style={{ left: `${coords.x}%`, top: `${coords.y}%` }}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 p-1.5 rounded-full border-2 transition-transform ${color} ${
-                  isSelected ? 'scale-150 ring-4 ring-[#0EA5E9]/50 z-30' : 'hover:scale-125 z-10'
+                className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 rounded-full border-2 transition-all ${color} ${
+                  isSelected ? 'scale-150 ring-4 ring-[#087FD1]/40 z-30 shadow-md' : 'hover:scale-125 z-10'
                 }`}
                 title={`${b.bin_id}: ${b.fill_level}% (${b.status})`}
               >
@@ -138,13 +144,13 @@ export const MapPanel: React.FC<MapPanelProps> = ({ onSimulate }) => {
       </div>
 
       {/* Selected Marker Detail Card */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+      <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-xs flex flex-col justify-between">
         {selectedBin ? (
           <div className="space-y-4">
-            <div className="flex items-start justify-between border-b border-slate-200 pb-3">
+            <div className="flex items-start justify-between border-b border-slate-100 pb-3">
               <div>
-                <span className="text-[10px] font-bold text-[#0077CC] tracking-wider uppercase">Selected Sensor Node</span>
-                <h3 className="text-lg font-black text-[#0F172A] font-mono">{selectedBin.bin_id}</h3>
+                <span className="text-[10px] font-bold text-[#087FD1] tracking-wider uppercase">Selected Sensor Node</span>
+                <h3 className="text-xl font-extrabold text-[#0F172A] font-mono mt-0.5">{selectedBin.bin_id}</h3>
                 <p className="text-xs text-slate-700 font-medium">{selectedBin.location}</p>
                 <p className="text-[11px] text-slate-500">{selectedBin.zone}</p>
               </div>
@@ -154,43 +160,43 @@ export const MapPanel: React.FC<MapPanelProps> = ({ onSimulate }) => {
             <div>
               <div className="flex justify-between text-xs font-semibold mb-1">
                 <span className="text-slate-600">Fill Capacity</span>
-                <span className={`font-mono font-bold ${selectedBin.fill_level >= 90 ? 'text-rose-600' : 'text-[#0F172A]'}`}>
+                <span className={`font-mono font-bold ${selectedBin.fill_level >= 90 ? 'text-[#EF4444]' : 'text-[#0F172A]'}`}>
                   {selectedBin.fill_level}%
                 </span>
               </div>
               <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
                 <div 
-                  className={`h-full ${selectedBin.fill_level >= 90 ? 'bg-rose-500' : selectedBin.fill_level >= 75 ? 'bg-amber-500' : 'bg-[#0077CC]'} transition-all`}
+                  className={`h-full ${selectedBin.fill_level >= 90 ? 'bg-[#EF4444]' : selectedBin.fill_level >= 75 ? 'bg-[#F59E0B]' : 'bg-[#10B981]'} transition-all`}
                   style={{ width: `${selectedBin.fill_level}%` }}
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                <span className="text-slate-500 text-[11px] block">Load Strain</span>
+              <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+                <span className="text-slate-400 text-[10px] block uppercase font-bold tracking-wider">Load Strain</span>
                 <strong className="text-[#0F172A] font-mono">{selectedBin.weight} kg</strong>
               </div>
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                <span className="text-slate-500 text-[11px] block">Temperature</span>
+              <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+                <span className="text-slate-400 text-[10px] block uppercase font-bold tracking-wider">Temperature</span>
                 <strong className="text-[#0F172A] font-mono">{selectedBin.temperature} °C</strong>
               </div>
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                <span className="text-slate-500 text-[11px] block">Battery Life</span>
+              <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+                <span className="text-slate-400 text-[10px] block uppercase font-bold tracking-wider">Battery</span>
                 <strong className="text-[#0F172A] font-mono">{selectedBin.battery}%</strong>
               </div>
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                <span className="text-slate-500 text-[11px] block">Dispatch Priority</span>
-                <strong className="text-purple-600 font-mono">{selectedBin.priority_score}/100</strong>
+              <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+                <span className="text-slate-400 text-[10px] block uppercase font-bold tracking-wider">Priority Score</span>
+                <strong className="text-[#087FD1] font-mono">{selectedBin.priority_score}/100</strong>
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-purple-50 border border-purple-200 text-xs">
-              <div className="font-bold text-purple-800 mb-1 flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-purple-600" />
-                <span>System Recommendation:</span>
+            <div className="p-3.5 rounded-xl bg-sky-50/80 border border-sky-200 text-xs">
+              <div className="font-bold text-[#004A80] mb-1 flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-[#087FD1]" />
+                <span>Operational Intelligence:</span>
               </div>
-              <p className="text-[11px] text-purple-900">{selectedBin.overflow_prediction}</p>
+              <p className="text-[11px] text-[#0F172A] leading-relaxed">{selectedBin.overflow_prediction}</p>
             </div>
 
             <Link

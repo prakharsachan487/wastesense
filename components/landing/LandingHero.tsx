@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   ArrowRight, 
   Activity, 
@@ -17,9 +17,9 @@ import {
   Radio, 
   ShieldCheck,
   Truck,
-  Compass,
-  Cpu
+  MapPin
 } from 'lucide-react';
+import { useWasteSense } from '../../context/WasteSenseContext';
 
 interface BinNode {
   id: string;
@@ -46,94 +46,98 @@ const INITIAL_NODES: BinNode[] = [
     battery: 87,
     weight: 18.4,
     status: 'CRITICAL',
-    x: 520,
-    y: 220,
+    x: 560,
+    y: 180,
   },
   {
     id: 'bin-101',
     code: 'B-101',
-    name: 'Metro Terminal',
+    name: 'Transit Plaza',
     zone: 'Sector 4',
     fill: 42,
     temp: 26.2,
     battery: 92,
     weight: 8.6,
     status: 'NORMAL',
-    x: 230,
-    y: 130,
+    x: 220,
+    y: 150,
   },
   {
     id: 'bin-103',
     code: 'B-103',
-    name: 'Civic Plaza',
+    name: 'Medical Center',
     zone: 'Sector 9',
     fill: 68,
     temp: 27.8,
     battery: 79,
     weight: 12.1,
     status: 'WARNING',
-    x: 680,
-    y: 350,
+    x: 720,
+    y: 310,
   },
   {
     id: 'bin-104',
     code: 'B-104',
-    name: 'Greenbelt Park',
+    name: 'Residential Gate',
     zone: 'Sector 15',
     fill: 28,
     temp: 24.5,
     battery: 95,
     weight: 5.4,
     status: 'NORMAL',
-    x: 320,
-    y: 400,
+    x: 360,
+    y: 390,
   },
 ];
 
 export const LandingHero: React.FC = () => {
+  const { simulateSurgeB102, resetBinToClean } = useWasteSense();
+
   const [nodes, setNodes] = useState<BinNode[]>(INITIAL_NODES);
   const [selectedNode, setSelectedNode] = useState<BinNode>(INITIAL_NODES[0]);
   const [simState, setSimState] = useState<'IDLE' | 'ANALYZING' | 'DISPATCHED' | 'COLLECTING' | 'RESOLVED'>('IDLE');
-  const [truckPos, setTruckPos] = useState({ x: 130, y: 300 }); // Depot position
+  const [truckPos, setTruckPos] = useState({ x: 130, y: 260 }); // Operations Depot
 
-  // Simulation Runner
+  // Simulation Runner: Demonstrates realistic closed-loop resolution
   const runSimulation = () => {
     if (simState !== 'IDLE' && simState !== 'RESOLVED') return;
 
-    // Reset B-102 to Critical
+    // Reset B-102 to Critical Surge (95%)
     setNodes(prev => prev.map(n => n.code === 'B-102' ? { ...n, fill: 95, status: 'CRITICAL' } : n));
     setSelectedNode(prev => prev.code === 'B-102' ? { ...prev, fill: 95, status: 'CRITICAL' } : prev);
-    setTruckPos({ x: 130, y: 300 });
+    setTruckPos({ x: 130, y: 260 });
     setSimState('ANALYZING');
 
     setTimeout(() => {
       setSimState('DISPATCHED');
-      // Truck moves along isometric road to B-102 (520, 220)
-      setTruckPos({ x: 490, y: 230 });
-    }, 1300);
+      // Truck moves smoothly along solid blue road to B-102
+      setTruckPos({ x: 505, y: 190 });
+    }, 1200);
 
     setTimeout(() => {
       setSimState('COLLECTING');
-    }, 3100);
+    }, 2800);
 
     setTimeout(() => {
-      // Empty B-102 to clean
+      // Empty B-102 to clean 18% & VERIFIED
       setNodes(prev => prev.map(n => n.code === 'B-102' ? { ...n, fill: 18, status: 'COLLECTED' } : n));
       setSelectedNode(prev => prev.code === 'B-102' ? { ...prev, fill: 18, status: 'COLLECTED' } : prev);
       setSimState('RESOLVED');
-    }, 4800);
+      resetBinToClean('B-102'); // Synchronize state globally with Admin, Worker, and Citizen dashboards!
+    }, 4500);
   };
 
   const resetSimulation = () => {
     setNodes(INITIAL_NODES);
     setSelectedNode(INITIAL_NODES[0]);
-    setTruckPos({ x: 130, y: 300 });
+    setTruckPos({ x: 130, y: 260 });
     setSimState('IDLE');
+    simulateSurgeB102(); // Ensure B-102 returns to 95% critical for demo evaluation
   };
 
   return (
     <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-gradient-to-b from-[#F0F7FF] via-[#F8FAFC] to-[#FFFFFF]">
-      {/* Background Grid Pattern */}
+      {/* Background Subtle Dot Grid */}
       <div 
         className="absolute inset-0 opacity-40 pointer-events-none"
         style={{
@@ -142,13 +146,10 @@ export const LandingHero: React.FC = () => {
         }}
       />
 
-      {/* Ambient Radial Spotlight */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[380px] bg-gradient-to-tr from-sky-200/40 via-blue-100/30 to-transparent blur-3xl pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
-          {/* LEFT COLUMN: Mission & Core Value */}
+          {/* LEFT COLUMN: Platform Overview & Mission */}
           <div className="lg:col-span-5 text-left">
             {/* System Status Pill */}
             <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-sky-200 shadow-xs mb-6 text-xs font-semibold text-[#004A80]">
@@ -156,18 +157,18 @@ export const LandingHero: React.FC = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0077CC]"></span>
               </span>
-              <span className="text-[#0077CC] font-black uppercase tracking-wider text-[10px]">
+              <span className="text-[#0077CC] font-bold uppercase tracking-wider text-[10px]">
                 A Living Digital Twin of a Cleaner City
               </span>
             </div>
 
             {/* Overline */}
-            <div className="text-xs font-black tracking-widest text-slate-500 uppercase mb-2">
+            <div className="text-xs font-bold tracking-widest text-slate-500 uppercase mb-2 font-mono">
               Smart Waste Intelligence Platform
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#0F172A] leading-[1.08]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#0F172A] leading-[1.06] font-display">
               Sense. Predict.{' '}
               <span className="bg-gradient-to-r from-[#0077CC] via-[#0EA5E9] to-[#004A80] bg-clip-text text-transparent">
                 Prioritize. Collect.
@@ -176,14 +177,14 @@ export const LandingHero: React.FC = () => {
 
             {/* Subtitle */}
             <p className="mt-5 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
-              AI-powered waste intelligence connecting citizens, smart bins and sanitation teams in one real-time command platform.
+              Autonomous waste intelligence connecting citizens, smart containers and sanitation teams in one real-time municipal command platform.
             </p>
 
             {/* CTA Action Buttons */}
             <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
               <Link
                 href="/admin/dashboard"
-                className="px-6 py-3.5 rounded-2xl bg-[#0077CC] hover:bg-[#004A80] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#0077CC]/25 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group"
+                className="px-6 py-3.5 rounded-2xl bg-[#0077CC] hover:bg-[#004A80] text-white font-bold text-xs sm:text-sm shadow-md shadow-[#0077CC]/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group"
               >
                 <span>Launch Command Center</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -218,16 +219,16 @@ export const LandingHero: React.FC = () => {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Ultra-Premium Isometric 3D Living Digital Twin */}
+          {/* RIGHT COLUMN: LIGHT GEOSPATIAL OPERATIONS MAP (PREMIUM SMART-CITY TECH) */}
           <div className="lg:col-span-7">
-            <div className="relative rounded-3xl p-3 sm:p-5 bg-white border border-slate-200/90 shadow-2xl shadow-slate-900/10">
+            <div className="relative rounded-3xl p-4 sm:p-6 bg-white border border-[#E2E8F0] shadow-xl shadow-slate-900/5">
               
               {/* Header Bar of Digital Twin Canvas */}
-              <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-100 px-2">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                  <span className="text-xs font-black uppercase tracking-wider text-[#0F172A]">
-                    Central Municipality &bull; Sector 12 3D Mesh
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#087FD1] animate-ping" />
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-[#0F172A]">
+                    Central Municipality &bull; Sector 12 Operations Grid
                   </span>
                 </div>
                 
@@ -235,9 +236,9 @@ export const LandingHero: React.FC = () => {
                   <button
                     onClick={runSimulation}
                     disabled={simState === 'ANALYZING' || simState === 'DISPATCHED' || simState === 'COLLECTING'}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs ${
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs ${
                       simState === 'IDLE' || simState === 'RESOLVED'
-                        ? 'bg-[#0077CC] hover:bg-[#004A80] text-white active:scale-95'
+                        ? 'bg-[#087FD1] hover:bg-[#004A80] text-white active:scale-95'
                         : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                     }`}
                   >
@@ -248,7 +249,7 @@ export const LandingHero: React.FC = () => {
                   {simState === 'RESOLVED' && (
                     <button
                       onClick={resetSimulation}
-                      title="Reset Twin"
+                      title="Reset Grid to Initial State"
                       className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
@@ -257,286 +258,190 @@ export const LandingHero: React.FC = () => {
                 </div>
               </div>
 
-              {/* Status Banner */}
-              <div className="mb-3 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs font-medium">
-                <div className="flex items-center gap-2">
-                  <span className="text-slate-500">Pipeline State:</span>
-                  {simState === 'IDLE' && (
-                    <span className="font-bold text-slate-700 flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-slate-400" /> Continuous IoT Radar Polling
-                    </span>
-                  )}
-                  {simState === 'ANALYZING' && (
-                    <span className="font-bold text-amber-600 flex items-center gap-1 animate-pulse">
-                      <Activity className="w-3.5 h-3.5" /> AI Priority Engine Evaluating Node B-102 (95/100)
-                    </span>
-                  )}
-                  {simState === 'DISPATCHED' && (
-                    <span className="font-bold text-[#0077CC] flex items-center gap-1">
-                      <Navigation className="w-3.5 h-3.5 animate-spin" /> Truck #04 En Route via Dynamic Waypoint
-                    </span>
-                  )}
-                  {simState === 'COLLECTING' && (
-                    <span className="font-bold text-indigo-600 flex items-center gap-1 animate-pulse">
-                      <Truck className="w-3.5 h-3.5" /> Geofence Verified &bull; Emptying Bin B-102
-                    </span>
-                  )}
-                  {simState === 'RESOLVED' && (
-                    <span className="font-bold text-emerald-600 flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Closed-Loop Complete &bull; B-102 Reset to 18%
-                    </span>
-                  )}
+              {/* PIPELINE STATUS: Clean Light Success/Status Component */}
+              {simState === 'RESOLVED' ? (
+                <div className="mb-3 px-4 py-2.5 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-between text-xs text-emerald-900 transition-all shadow-xs">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#10B981] shrink-0" />
+                    <div>
+                      <span className="font-extrabold uppercase tracking-wide text-emerald-800 text-[11px] block sm:inline sm:mr-2">
+                        ✓ CLOSED-LOOP COMPLETE
+                      </span>
+                      <span className="text-emerald-700 font-medium">
+                        B-102 collection verified &bull; Telemetry reset 95% → 18%
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full font-bold">
+                    VERIFIED
+                  </span>
                 </div>
+              ) : simState === 'ANALYZING' ? (
+                <div className="mb-3 px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between text-xs text-amber-900 font-semibold animate-pulse">
+                  <div className="flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-amber-600 animate-spin" />
+                    <span>Priority Engine Evaluating Node B-102 &bull; Risk Score 95/100</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-amber-700 bg-white px-2 py-0.5 rounded border border-amber-200">
+                    ANALYZING
+                  </span>
+                </div>
+              ) : simState === 'DISPATCHED' || simState === 'COLLECTING' ? (
+                <div className="mb-3 px-4 py-2.5 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-between text-xs text-[#004A80] font-semibold">
+                  <div className="flex items-center gap-2">
+                    <Truck className="w-4 h-4 text-[#087FD1] animate-bounce" />
+                    <span>Compactor Truck #04 En Route via Central Arterial &bull; ETA &lt; 2m</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-[#087FD1] bg-white px-2 py-0.5 rounded border border-sky-200">
+                    DISPATCHED
+                  </span>
+                </div>
+              ) : (
+                <div className="mb-3 px-4 py-2 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between text-xs text-slate-700 font-medium">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse" />
+                    <span className="font-bold text-slate-800">Node B-102 Critical Overflow (95%)</span>
+                    <span className="text-slate-500 hidden sm:inline">&bull; Autonomous Dispatch Recommended</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">
+                    CRITICAL 95/100
+                  </span>
+                </div>
+              )}
 
-                <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
-                  LoRa SF7 &bull; -72 dBm
-                </span>
-              </div>
-
-              {/* 3D ISOMETRIC CYBER CITY CANVAS */}
-              <div className="relative w-full aspect-[16/10] bg-[#020617] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl select-none">
-                
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 860 520" preserveAspectRatio="xMidYMid meet">
-                  <defs>
-                    {/* Glowing Filters */}
-                    <filter id="cyberGlow" x="-50%" y="-50%" width="200%" height="200%">
-                      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-
-                    <filter id="alertGlow" x="-50%" y="-50%" width="200%" height="200%">
-                      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-
-                    {/* Linear Gradients for 3D Faces */}
-                    <linearGradient id="roadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#0B132B" />
-                      <stop offset="100%" stopColor="#1C2541" />
-                    </linearGradient>
-
-                    <linearGradient id="routeBeam" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#0077CC" />
-                      <stop offset="50%" stopColor="#0EA5E9" />
-                      <stop offset="100%" stopColor="#38BDF8" />
-                    </linearGradient>
-
-                    <linearGradient id="headlightBeam" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.4" />
-                      <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.0" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* 1. PERSPECTIVE ISOMETRIC FLOOR GRID */}
-                  <g opacity="0.2" stroke="#38BDF8" strokeWidth="0.8">
-                    {/* Isometric Slanted Axis Lines */}
-                    {[0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840].map((x) => (
-                      <line key={`iso-1-${x}`} x1={x} y1="0" x2={x - 200} y2="520" strokeDasharray="3 3" />
-                    ))}
-                    {[0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500].map((y) => (
-                      <line key={`iso-2-${y}`} x1="0" y1={y} x2="860" y2={y + 120} strokeDasharray="3 3" />
-                    ))}
-                  </g>
-
-                  {/* 2. ROTATING 360° MESH SCANNER RADAR BEAM */}
-                  <g transform="translate(430, 260)">
-                    <circle cx="0" cy="0" r="180" fill="none" stroke="#0077CC" strokeWidth="1" strokeDasharray="4 8" opacity="0.2" />
-                    <circle cx="0" cy="0" r="280" fill="none" stroke="#0EA5E9" strokeWidth="1" strokeDasharray="2 6" opacity="0.1" />
-                    <circle cx="0" cy="0" r="80" fill="none" stroke="#38BDF8" strokeWidth="1" opacity="0.2" />
-                    {/* Animated Rotating Sweep Arc */}
-                    <g>
-                      <animateTransform
-                        attributeName="transform"
-                        type="rotate"
-                        from="0"
-                        to="360"
-                        dur="14s"
-                        repeatCount="indefinite"
-                      />
-                      <path d="M 0 0 L 260 -60 A 280 280 0 0 1 260 60 Z" fill="#38BDF8" opacity="0.04" />
-                      <line x1="0" y1="0" x2="260" y2="0" stroke="#38BDF8" strokeWidth="1.5" opacity="0.3" />
-                    </g>
-                  </g>
-
-                  {/* 3. ISOMETRIC HIGHWAY & STREET ARTERIALS */}
-                  <g stroke="#0F172A" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M 90 300 L 360 300 L 520 220 L 780 220" />
-                    <path d="M 230 90 L 230 300 L 320 400 L 580 400" />
-                    <path d="M 520 220 L 680 350 L 780 350" />
-                  </g>
-                  {/* Road Asphalt Inner Layer */}
-                  <g stroke="#1E293B" strokeWidth="26" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M 90 300 L 360 300 L 520 220 L 780 220" />
-                    <path d="M 230 90 L 230 300 L 320 400 L 580 400" />
-                    <path d="M 520 220 L 680 350 L 780 350" />
-                  </g>
-                  {/* Animated Center Telemetry Neon Line */}
-                  <g stroke="#0EA5E9" strokeWidth="2" strokeDasharray="8 12" fill="none" opacity="0.7">
-                    <path d="M 90 300 L 360 300 L 520 220 L 780 220">
-                      <animate attributeName="stroke-dashoffset" values="40;0" dur="2s" repeatCount="indefinite" />
-                    </path>
-                    <path d="M 230 90 L 230 300 L 320 400 L 580 400">
-                      <animate attributeName="stroke-dashoffset" values="40;0" dur="2s" repeatCount="indefinite" />
-                    </path>
-                    <path d="M 520 220 L 680 350 L 780 350">
-                      <animate attributeName="stroke-dashoffset" values="40;0" dur="2s" repeatCount="indefinite" />
-                    </path>
-                  </g>
-
-                  {/* 4. REAL 3D ISOMETRIC ARCHITECTURAL BUILDINGS */}
+              {/* LIGHT GEOSPATIAL MAP CANVAS (NO CYBERPUNK / NO DARK THEME) */}
+              <div 
+                className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl bg-[#F7FAFC] border border-[#E2E8F0] shadow-inner select-none overflow-hidden"
+                style={{
+                  backgroundImage: `radial-gradient(#CBD5E1 1.2px, transparent 1.2px)`,
+                  backgroundSize: '20px 20px',
+                }}
+              >
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 860 480" preserveAspectRatio="xMidYMid meet">
                   
-                  {/* BUILDING 1: Commercial Hub Tower A (Tall 3D Isometric Skyscraper) */}
-                  <g transform="translate(390, 70)">
-                    {/* Shadow */}
-                    <polygon points="0,85 70,50 140,85 70,120" fill="#000000" opacity="0.4" />
-                    {/* Left Front Face */}
-                    <polygon points="10,40 60,65 60,115 10,90" fill="#0F172A" stroke="#1E293B" strokeWidth="1" />
-                    {/* Right Front Face */}
-                    <polygon points="60,65 110,40 110,90 60,115" fill="#1E293B" stroke="#334155" strokeWidth="1" />
-                    {/* Top Roof Face */}
-                    <polygon points="60,15 110,40 60,65 10,40" fill="#334155" stroke="#475569" strokeWidth="1" />
-                    {/* Illuminated Window Matrix */}
-                    <circle cx="35" cy="65" r="2" fill="#38BDF8" opacity="0.8" />
-                    <circle cx="45" cy="70" r="2" fill="#38BDF8" opacity="0.8" />
-                    <circle cx="35" cy="78" r="2" fill="#38BDF8" opacity="0.8" />
-                    <circle cx="85" cy="65" r="2" fill="#38BDF8" opacity="0.8" />
-                    <circle cx="75" cy="70" r="2" fill="#38BDF8" opacity="0.8" />
-                    {/* Rooftop Helipad / Antenna */}
-                    <line x1="60" y1="15" x2="60" y2="0" stroke="#94A3B8" strokeWidth="2" />
-                    <circle cx="60" cy="0" r="3" fill="#EF4444">
-                      <animate attributeName="opacity" values="1;0.2;1" dur="1.2s" repeatCount="indefinite" />
-                    </circle>
-                    <text x="60" y="45" fill="#38BDF8" fontSize="8" fontWeight="bold" textAnchor="middle">HUB A</text>
+                  {/* 1. MUNICIPAL ZONE SHAPES (SUBTLE ARCHITECTURAL FOOTPRINTS) */}
+                  
+                  {/* Zone A: Commercial District */}
+                  <g>
+                    <rect x="440" y="70" width="260" height="190" rx="16" fill="#087FD1" fillOpacity="0.04" stroke="#BAE6FD" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <text x="570" y="98" fill="#004A80" fontSize="10" fontWeight="700" letterSpacing="0.8" textAnchor="middle">
+                      Zone A &bull; Commercial
+                    </text>
                   </g>
 
-                  {/* BUILDING 2: Tech Park 09 (Tiered Isometric Complex) */}
-                  <g transform="translate(590, 190)">
-                    {/* Shadow */}
-                    <polygon points="0,65 60,35 120,65 60,95" fill="#000000" opacity="0.4" />
-                    {/* Left Face */}
-                    <polygon points="10,35 55,55 55,95 10,75" fill="#0F172A" stroke="#1E293B" strokeWidth="1" />
-                    {/* Right Face */}
-                    <polygon points="55,55 100,35 100,75 55,95" fill="#1E293B" stroke="#334155" strokeWidth="1" />
-                    {/* Top Face */}
-                    <polygon points="55,15 100,35 55,55 10,35" fill="#334155" stroke="#475569" strokeWidth="1" />
-                    {/* Solar Panel Accent */}
-                    <polygon points="55,22 85,35 55,48 25,35" fill="#0077CC" opacity="0.4" />
-                    <text x="55" y="75" fill="#94A3B8" fontSize="8" fontWeight="bold" textAnchor="middle">TECH 09</text>
+                  {/* Zone B: Transit Corridor */}
+                  <g>
+                    <rect x="110" y="80" width="220" height="150" rx="16" fill="#F1F5F9" fillOpacity="0.7" stroke="#E2E8F0" strokeWidth="1.5" />
+                    <text x="220" y="106" fill="#475569" fontSize="10" fontWeight="700" letterSpacing="0.8" textAnchor="middle">
+                      Zone B &bull; Transit
+                    </text>
                   </g>
 
-                  {/* BUILDING 3: Metro Transit Terminal */}
-                  <g transform="translate(130, 80)">
-                    {/* Shadow */}
-                    <polygon points="0,55 50,30 100,55 50,80" fill="#000000" opacity="0.4" />
-                    <polygon points="10,30 50,50 50,80 10,60" fill="#0F172A" stroke="#1E293B" strokeWidth="1" />
-                    <polygon points="50,50 90,30 90,60 50,80" fill="#1E293B" stroke="#334155" strokeWidth="1" />
-                    <polygon points="50,10 90,30 50,50 10,30" fill="#334155" stroke="#475569" strokeWidth="1" />
-                    <text x="50" y="32" fill="#38BDF8" fontSize="8" fontWeight="bold" textAnchor="middle">METRO</text>
+                  {/* Zone C: Residential Ward */}
+                  <g>
+                    <rect x="230" y="300" width="260" height="150" rx="16" fill="#F1F5F9" fillOpacity="0.7" stroke="#E2E8F0" strokeWidth="1.5" />
+                    <text x="360" y="326" fill="#475569" fontSize="10" fontWeight="700" letterSpacing="0.8" textAnchor="middle">
+                      Zone C &bull; Residential
+                    </text>
                   </g>
 
-                  {/* BUILDING 4: Sector 12 Residential Smart Complex */}
-                  <g transform="translate(360, 320)">
-                    <polygon points="0,60 65,30 130,60 65,90" fill="#000000" opacity="0.4" />
-                    <polygon points="10,35 65,60 65,95 10,70" fill="#0F172A" stroke="#1E293B" strokeWidth="1" />
-                    <polygon points="65,60 120,35 120,70 65,95" fill="#1E293B" stroke="#334155" strokeWidth="1" />
-                    <polygon points="65,10 120,35 65,60 10,35" fill="#334155" stroke="#475569" strokeWidth="1" />
-                    <text x="65" y="37" fill="#94A3B8" fontSize="8" fontWeight="bold" textAnchor="middle">SECTOR 12</text>
+                  {/* Zone D: Medical Center */}
+                  <g>
+                    <rect x="620" y="240" width="200" height="180" rx="16" fill="#10B981" fillOpacity="0.04" stroke="#A7F3D0" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <text x="720" y="266" fill="#065F46" fontSize="10" fontWeight="700" letterSpacing="0.8" textAnchor="middle">
+                      Zone D &bull; Medical
+                    </text>
                   </g>
 
-                  {/* BUILDING 5: Municipal Sanitation Fleet Base (Depot #01) */}
-                  <g transform="translate(70, 240)">
-                    <polygon points="0,80 60,45 120,80 60,115" fill="#000000" opacity="0.4" />
-                    <polygon points="10,45 60,70 60,105 10,80" fill="#0A192F" stroke="#0077CC" strokeWidth="1.5" />
-                    <polygon points="60,70 110,45 110,80 60,105" fill="#0F172A" stroke="#0077CC" strokeWidth="1.5" />
-                    <polygon points="60,20 110,45 60,70 10,45" fill="#1E293B" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="3 3" />
-                    {/* Glowing Bay Doors */}
-                    <rect x="25" y="65" width="20" height="25" rx="3" fill="#0077CC" opacity="0.3" />
-                    <text x="60" y="47" fill="#38BDF8" fontSize="9" fontWeight="black" textAnchor="middle">DEPOT #01</text>
-                    <text x="60" y="60" fill="#64748B" fontSize="7" textAnchor="middle">Fleet Hangar</text>
+                  {/* 2. LIGHT GRAY MUNICIPAL ROAD NETWORK */}
+                  {/* Road Base Layer (Light Slate/Gray) */}
+                  <g stroke="#E2E8F0" strokeWidth="26" strokeLinecap="round" strokeLinejoin="round" fill="none">
+                    <path d="M 70 260 L 360 260 L 560 180 L 760 180" />
+                    <path d="M 220 110 L 220 260 L 360 390 L 600 390" />
+                    <path d="M 560 180 L 720 310 L 800 310" />
                   </g>
 
-                  {/* 5. AI DYNAMIC CYBER ROUTE VECTOR (Drawn when Dispatched) */}
-                  {(simState === 'DISPATCHED' || simState === 'COLLECTING' || simState === 'RESOLVED') && (
-                    <g>
-                      <motion.path
-                        d="M 130 300 L 360 300 L 520 220"
-                        fill="none"
-                        stroke="url(#routeBeam)"
-                        strokeWidth="5"
-                        strokeLinecap="round"
-                        strokeDasharray="10 10"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 1.2, ease: "easeOut" }}
-                        filter="url(#cyberGlow)"
-                      />
-                      {/* Trailing Energy Pulse */}
-                      <circle r="4" fill="#FFFFFF">
-                        <animateMotion path="M 130 300 L 360 300 L 520 220" dur="2s" repeatCount="indefinite" />
-                      </circle>
-                    </g>
-                  )}
+                  {/* Road Surface Inner Layer */}
+                  <g stroke="#FFFFFF" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" fill="none">
+                    <path d="M 70 260 L 360 260 L 560 180 L 760 180" />
+                    <path d="M 220 110 L 220 260 L 360 390 L 600 390" />
+                    <path d="M 560 180 L 720 310 L 800 310" />
+                  </g>
 
-                  {/* 6. HOLOGRAPHIC 3D SMART BIN NODES */}
+                  {/* INACTIVE FEEDER ROUTES (Dashed Gray Lines) */}
+                  <g stroke="#CBD5E1" strokeWidth="2" strokeDasharray="5 5" fill="none">
+                    <path d="M 220 110 L 220 260" />
+                    <path d="M 360 260 L 360 390 L 600 390" />
+                    <path d="M 560 180 L 720 310 L 800 310" />
+                    <path d="M 560 180 L 760 180" />
+                  </g>
+
+                  {/* ACTIVE DISPATCH ROUTE (Solid Blue Line - Clean, No Neon) */}
+                  <path 
+                    d="M 130 260 L 360 260 L 560 180" 
+                    fill="none" 
+                    stroke="#087FD1" 
+                    strokeWidth="3.5" 
+                    strokeLinecap="round" 
+                  />
+
+                  {/* Fleet Operations Depot Base Marker */}
+                  <g transform="translate(90, 260)">
+                    <rect x="-22" y="-12" width="44" height="24" rx="8" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="1.5" />
+                    <text x="0" y="3" fill="#64748B" fontSize="9" fontWeight="700" textAnchor="middle">DEPOT</text>
+                  </g>
+
+                  {/* 3. SMART BIN NODES (CLEAN CIRCULAR MARKERS WITH OPERATION BADGES) */}
                   {nodes.map((node) => {
                     const isSelected = selectedNode.code === node.code;
+                    const isB102 = node.code === 'B-102';
+                    const isCollected = node.status === 'COLLECTED';
                     const isCritical = node.status === 'CRITICAL';
                     const isWarning = node.status === 'WARNING';
-                    const isCollected = node.status === 'COLLECTED';
 
-                    let color = '#10B981'; // Green
-                    if (isCritical) color = '#EF4444'; // Red
-                    if (isWarning) color = '#F59E0B'; // Amber
-                    if (isCollected) color = '#06B6D4'; // Cyan
+                    const markerColor = isCollected ? '#10B981' : isCritical ? '#EF4444' : isWarning ? '#F59E0B' : '#10B981';
 
                     return (
                       <g 
-                        key={node.code} 
+                        key={node.id} 
                         transform={`translate(${node.x}, ${node.y})`}
                         onClick={() => setSelectedNode(node)}
                         className="cursor-pointer group"
                       >
-                        {/* Hexagonal Isometric Base Ring */}
-                        <polygon
-                          points="-16,0 -8,-10 8,-10 16,0 8,10 -8,10"
-                          fill="none"
-                          stroke={color}
-                          strokeWidth="1.5"
-                          opacity="0.6"
-                        />
-
-                        {/* Critical Radar Beacon Shooting Upwards */}
-                        {isCritical && (
-                          <g>
-                            <line x1="0" y1="0" x2="0" y2="-45" stroke="#EF4444" strokeWidth="2" strokeDasharray="3 3" filter="url(#alertGlow)" />
-                            <circle cx="0" cy="-45" r="4" fill="#EF4444" />
-                            {/* Expanding Shockwaves */}
-                            <circle cx="0" cy="0" r="26" fill={color} opacity="0.25">
-                              <animate attributeName="r" values="10;36;10" dur="1.8s" repeatCount="indefinite" />
-                              <animate attributeName="opacity" values="0.4;0.0;0.4" dur="1.8s" repeatCount="indefinite" />
-                            </circle>
-                          </g>
+                        {/* Subtle Pulsing Ring around B-102 */}
+                        {isB102 && (
+                          <circle cx="0" cy="0" r="22" fill="none" stroke="#087FD1" strokeWidth="2" opacity="0.6">
+                            <animate attributeName="r" values="16;28;16" dur="2.2s" repeatCount="indefinite" />
+                            <animate attributeName="opacity" values="0.7;0.1;0.7" dur="2.2s" repeatCount="indefinite" />
+                          </circle>
                         )}
 
-                        {/* Selection Halo */}
-                        {isSelected && (
-                          <circle cx="0" cy="0" r="18" fill="none" stroke="#38BDF8" strokeWidth="2" strokeDasharray="4 4" />
+                        {/* Selected Node Ring */}
+                        {isSelected && !isB102 && (
+                          <circle cx="0" cy="0" r="18" fill="none" stroke="#087FD1" strokeWidth="2" strokeDasharray="3 3" />
                         )}
 
-                        {/* 3D Node Capsule */}
-                        <circle cx="0" cy="0" r="10" fill="#0A192F" stroke={color} strokeWidth="3" filter="url(#cyberGlow)" />
-                        <circle cx="0" cy="0" r="4" fill={color} />
+                        {/* Outer White Base Disc */}
+                        <circle cx="0" cy="0" r="11" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="2" />
 
-                        {/* Hologram Tooltip Flag */}
-                        <g transform="translate(0, -26)">
-                          <rect x="-38" y="-12" width="76" height="20" rx="6" fill="#020617" stroke={color} strokeWidth="1" opacity="0.95" />
-                          <text x="0" y="1" fill="#FFFFFF" fontSize="9" fontWeight="bold" textAnchor="middle">
+                        {/* Circular Status Core */}
+                        <circle cx="0" cy="0" r="8" fill={markerColor} />
+
+                        {/* Callout Information Pill Above Node */}
+                        <g transform="translate(0, -22)">
+                          <rect 
+                            x="-38" 
+                            y="-11" 
+                            width="76" 
+                            height="20" 
+                            rx="10" 
+                            fill="#FFFFFF" 
+                            stroke={isSelected ? '#087FD1' : '#E2E8F0'} 
+                            strokeWidth={isSelected ? '1.5' : '1'}
+                            className="shadow-xs" 
+                          />
+                          <circle cx="-26" cy="-1" r="3" fill={markerColor} />
+                          <text x="4" y="2" fill="#0F172A" fontSize="9" fontWeight="800" textAnchor="middle" fontFamily="monospace">
                             {node.code} &bull; {node.fill}%
                           </text>
                         </g>
@@ -544,91 +449,113 @@ export const LandingHero: React.FC = () => {
                     );
                   })}
 
-                  {/* 7. ISOMETRIC SANITATION TRUCK WITH HEADLIGHTS */}
+                  {/* 4. SANITATION COMPACTOR TRUCK (CLEAN BLUE ICON & SUBTLE MOVEMENT) */}
                   <motion.g
                     animate={{ x: truckPos.x, y: truckPos.y }}
                     transition={{ duration: 1.6, ease: "easeInOut" }}
                   >
-                    {/* Glowing Headlight Cones projecting forward onto road */}
-                    <polygon points="12,-5 55,-20 55,20 12,5" fill="url(#headlightBeam)" />
+                    {/* Shadow */}
+                    <ellipse cx="0" cy="14" rx="20" ry="6" fill="#000000" opacity="0.12" />
 
-                    {/* Truck Base Shadow */}
-                    <ellipse cx="0" cy="8" rx="20" ry="8" fill="#000000" opacity="0.5" />
-
-                    {/* Isometric EV Compactor Body */}
-                    <rect x="-16" y="-12" width="32" height="22" rx="6" fill="#0077CC" stroke="#38BDF8" strokeWidth="2" />
-                    {/* Cab windshield */}
-                    <rect x="4" y="-9" width="10" height="16" rx="3" fill="#38BDF8" opacity="0.8" />
+                    {/* Truck Base Badge */}
+                    <rect 
+                      x="-28" 
+                      y="-13" 
+                      width="56" 
+                      height="26" 
+                      rx="13" 
+                      fill="#087FD1" 
+                      stroke="#FFFFFF" 
+                      strokeWidth="2.5" 
+                      className="shadow-md"
+                    />
                     
-                    {/* Flashing Beacon */}
-                    <circle cx="-10" cy="-12" r="3" fill="#FBBF24">
-                      <animate attributeName="opacity" values="1;0.3;1" dur="0.8s" repeatCount="indefinite" />
-                    </circle>
-
-                    {/* Wheels */}
-                    <circle cx="-10" cy="11" r="3.5" fill="#334155" />
-                    <circle cx="8" cy="11" r="3.5" fill="#334155" />
-
-                    {/* Truck Identifier Badge */}
-                    <g transform="translate(0, -22)">
-                      <rect x="-34" y="-10" width="68" height="16" rx="5" fill="#0284C7" stroke="#38BDF8" strokeWidth="1" />
-                      <text x="0" y="2" fill="#FFFFFF" fontSize="8" fontWeight="black" textAnchor="middle">
-                        TRUCK #04
-                      </text>
-                    </g>
+                    <text x="0" y="3" fill="#FFFFFF" fontSize="9" fontWeight="800" textAnchor="middle">
+                      🚛 TRUCK #04
+                    </text>
                   </motion.g>
 
                 </svg>
               </div>
 
-              {/* DOCKED NODE TELEMETRY INSPECTOR BAR (BELOW CANVAS - ZERO OVERLAP) */}
-              <div className="mt-3 p-3 sm:p-3.5 rounded-2xl bg-[#0B0F19] border border-slate-800 text-left text-white shadow-md">
-                <div className="flex flex-wrap items-center justify-between gap-3">
+              {/* BOTTOM SELECTED BIN PANEL: Clean Surface Card (#FFFFFF, #E2E8F0 border, dark navy text) */}
+              <div className="mt-3.5 p-4 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs text-left">
+                <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
                   <div className="flex items-center gap-2.5">
-                    <div className={`w-2.5 h-2.5 rounded-full ${
-                      selectedNode.status === 'CRITICAL' ? 'bg-rose-500 animate-ping' :
-                      selectedNode.status === 'WARNING' ? 'bg-amber-400' :
-                      selectedNode.status === 'COLLECTED' ? 'bg-cyan-400' : 'bg-emerald-400'
+                    <div className={`w-3 h-3 rounded-full ${
+                      selectedNode.status === 'COLLECTED' ? 'bg-[#10B981]' :
+                      selectedNode.status === 'CRITICAL' ? 'bg-[#EF4444] animate-pulse' :
+                      selectedNode.status === 'WARNING' ? 'bg-[#F59E0B]' : 'bg-[#10B981]'
                     }`} />
-                    <span className="font-mono font-bold text-xs text-white">
-                      {selectedNode.code} &bull; {selectedNode.name}
-                    </span>
-                    <span className={`text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider ${
-                      selectedNode.status === 'CRITICAL' ? 'bg-rose-950 text-rose-300 border border-rose-800' :
-                      selectedNode.status === 'WARNING' ? 'bg-amber-950 text-amber-300 border border-amber-800' :
-                      selectedNode.status === 'COLLECTED' ? 'bg-cyan-950 text-cyan-300 border border-cyan-800' :
-                      'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-extrabold text-sm text-[#0F172A]">
+                          {selectedNode.code}
+                        </span>
+                        <span className="text-xs text-slate-600 font-medium">
+                          &bull; {selectedNode.name}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className={`text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider ${
+                      selectedNode.status === 'COLLECTED' 
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                        : selectedNode.status === 'CRITICAL'
+                        ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                        : selectedNode.status === 'WARNING'
+                        ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                        : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     }`}>
-                      {selectedNode.status}
+                      {selectedNode.status === 'COLLECTED' ? 'VERIFIED' : selectedNode.status}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 4-Pack Telemetry Metrics */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3">
+                  <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-slate-100">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider font-mono">Fill Level</span>
+                    <span className={`font-mono font-bold text-sm ${
+                      selectedNode.fill >= 85 ? 'text-rose-600' : selectedNode.fill >= 60 ? 'text-amber-600' : 'text-emerald-600'
+                    }`}>
+                      {selectedNode.fill}%
                     </span>
                   </div>
 
-                  {/* Telemetry Metrics */}
-                  <div className="flex flex-wrap items-center gap-2 text-xs">
-                    <span className="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px]">
-                      Fill: <strong className={selectedNode.fill >= 85 ? 'text-rose-400' : selectedNode.fill >= 60 ? 'text-amber-400' : 'text-sky-400'}>{selectedNode.fill}%</strong>
-                    </span>
-                    <span className="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-slate-300">
+                  <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-slate-100">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider font-mono">Temperature</span>
+                    <span className="font-mono font-bold text-sm text-[#0F172A]">
                       {selectedNode.temp}°C
                     </span>
-                    <span className="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-emerald-400">
-                      🔋 {selectedNode.battery}%
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-slate-100">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider font-mono">Battery</span>
+                    <span className="font-mono font-bold text-sm text-[#0F172A]">
+                      {selectedNode.battery}%
                     </span>
-                    <span className="hidden sm:inline-block px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-[11px] text-slate-400">
-                      {selectedNode.zone} &bull; {selectedNode.weight} kg
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-slate-100">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider font-mono">Zone</span>
+                    <span className="font-bold text-xs text-[#0F172A] truncate block">
+                      {selectedNode.zone}
                     </span>
                   </div>
                 </div>
               </div>
 
               {/* Caption Under Canvas */}
-              <div className="mt-3 flex items-center justify-between px-2 text-[11px] text-slate-500">
-                <span className="flex items-center gap-1.5">
-                  <Layers className="w-3.5 h-3.5 text-[#0077CC]" />
-                  <span>Click any node (B-101, B-102, B-103, B-104) to inspect 3D telemetry in real-time.</span>
+              <div className="mt-3 flex items-center justify-between px-1 text-[11px] text-slate-500">
+                <span className="flex items-center gap-1.5 font-medium">
+                  <Layers className="w-3.5 h-3.5 text-[#087FD1]" />
+                  <span>Click any node (B-101, B-102, B-103, B-104) to inspect operations telemetry.</span>
                 </span>
                 <span className="hidden sm:inline font-mono text-[10px] text-slate-400">
-                  LoRaWAN Mesh Protocol v2.4
+                  Municipal Grid Telemetry Active
                 </span>
               </div>
 
