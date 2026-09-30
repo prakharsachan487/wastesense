@@ -1,130 +1,269 @@
 'use client';
 
-import React from 'react';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  AlertTriangle, 
+  Clock, 
+  EyeOff, 
+  ArrowRight, 
+  ShieldCheck, 
+  Cpu, 
+  Radio, 
+  CheckCircle2, 
+  Sparkles,
+  Layers,
+  Zap,
+  Repeat
+} from 'lucide-react';
 
 export const LandingProblemSolution: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'DISCONNECTED' | 'CONNECTED'>('CONNECTED');
+
+  const problems = [
+    {
+      num: '01',
+      title: 'Disconnected Reporting',
+      desc: 'Citizen complaints often exist separately from field operations, creating untracked delays, duplicate calls, and public frustration.',
+      impact: 'Average resolution lag: 3-5 days',
+      icon: AlertTriangle,
+      tag: 'SILOED INTAKE',
+      color: 'border-rose-200 bg-rose-50/50 text-rose-700',
+    },
+    {
+      num: '02',
+      title: 'Reactive Collection',
+      desc: 'Waste is often collected based on fixed calendar schedules rather than actual container fill conditions, wasting diesel on half-empty bins.',
+      impact: 'Up to 38% fleet fuel wasted on empty runs',
+      icon: Clock,
+      tag: 'BLIND SCHEDULES',
+      color: 'border-amber-200 bg-amber-50/50 text-amber-700',
+    },
+    {
+      num: '03',
+      title: 'Limited Operational Visibility',
+      desc: 'Administrators lack one unified real-time view connecting smart bins, live grievances, and field worker locations across city sectors.',
+      impact: 'Zero tamper-proof verification trail',
+      icon: EyeOff,
+      tag: 'BLIND OPERATIONS',
+      color: 'border-slate-200 bg-slate-50 text-slate-700',
+    },
+  ];
+
+  const solutions = [
+    {
+      num: '01',
+      title: 'Live Telemetry & Geotagged Intake',
+      desc: 'Ultrasonic sensors stream sub-minute volume data while citizen reports capture live GPS coordinates with 100m geofence validation.',
+      impact: '100% telemetry coverage across all sectors',
+      icon: Radio,
+      tag: 'REAL-TIME SIGNALS',
+      color: 'border-sky-200 bg-sky-50/50 text-[#0077CC]',
+    },
+    {
+      num: '02',
+      title: 'Predictive & Priority-Driven Routing',
+      desc: 'AI calculates multi-factor urgency scores to auto-generate collection routes, directing vehicles only where intervention is required.',
+      impact: 'Optimized dynamic collection waypoints',
+      icon: Cpu,
+      tag: 'AI DISPATCH ENGINE',
+      color: 'border-indigo-200 bg-indigo-50/50 text-indigo-700',
+    },
+    {
+      num: '03',
+      title: 'Unified Command & Verified Proof',
+      desc: 'City supervisors maintain 360° visibility over IoT assets, fleet positions, and photographic resolution proof before tasks can be resolved.',
+      impact: 'Closed-loop accountability & audit log',
+      icon: ShieldCheck,
+      tag: 'VERIFIED RESOLUTION',
+      color: 'border-emerald-200 bg-emerald-50/50 text-emerald-700',
+    },
+  ];
+
   return (
-    <section id="overview" className="py-24 bg-gradient-to-b from-[#004A80] to-[#0077CC] text-white relative overflow-hidden">
+    <section id="solutions" className="py-24 bg-white relative overflow-hidden border-b border-slate-200">
+      {/* Background Subtle Ambience */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#F8FAFC]/50 to-white pointer-events-none" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Top Header matching Image 3 */}
-        <div className="max-w-3xl mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/15 border border-white/25 text-[11px] font-bold text-white uppercase tracking-widest mb-4 backdrop-blur-md">
-            Problem & Solution
+        {/* Section Heading */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 uppercase tracking-widest mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#0077CC]" />
+            Municipal Architecture Paradigm
           </div>
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1]">
-            Creating a Modern & Autonomous Smart Waste Infrastructure
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#0F172A] tracking-tight leading-[1.1]">
+            Waste management is a{' '}
+            <span className="bg-gradient-to-r from-[#0077CC] to-[#0EA5E9] bg-clip-text text-transparent">
+              coordination problem.
+            </span>
           </h2>
+          <p className="mt-5 text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
+            Traditional municipal sanitation relies on fragmented databases, blind driving schedules, and unverified work orders. WasteSense unites the entire lifecycle into one continuous loop.
+          </p>
         </div>
 
-        {/* Dual Problem & Solution Cards matching Image 3 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          
-          {/* Problem Card (White Background, Black Text) */}
-          <div className="p-8 sm:p-10 rounded-3xl bg-white text-[#0F172A] shadow-xl border border-slate-200/80 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0">
-                  <AlertCircle className="w-5 h-5" />
-                </div>
-                <h3 className="text-2xl font-black tracking-tight text-[#0F172A]">
-                  Municipal Challenges
-                </h3>
-              </div>
+        {/* Dynamic State Toggle Conduit: DISCONNECTED vs CONNECTED */}
+        <div className="max-w-xl mx-auto mb-12">
+          <div className="p-1.5 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-between shadow-inner">
+            <button
+              onClick={() => setActiveTab('DISCONNECTED')}
+              className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+                activeTab === 'DISCONNECTED'
+                  ? 'bg-white text-rose-600 shadow-sm border border-rose-100'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-rose-500" />
+              <span>01. Disconnected Municipal State</span>
+            </button>
 
-              <ul className="space-y-4 text-sm text-slate-600 leading-relaxed">
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
-                  <span>
-                    <strong>Outdated static collection schedules</strong> that do not reflect actual bin fill levels, causing public street overflows.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
-                  <span>
-                    <strong>Delayed paper or phone complaint intake</strong> that leaves citizen grievances unresolved for days without tracking.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
-                  <span>
-                    <strong>Excessive fuel and operational fleet expenses</strong> incurred from truck drivers navigating blind routes to empty containers.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
-                  <span>
-                    <strong>Zero accountability or verification</strong> on whether bins were genuinely cleared or simply bypassed by field workers.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
-                  <span>
-                    <strong>Eroding citizen confidence</strong> in municipal cleanliness and lack of incentives for proper waste segregation.
-                  </span>
-                </li>
-              </ul>
+            <button
+              onClick={() => setActiveTab('CONNECTED')}
+              className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+                activeTab === 'CONNECTED'
+                  ? 'bg-[#0077CC] text-white shadow-md shadow-[#0077CC]/25'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-sky-200" />
+              <span>02. WasteSense Connected Loop</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 3 Interactive Cards with Smooth State Morph */}
+        <AnimatePresence mode="wait">
+          {activeTab === 'DISCONNECTED' ? (
+            <motion.div
+              key="disconnected-grid"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
+              {problems.map((p) => {
+                const Icon = p.icon;
+                return (
+                  <div
+                    key={p.num}
+                    className="p-8 rounded-3xl bg-[#FFFDFD] border border-rose-100 hover:border-rose-300 transition-all shadow-sm flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-6">
+                        <span className="font-mono text-xs font-black text-rose-600 tracking-wider">
+                          STEP {p.num}
+                        </span>
+                        <span className={`text-[9px] font-black uppercase px-2.5 py-1 rounded-full border ${p.color}`}>
+                          {p.tag}
+                        </span>
+                      </div>
+
+                      <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 mb-5 group-hover:scale-105 transition-transform">
+                        <Icon className="w-6 h-6" />
+                      </div>
+
+                      <h3 className="text-xl font-black text-[#0F172A] tracking-tight">
+                        {p.title}
+                      </h3>
+
+                      <p className="mt-3 text-sm text-slate-600 leading-relaxed font-normal">
+                        {p.desc}
+                      </p>
+                    </div>
+
+                    <div className="mt-8 pt-4 border-t border-rose-100/60 flex items-center gap-2 text-xs font-semibold text-rose-600">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                      <span>{p.impact}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="connected-grid"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
+              {solutions.map((s) => {
+                const Icon = s.icon;
+                return (
+                  <div
+                    key={s.num}
+                    className="p-8 rounded-3xl bg-white border border-sky-100 hover:border-[#0077CC]/40 transition-all shadow-md shadow-sky-900/5 flex flex-col justify-between group relative overflow-hidden"
+                  >
+                    {/* Top ambient highlight */}
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0077CC] to-[#0EA5E9]" />
+
+                    <div>
+                      <div className="flex items-center justify-between mb-6">
+                        <span className="font-mono text-xs font-black text-[#0077CC] tracking-wider">
+                          STAGE {s.num}
+                        </span>
+                        <span className={`text-[9px] font-black uppercase px-2.5 py-1 rounded-full border ${s.color}`}>
+                          {s.tag}
+                        </span>
+                      </div>
+
+                      <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-[#0077CC] mb-5 group-hover:scale-105 transition-transform shadow-xs">
+                        <Icon className="w-6 h-6" />
+                      </div>
+
+                      <h3 className="text-xl font-black text-[#0F172A] tracking-tight">
+                        {s.title}
+                      </h3>
+
+                      <p className="mt-3 text-sm text-slate-600 leading-relaxed font-normal">
+                        {s.desc}
+                      </p>
+                    </div>
+
+                    <div className="mt-8 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-[#0077CC]">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      <span>{s.impact}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Center Transition Conduit Visual */}
+        <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-[#0F172A] text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800">
+          <div className="flex items-center gap-4 text-left">
+            <div className="w-12 h-12 rounded-2xl bg-[#0077CC]/20 border border-[#0077CC] flex items-center justify-center text-[#38BDF8] shrink-0">
+              <Repeat className="w-6 h-6 animate-spin duration-3000" />
             </div>
-
-            <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
-              <span>Status: Legacy Municipal Operations</span>
-              <span className="text-rose-600 font-bold">Inefficient &amp; Costly</span>
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-[#38BDF8]">
+                Unified Synchronization Conduit
+              </div>
+              <div className="text-base sm:text-lg font-bold text-white mt-0.5">
+                From Siloed Municipal Gaps ➔ Automated Closed-Loop Resolution
+              </div>
             </div>
           </div>
 
-          {/* Solution Card (Soft Light Blue / Mint Tinted Background) */}
-          <div className="p-8 sm:p-10 rounded-3xl bg-[#F0F9FF] text-[#0F172A] shadow-xl border border-[#BAE6FD] flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-2xl bg-[#0077CC] flex items-center justify-center text-white shrink-0 shadow-md shadow-[#0077CC]/20">
-                  <CheckCircle2 className="w-5 h-5" />
-                </div>
-                <h3 className="text-2xl font-black tracking-tight text-[#0F172A]">
-                  WasteSense Solution
-                </h3>
-              </div>
-
-              <ul className="space-y-4 text-sm text-slate-700 leading-relaxed">
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0077CC] mt-2 shrink-0" />
-                  <span>
-                    <strong>Autonomous IoT sensory mesh</strong> streaming continuous ultrasonic fill %, load cell weight, and internal fire hazard telemetry.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0077CC] mt-2 shrink-0" />
-                  <span>
-                    <strong>Predictive time-to-overflow algorithms</strong> that forecast container saturation 30–60 minutes in advance.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0077CC] mt-2 shrink-0" />
-                  <span>
-                    <strong>Dynamic route optimization</strong> cutting up to 38% fleet fuel consumption through waypoint-guided dispatch.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0077CC] mt-2 shrink-0" />
-                  <span>
-                    <strong>Tamper-resistant photographic completion proof</strong> that automatically resets sensor telemetry in the central command center.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0077CC] mt-2 shrink-0" />
-                  <span>
-                    <strong>Gamified citizen eco-rewards</strong> granting 50 municipal utility credits for verified grievance resolution.
-                  </span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-[#BAE6FD]/60 flex items-center justify-between text-xs text-[#004A80] font-medium">
-              <span>Status: Autonomous Smart Operations</span>
-              <span className="text-[#0077CC] font-bold">100% Closed Loop</span>
-            </div>
+          <div className="flex items-center gap-3 font-mono text-xs font-bold shrink-0">
+            <span className="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-400 border border-slate-700">
+              DISCONNECTED
+            </span>
+            <ArrowRight className="w-4 h-4 text-sky-400" />
+            <span className="px-3.5 py-1.5 rounded-xl bg-[#0077CC] text-white shadow-md shadow-[#0077CC]/30 border border-sky-400">
+              WASTESENSE
+            </span>
+            <ArrowRight className="w-4 h-4 text-sky-400" />
+            <span className="px-3 py-1.5 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-800">
+              CONNECTED
+            </span>
           </div>
-
         </div>
 
       </div>

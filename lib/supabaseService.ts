@@ -66,26 +66,74 @@ export async function getSupabaseComplaints(): Promise<Complaint[] | null> {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) return null;
+    if (error) {
+      console.warn('Supabase getComplaints error:', error.message);
+      return null;
+    }
     return data as Complaint[];
-  } catch {
+  } catch (err) {
+    console.warn('Supabase getComplaints catch:', err);
     return null;
   }
 }
 
 /**
  * Insert a new citizen complaint into Supabase
+ * Note: We strip the client string id so Postgres uuid_generate_v4() generates a valid UUID!
  */
-export async function insertSupabaseComplaint(complaint: Partial<Complaint>): Promise<boolean> {
-  if (!isSupabaseConfigured || !supabase) return false;
+export async function insertSupabaseComplaint(complaint: Partial<Complaint>): Promise<{ success: boolean; data?: any; error?: string }> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { success: false, error: 'Supabase client not configured' };
+  }
   try {
-    const { error } = await supabase
-      .from('complaints')
-      .insert([complaint]);
+    const { id, timeline, ...rest } = complaint;
 
-    return !error;
-  } catch {
-    return false;
+    const payload: Record<string, any> = {
+      ...rest,
+      timeline: timeline ? JSON.stringify(timeline) : '[]',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await supabase
+      .from('complaints')
+      .insert([payload])
+      .select();
+
+    if (error) {
+      console.error('Supabase insertComplaint error:', error.message);
+      return { success: false, error: error.message };
+    }
+
+    console.log('✓ Successfully stored complaint in Supabase Cloud DB:', data?.[0]?.complaint_id);
+    return { success: true, data: data?.[0] };
+  } catch (err: any) {
+    console.error('Supabase insertComplaint catch:', err);
+    return { success: false, error: err?.message || 'Network exception' };
+  }
+}
+
+/**
+ * Insert a new collection work order task into Supabase
+ */
+export async function insertSupabaseTask(task: Partial<CollectionTask>): Promise<{ success: boolean; data?: any; error?: string }> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { success: false, error: 'Supabase client not configured' };
+  }
+  try {
+    const { id, ...rest } = task;
+    const { data, error } = await supabase
+      .from('collection_tasks')
+      .insert([rest])
+      .select();
+
+    if (error) {
+      console.warn('Supabase insertTask error:', error.message);
+      return { success: false, error: error.message };
+    }
+    return { success: true, data: data?.[0] };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Network exception' };
   }
 }
 
@@ -103,6 +151,26 @@ export function subscribeToBinsRealtime(onBinChange: (bin: SmartBin) => void) {
       (payload) => {
         if (payload.new) {
           onBinChange(payload.new as SmartBin);
+        }
+      }
+    )
+    .subscribe();
+}
+
+/**
+ * Realtime WebSocket listener for Complaints
+ */
+export function subscribeToComplaintsRealtime(onComplaintChange: (complaint: Complaint) => void) {
+  if (!isSupabaseConfigured || !supabase) return null;
+
+  return supabase
+    .channel('public:complaints')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'complaints' },
+      (payload) => {
+        if (payload.new) {
+          onComplaintChange(payload.new as Complaint);
         }
       }
     )

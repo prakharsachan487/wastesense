@@ -105,7 +105,9 @@ export interface PickupRequest {
 export type TaskStatus = 
   | 'Pending' 
   | 'Assigned' 
+  | 'Accepted'
   | 'En Route' 
+  | 'On Site'
   | 'In Progress' 
   | 'Under Review' 
   | 'Completed' 

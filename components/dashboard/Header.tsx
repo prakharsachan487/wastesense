@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useWasteSense } from '../../context/WasteSenseContext';
 import { 
-  Bell, Zap, Shield, User, LogOut, Award, Truck 
+  Bell, Zap, Shield, User, LogOut, Award, Truck, Settings 
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -125,6 +125,16 @@ export const Header: React.FC = () => {
                     ))}
                   </div>
                 </div>
+              )}
+              {/* Settings button for Admin */}
+              {role === 'admin' && (
+                <Link
+                  href="/admin/settings"
+                  className="p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-[#0077CC] hover:bg-slate-200 transition"
+                  title="System Settings"
+                >
+                  <Settings className="w-4 h-4" />
+                </Link>
               )}
             </div>
           )}

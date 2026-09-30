@@ -18,7 +18,9 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' })
     styles = 'bg-emerald-50 text-emerald-700 border-emerald-200';
   } else if (norm === 'EN ROUTE' || norm === 'IN ROUTE') {
     styles = 'bg-purple-50 text-purple-700 border-purple-200';
-  } else if (norm === 'ASSIGNED' || norm === 'IN PROGRESS' || norm === 'SCHEDULED') {
+  } else if (norm === 'ON SITE' || norm === 'ARRIVED') {
+    styles = 'bg-amber-50 text-amber-800 border-amber-200';
+  } else if (norm === 'ASSIGNED' || norm === 'ACCEPTED' || norm === 'IN PROGRESS' || norm === 'SCHEDULED') {
     styles = 'bg-[#F0F9FF] text-[#0077CC] border-[#BAE6FD]';
   } else if (norm === 'SUBMITTED') {
     styles = 'bg-[#F0F9FF] text-[#0EA5E9] border-[#BAE6FD]';

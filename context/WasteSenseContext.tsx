@@ -14,7 +14,9 @@ import {
   getSupabaseComplaints, 
   updateSupabaseBinTelemetry, 
   insertSupabaseComplaint, 
-  subscribeToBinsRealtime 
+  insertSupabaseTask,
+  subscribeToBinsRealtime,
+  subscribeToComplaintsRealtime
 } from '../lib/supabaseService';
 import { isSupabaseConfigured } from '../lib/supabaseClient';
 import { detectZoneFromLocation, isWithinGeofence } from '../lib/geoUtils';
@@ -133,24 +135,39 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     getSupabaseBins().then((remoteBins) => {
       if (remoteBins && remoteBins.length > 0) {
-        setBins(remoteBins);
+        setBins((prev) => {
+          const remoteMap = new Map(remoteBins.map(b => [b.bin_id.toLowerCase(), b]));
+          return prev.map(b => remoteMap.get(b.bin_id.toLowerCase()) || b);
+        });
       }
     });
 
     getSupabaseComplaints().then((remoteComplaints) => {
       if (remoteComplaints && remoteComplaints.length > 0) {
-        setComplaints(remoteComplaints);
+        setComplaints((prev) => {
+          const remoteMap = new Map(remoteComplaints.map(c => [c.complaint_id, c]));
+          const remaining = prev.filter(c => !remoteMap.has(c.complaint_id));
+          return [...remoteComplaints, ...remaining];
+        });
       }
     });
 
-    const channel = subscribeToBinsRealtime((updatedBin) => {
+    const binChannel = subscribeToBinsRealtime((updatedBin) => {
       setBins((prev) =>
         prev.map((b) => (b.bin_id.toLowerCase() === updatedBin.bin_id.toLowerCase() ? { ...b, ...updatedBin } : b))
       );
     });
 
+    const complaintChannel = subscribeToComplaintsRealtime((incomingComplaint) => {
+      setComplaints((prev) => {
+        if (prev.some(c => c.complaint_id === incomingComplaint.complaint_id)) return prev;
+        return [incomingComplaint, ...prev];
+      });
+    });
+
     return () => {
-      channel?.unsubscribe();
+      binChannel?.unsubscribe();
+      complaintChannel?.unsubscribe();
     };
   }, []);
 
@@ -317,7 +334,15 @@ export const WasteSenseProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setTasks(prev => [newTask, ...prev]);
 
     // Background async insert to Supabase if configured
-    insertSupabaseComplaint(newComplaint).catch(() => {});
+    insertSupabaseComplaint(newComplaint).then(res => {
+      if (res.success) {
+        console.log('✓ Complaint saved to Supabase Cloud DB:', newComplaint.complaint_id);
+      } else {
+        console.warn('Supabase complaint insert error:', res.error);
+      }
+    }).catch(err => console.warn('Supabase complaint catch:', err));
+
+    insertSupabaseTask(newTask).catch(() => {});
 
     addNotification({
       title: `Work Order Auto-Assigned: ${newTask.task_code}`,

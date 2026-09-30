@@ -8,7 +8,7 @@ import {
 
 export const LandingBento: React.FC = () => {
   return (
-    <section id="features" className="py-24 bg-white relative overflow-hidden border-b border-slate-200">
+    <section id="technology" className="py-24 bg-white relative overflow-hidden border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
