@@ -32,16 +32,46 @@ export const WordsPreloader: React.FC<{ onComplete?: () => void }> = ({ onComple
   useEffect(() => {
     setMounted(true);
 
-    // Check if preloader was already seen in current browser session
+    // 1. Detect if this is a Page Reload (F5 / Ctrl+R / Browser reload button)
+    let isReload = false;
+    let isBackForward = false;
     try {
-      const alreadySeen = typeof window !== 'undefined' && sessionStorage.getItem('wastesense_preloader_seen') === 'true';
-      if (alreadySeen) {
-        setIsActive(false);
-        if (onComplete) onComplete();
-        return;
+      const navEntries = performance.getEntriesByType('navigation');
+      if (navEntries.length > 0) {
+        const navTiming = navEntries[0] as PerformanceNavigationTiming;
+        if (navTiming.type === 'reload') isReload = true;
+        if (navTiming.type === 'back_forward') isBackForward = true;
+      } else if (typeof performance !== 'undefined' && (performance as any).navigation) {
+        const pNav = (performance as any).navigation;
+        if (pNav.type === 1) isReload = true;
+        if (pNav.type === 2) isBackForward = true;
       }
-    } catch {
-      // In case storage is restricted
+    } catch {}
+
+    // 2. Detect if user is returning from another internal portal (/admin, /citizen, /worker, /login)
+    let arrivedFromInternalPage = false;
+    try {
+      const prevPath = sessionStorage.getItem('wastesense_previous_path');
+      if (prevPath && prevPath !== '/') {
+        arrivedFromInternalPage = true;
+      }
+    } catch {}
+
+    // BEHAVIOR RULES:
+    // - If user reloaded the landing page: ALWAYS SHOW PRELOADER
+    // - If user came back via Back button or from another internal portal: SKIP PRELOADER
+    // - If fresh direct visit: SHOW PRELOADER
+    if (!isReload && (isBackForward || arrivedFromInternalPage)) {
+      setIsActive(false);
+      if (onComplete) onComplete();
+      return;
+    }
+
+    // Clean previous internal path marker on reload
+    if (isReload) {
+      try {
+        sessionStorage.removeItem('wastesense_previous_path');
+      } catch {}
     }
 
     setIsActive(true);
