@@ -13,9 +13,25 @@ const WORDS = [
 
 export const WordsPreloader: React.FC<{ onComplete?: () => void }> = ({ onComplete }) => {
   const [index, setIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+
+    // Prevent re-running preloader if already seen in current browser session
+    try {
+      const alreadySeen = typeof window !== 'undefined' && sessionStorage.getItem('wastesense_preloader_seen') === 'true';
+      if (alreadySeen) {
+        setLoading(false);
+        if (onComplete) onComplete();
+        return;
+      }
+    } catch {
+      // In case sessionStorage is blocked
+    }
+
+    setLoading(true);
     // Prevent scrolling while preloader is active
     document.body.style.overflow = 'hidden';
 
@@ -28,6 +44,9 @@ export const WordsPreloader: React.FC<{ onComplete?: () => void }> = ({ onComple
           clearInterval(interval);
           setTimeout(() => {
             setLoading(false);
+            try {
+              sessionStorage.setItem('wastesense_preloader_seen', 'true');
+            } catch {}
             document.body.style.overflow = '';
             if (onComplete) onComplete();
           }, 450);
@@ -44,6 +63,9 @@ export const WordsPreloader: React.FC<{ onComplete?: () => void }> = ({ onComple
 
   // 5 vertical columns for the clean white stairs/shutter exit transition
   const columns = [0, 1, 2, 3, 4];
+
+  if (!mounted || !loading) return null;
+
 
   return (
     <AnimatePresence mode="wait">
