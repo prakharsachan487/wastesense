@@ -87,50 +87,54 @@ export const Header: React.FC = () => {
 
           {/* System Notifications (Admin & Worker) */}
           {role !== 'citizen' && (
-            <div className="relative">
-              <button
-                onClick={() => setShowNotifs(!showNotifs)}
-                className="p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-[#0077CC] hover:bg-slate-200 transition relative"
-                title="System Notifications"
-              >
-                <Bell className="w-4 h-4" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
-                    {unreadCount}
-                  </span>
-                )}
-              </button>
+            <div className="flex items-center gap-2">
+              {/* Notification Bell Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowNotifs(!showNotifs)}
+                  className="p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-[#0077CC] hover:bg-slate-200 transition relative flex items-center justify-center"
+                  title="System Notifications"
+                >
+                  <Bell className="w-4 h-4" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
 
-              {showNotifs && (
-                <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 z-50">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-100 mb-2">
-                    <span className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">Alerts Queue</span>
-                    <span className="text-[10px] text-slate-500">{notifications.length} events</span>
-                  </div>
-                  <div className="space-y-2 max-h-72 overflow-y-auto">
-                    {notifications.map(n => (
-                      <div 
-                        key={n.id}
-                        onClick={() => markNotificationRead(n.id)}
-                        className={`p-2.5 rounded-xl text-xs cursor-pointer transition ${
-                          n.read ? 'bg-slate-50 text-slate-500' : 'bg-[#F0F9FF] text-[#0F172A] border-l-2 border-[#0077CC]'
-                        }`}
-                      >
-                        <div className="font-semibold flex items-center justify-between">
-                          <span>{n.title}</span>
-                          <span className="text-[10px] text-slate-500">{n.timestamp}</span>
+                {showNotifs && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 z-50">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 mb-2">
+                      <span className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">Alerts Queue</span>
+                      <span className="text-[10px] text-slate-500">{notifications.length} events</span>
+                    </div>
+                    <div className="space-y-2 max-h-72 overflow-y-auto">
+                      {notifications.map(n => (
+                        <div 
+                          key={n.id}
+                          onClick={() => markNotificationRead(n.id)}
+                          className={`p-2.5 rounded-xl text-xs cursor-pointer transition ${
+                            n.read ? 'bg-slate-50 text-slate-500' : 'bg-[#F0F9FF] text-[#0F172A] border-l-2 border-[#0077CC]'
+                          }`}
+                        >
+                          <div className="font-semibold flex items-center justify-between">
+                            <span>{n.title}</span>
+                            <span className="text-[10px] text-slate-500">{n.timestamp}</span>
+                          </div>
+                          <p className="text-[11px] text-slate-600 mt-1">{n.message}</p>
                         </div>
-                        <p className="text-[11px] text-slate-600 mt-1">{n.message}</p>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
               {/* Settings button for Admin */}
               {role === 'admin' && (
                 <Link
                   href="/admin/settings"
-                  className="p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-[#0077CC] hover:bg-slate-200 transition"
+                  className="p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-[#0077CC] hover:bg-slate-200 transition flex items-center justify-center"
                   title="System Settings"
                 >
                   <Settings className="w-4 h-4" />
