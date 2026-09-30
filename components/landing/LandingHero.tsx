@@ -579,20 +579,20 @@ export const LandingHero: React.FC = () => {
                   </motion.g>
 
                 </svg>
+              </div>
 
-                {/* BOTTOM FLOATING NODE INSPECTOR CARD */}
-                <div className="absolute bottom-3 left-3 right-3 sm:left-auto sm:right-3 sm:w-80 p-3 sm:p-4 rounded-2xl bg-slate-950/90 backdrop-blur-xl border border-slate-800 shadow-2xl text-left text-white">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-2.5 h-2.5 rounded-full ${
-                        selectedNode.status === 'CRITICAL' ? 'bg-rose-500 animate-ping' :
-                        selectedNode.status === 'WARNING' ? 'bg-amber-400' :
-                        selectedNode.status === 'COLLECTED' ? 'bg-cyan-400' : 'bg-emerald-400'
-                      }`} />
-                      <span className="font-mono font-bold text-xs text-white">
-                        {selectedNode.code} &bull; {selectedNode.name}
-                      </span>
-                    </div>
+              {/* DOCKED NODE TELEMETRY INSPECTOR BAR (BELOW CANVAS - ZERO OVERLAP) */}
+              <div className="mt-3 p-3 sm:p-3.5 rounded-2xl bg-[#0B0F19] border border-slate-800 text-left text-white shadow-md">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className={`w-2.5 h-2.5 rounded-full ${
+                      selectedNode.status === 'CRITICAL' ? 'bg-rose-500 animate-ping' :
+                      selectedNode.status === 'WARNING' ? 'bg-amber-400' :
+                      selectedNode.status === 'COLLECTED' ? 'bg-cyan-400' : 'bg-emerald-400'
+                    }`} />
+                    <span className="font-mono font-bold text-xs text-white">
+                      {selectedNode.code} &bull; {selectedNode.name}
+                    </span>
                     <span className={`text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider ${
                       selectedNode.status === 'CRITICAL' ? 'bg-rose-950 text-rose-300 border border-rose-800' :
                       selectedNode.status === 'WARNING' ? 'bg-amber-950 text-amber-300 border border-amber-800' :
@@ -603,37 +603,22 @@ export const LandingHero: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
-                    <div className="p-2 rounded-xl bg-slate-900 border border-slate-800">
-                      <span className="text-[10px] text-slate-400 block font-semibold">Fill Level</span>
-                      <span className={`font-mono font-bold text-sm ${
-                        selectedNode.fill >= 85 ? 'text-rose-400' : selectedNode.fill >= 60 ? 'text-amber-400' : 'text-sky-400'
-                      }`}>
-                        {selectedNode.fill}%
-                      </span>
-                    </div>
-
-                    <div className="p-2 rounded-xl bg-slate-900 border border-slate-800">
-                      <span className="text-[10px] text-slate-400 block font-semibold flex items-center justify-center gap-0.5">
-                        <Thermometer className="w-2.5 h-2.5" /> Temp
-                      </span>
-                      <span className="font-mono font-bold text-sm text-slate-200">{selectedNode.temp}°C</span>
-                    </div>
-
-                    <div className="p-2 rounded-xl bg-slate-900 border border-slate-800">
-                      <span className="text-[10px] text-slate-400 block font-semibold flex items-center justify-center gap-0.5">
-                        <Battery className="w-2.5 h-2.5 text-emerald-400" /> Battery
-                      </span>
-                      <span className="font-mono font-bold text-sm text-emerald-400">{selectedNode.battery}%</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-2.5 flex items-center justify-between text-[11px] text-slate-400">
-                    <span>Zone: <strong className="text-slate-200">{selectedNode.zone}</strong></span>
-                    <span>Gross Weight: <strong className="text-slate-200">{selectedNode.weight} kg</strong></span>
+                  {/* Telemetry Metrics */}
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <span className="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px]">
+                      Fill: <strong className={selectedNode.fill >= 85 ? 'text-rose-400' : selectedNode.fill >= 60 ? 'text-amber-400' : 'text-sky-400'}>{selectedNode.fill}%</strong>
+                    </span>
+                    <span className="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-slate-300">
+                      {selectedNode.temp}°C
+                    </span>
+                    <span className="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-emerald-400">
+                      🔋 {selectedNode.battery}%
+                    </span>
+                    <span className="hidden sm:inline-block px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-[11px] text-slate-400">
+                      {selectedNode.zone} &bull; {selectedNode.weight} kg
+                    </span>
                   </div>
                 </div>
-
               </div>
 
               {/* Caption Under Canvas */}

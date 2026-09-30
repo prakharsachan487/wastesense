@@ -235,37 +235,6 @@ export const LandingProblemSolution: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* Center Transition Conduit Visual */}
-        <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-[#0F172A] text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800">
-          <div className="flex items-center gap-4 text-left">
-            <div className="w-12 h-12 rounded-2xl bg-[#0077CC]/20 border border-[#0077CC] flex items-center justify-center text-[#38BDF8] shrink-0">
-              <Repeat className="w-6 h-6 animate-spin duration-3000" />
-            </div>
-            <div>
-              <div className="text-[10px] font-black uppercase tracking-widest text-[#38BDF8]">
-                Unified Synchronization Conduit
-              </div>
-              <div className="text-base sm:text-lg font-bold text-white mt-0.5">
-                From Siloed Municipal Gaps ➔ Automated Closed-Loop Resolution
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 font-mono text-xs font-bold shrink-0">
-            <span className="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-400 border border-slate-700">
-              DISCONNECTED
-            </span>
-            <ArrowRight className="w-4 h-4 text-sky-400" />
-            <span className="px-3.5 py-1.5 rounded-xl bg-[#0077CC] text-white shadow-md shadow-[#0077CC]/30 border border-sky-400">
-              WASTESENSE
-            </span>
-            <ArrowRight className="w-4 h-4 text-sky-400" />
-            <span className="px-3 py-1.5 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-800">
-              CONNECTED
-            </span>
-          </div>
-        </div>
-
       </div>
     </section>
   );

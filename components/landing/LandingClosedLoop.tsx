@@ -166,30 +166,6 @@ export const LandingClosedLoop: React.FC = () => {
           </div>
         </div>
 
-        {/* Detailed Circuit Inspector Box */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
-          <div className="flex items-center gap-4 text-left">
-            <div className="w-12 h-12 rounded-2xl bg-sky-950 border border-sky-600 flex items-center justify-center text-sky-400 shrink-0">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-[10px] font-mono uppercase tracking-widest text-sky-400 font-bold">
-                AUDIT-LOCKED COMPLIANCE CIRCUIT
-              </div>
-              <div className="text-sm sm:text-base font-bold text-white mt-0.5">
-                Every task requires before/after photographic matching &amp; &lt;100m GPS geofence validation.
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 shrink-0">
-            <span className="text-xs font-mono text-emerald-400 font-semibold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-              100% Closed Loop Complete
-            </span>
-          </div>
-        </div>
-
       </div>
     </section>
   );
