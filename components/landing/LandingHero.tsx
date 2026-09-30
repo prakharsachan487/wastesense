@@ -309,89 +309,185 @@ export const LandingHero: React.FC = () => {
                 </div>
               )}
 
-              {/* LIGHT GEOSPATIAL MAP CANVAS (NO CYBERPUNK / NO DARK THEME) */}
+              {/* LIGHT GEOSPATIAL MAP CANVAS (HIGH VISIBILITY & COMPREHENSION • LIGHT MUNICIPAL PALETTE) */}
               <div 
-                className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl bg-[#F7FAFC] border border-[#E2E8F0] shadow-inner select-none overflow-hidden"
+                className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl bg-[#F8FAFC] border-2 border-[#CBD5E1] shadow-inner select-none overflow-hidden"
                 style={{
-                  backgroundImage: `radial-gradient(#CBD5E1 1.2px, transparent 1.2px)`,
-                  backgroundSize: '20px 20px',
+                  backgroundImage: `radial-gradient(#94A3B8 1px, transparent 1px)`,
+                  backgroundSize: '22px 22px',
                 }}
               >
+                {/* On-Canvas Visual Legend (Top-Right) */}
+                <div className="absolute top-3 right-3 z-20 hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white/95 border border-slate-200/90 shadow-md text-[10px] font-semibold text-slate-700 backdrop-blur-xs">
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse" />
+                    <span>Critical (≥85%)</span>
+                  </div>
+                  <div className="flex items-center gap-1 border-l border-slate-200 pl-2">
+                    <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
+                    <span>Warning</span>
+                  </div>
+                  <div className="flex items-center gap-1 border-l border-slate-200 pl-2">
+                    <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+                    <span>Normal</span>
+                  </div>
+                  <div className="flex items-center gap-1 border-l border-slate-200 pl-2 text-[#0077CC]">
+                    <span className="w-2 h-2 rounded-full bg-[#0077CC]" />
+                    <span>En Route</span>
+                  </div>
+                </div>
+
                 <svg className="absolute inset-0 w-full h-full" viewBox="0 0 860 480" preserveAspectRatio="xMidYMid meet">
+                  <defs>
+                    {/* Headlight illumination beam */}
+                    <linearGradient id="headlightBeam" x1="0%" y1="50%" x2="100%" y2="50%">
+                      <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#38BDF8" stopOpacity="0" />
+                    </linearGradient>
+
+                    {/* Subtle Drop Shadow */}
+                    <filter id="mapShadow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.12" />
+                    </filter>
+                  </defs>
                   
-                  {/* 1. MUNICIPAL ZONE SHAPES (SUBTLE ARCHITECTURAL FOOTPRINTS) */}
+                  {/* 1. MUNICIPAL ZONE SHAPES WITH DISTINCT BUILDING FOOTPRINTS */}
                   
-                  {/* Zone A: Commercial District */}
+                  {/* Zone A: Commercial Hub (Sector 12) */}
                   <g>
-                    <rect x="440" y="70" width="260" height="190" rx="16" fill="#087FD1" fillOpacity="0.04" stroke="#BAE6FD" strokeWidth="1.5" strokeDasharray="4 4" />
-                    <text x="570" y="98" fill="#004A80" fontSize="10" fontWeight="700" letterSpacing="0.8" textAnchor="middle">
-                      Zone A &bull; Commercial
-                    </text>
+                    <rect x="430" y="60" width="270" height="200" rx="18" fill="#F0F9FF" stroke="#0284C7" strokeWidth="1.8" strokeDasharray="5 5" opacity="0.9" />
+                    {/* Mini Architectural Building Footprints */}
+                    <rect x="450" y="80" width="45" height="35" rx="6" fill="#BAE6FD" opacity="0.6" />
+                    <rect x="505" y="80" width="60" height="35" rx="6" fill="#BAE6FD" opacity="0.6" />
+                    <rect x="640" y="80" width="45" height="40" rx="6" fill="#BAE6FD" opacity="0.6" />
+                    <rect x="635" y="135" width="50" height="45" rx="6" fill="#BAE6FD" opacity="0.6" />
+                    
+                    {/* Zone Badge */}
+                    <g transform="translate(565, 82)">
+                      <rect x="-90" y="-12" width="180" height="22" rx="11" fill="#FFFFFF" stroke="#0284C7" strokeWidth="1.2" filter="url(#mapShadow)" />
+                      <text x="0" y="3" fill="#004A80" fontSize="10" fontWeight="800" letterSpacing="0.5" textAnchor="middle">
+                        🏢 ZONE A &bull; COMMERCIAL HUB
+                      </text>
+                    </g>
                   </g>
 
-                  {/* Zone B: Transit Corridor */}
+                  {/* Zone B: Transit Corridor (Metro & Railway) */}
                   <g>
-                    <rect x="110" y="80" width="220" height="150" rx="16" fill="#F1F5F9" fillOpacity="0.7" stroke="#E2E8F0" strokeWidth="1.5" />
-                    <text x="220" y="106" fill="#475569" fontSize="10" fontWeight="700" letterSpacing="0.8" textAnchor="middle">
-                      Zone B &bull; Transit
-                    </text>
+                    <rect x="100" y="70" width="230" height="160" rx="18" fill="#F1F5F9" stroke="#64748B" strokeWidth="1.8" strokeDasharray="5 5" opacity="0.95" />
+                    {/* Transit Platform Lines */}
+                    <line x1="120" y1="120" x2="200" y2="120" stroke="#CBD5E1" strokeWidth="6" strokeLinecap="round" />
+                    <line x1="120" y1="135" x2="200" y2="135" stroke="#CBD5E1" strokeWidth="6" strokeLinecap="round" />
+
+                    <g transform="translate(215, 90)">
+                      <rect x="-85" y="-12" width="170" height="22" rx="11" fill="#FFFFFF" stroke="#64748B" strokeWidth="1.2" filter="url(#mapShadow)" />
+                      <text x="0" y="3" fill="#334155" fontSize="10" fontWeight="800" letterSpacing="0.5" textAnchor="middle">
+                        🚆 ZONE B &bull; TRANSIT PLAZA
+                      </text>
+                    </g>
                   </g>
 
-                  {/* Zone C: Residential Ward */}
+                  {/* Zone C: Residential Ward 12 */}
                   <g>
-                    <rect x="230" y="300" width="260" height="150" rx="16" fill="#F1F5F9" fillOpacity="0.7" stroke="#E2E8F0" strokeWidth="1.5" />
-                    <text x="360" y="326" fill="#475569" fontSize="10" fontWeight="700" letterSpacing="0.8" textAnchor="middle">
-                      Zone C &bull; Residential
-                    </text>
+                    <rect x="220" y="290" width="270" height="165" rx="18" fill="#F0FDF4" stroke="#10B981" strokeWidth="1.8" strokeDasharray="5 5" opacity="0.95" />
+                    {/* Residential Blocks */}
+                    <rect x="240" y="315" width="40" height="30" rx="4" fill="#BBF7D0" opacity="0.6" />
+                    <rect x="290" y="315" width="40" height="30" rx="4" fill="#BBF7D0" opacity="0.6" />
+                    <rect x="420" y="315" width="55" height="30" rx="4" fill="#BBF7D0" opacity="0.6" />
+
+                    <g transform="translate(355, 310)">
+                      <rect x="-85" y="-12" width="170" height="22" rx="11" fill="#FFFFFF" stroke="#10B981" strokeWidth="1.2" filter="url(#mapShadow)" />
+                      <text x="0" y="3" fill="#065F46" fontSize="10" fontWeight="800" letterSpacing="0.5" textAnchor="middle">
+                        🏘️ ZONE C &bull; RESIDENTIAL WARD
+                      </text>
+                    </g>
                   </g>
 
-                  {/* Zone D: Medical Center */}
+                  {/* Zone D: Healthcare / Medical Center */}
                   <g>
-                    <rect x="620" y="240" width="200" height="180" rx="16" fill="#10B981" fillOpacity="0.04" stroke="#A7F3D0" strokeWidth="1.5" strokeDasharray="4 4" />
-                    <text x="720" y="266" fill="#065F46" fontSize="10" fontWeight="700" letterSpacing="0.8" textAnchor="middle">
-                      Zone D &bull; Medical
-                    </text>
+                    <rect x="610" y="230" width="210" height="195" rx="18" fill="#FFFBEB" stroke="#F59E0B" strokeWidth="1.8" strokeDasharray="5 5" opacity="0.95" />
+                    {/* Medical Cross Building */}
+                    <rect x="635" y="260" width="35" height="35" rx="6" fill="#FDE68A" opacity="0.6" />
+
+                    <g transform="translate(715, 252)">
+                      <rect x="-80" y="-12" width="160" height="22" rx="11" fill="#FFFFFF" stroke="#F59E0B" strokeWidth="1.2" filter="url(#mapShadow)" />
+                      <text x="0" y="3" fill="#92400E" fontSize="10" fontWeight="800" letterSpacing="0.5" textAnchor="middle">
+                        🏥 ZONE D &bull; MEDICAL CTR
+                      </text>
+                    </g>
                   </g>
 
-                  {/* 2. LIGHT GRAY MUNICIPAL ROAD NETWORK */}
-                  {/* Road Base Layer (Light Slate/Gray) */}
-                  <g stroke="#E2E8F0" strokeWidth="26" strokeLinecap="round" strokeLinejoin="round" fill="none">
-                    <path d="M 70 260 L 360 260 L 560 180 L 760 180" />
-                    <path d="M 220 110 L 220 260 L 360 390 L 600 390" />
-                    <path d="M 560 180 L 720 310 L 800 310" />
+                  {/* 2. HIGH-CONTRAST MUNICIPAL ROAD NETWORK (DEFINED ASPHALT + LANE DIVIDERS) */}
+                  {/* Road Outer Edge Border (Strong Slate Contrast) */}
+                  <g stroke="#94A3B8" strokeWidth="36" strokeLinecap="round" strokeLinejoin="round" fill="none">
+                    <path d="M 60 260 L 360 260 L 560 180 L 780 180" />
+                    <path d="M 220 100 L 220 260 L 360 390 L 620 390" />
+                    <path d="M 560 180 L 720 310 L 810 310" />
                   </g>
 
-                  {/* Road Surface Inner Layer */}
-                  <g stroke="#FFFFFF" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" fill="none">
-                    <path d="M 70 260 L 360 260 L 560 180 L 760 180" />
-                    <path d="M 220 110 L 220 260 L 360 390 L 600 390" />
-                    <path d="M 560 180 L 720 310 L 800 310" />
+                  {/* Road Clean White Asphalt Surface */}
+                  <g stroke="#FFFFFF" strokeWidth="26" strokeLinecap="round" strokeLinejoin="round" fill="none">
+                    <path d="M 60 260 L 360 260 L 560 180 L 780 180" />
+                    <path d="M 220 100 L 220 260 L 360 390 L 620 390" />
+                    <path d="M 560 180 L 720 310 L 810 310" />
                   </g>
 
-                  {/* INACTIVE FEEDER ROUTES (Dashed Gray Lines) */}
-                  <g stroke="#CBD5E1" strokeWidth="2" strokeDasharray="5 5" fill="none">
-                    <path d="M 220 110 L 220 260" />
-                    <path d="M 360 260 L 360 390 L 600 390" />
-                    <path d="M 560 180 L 720 310 L 800 310" />
-                    <path d="M 560 180 L 760 180" />
+                  {/* Road Center Dashed Lane Divider (Guides the Eye) */}
+                  <g stroke="#94A3B8" strokeWidth="1.8" strokeDasharray="6 6" fill="none">
+                    <path d="M 60 260 L 360 260 L 560 180 L 780 180" />
+                    <path d="M 220 100 L 220 260 L 360 390 L 620 390" />
+                    <path d="M 560 180 L 720 310 L 810 310" />
                   </g>
 
-                  {/* ACTIVE DISPATCH ROUTE (Solid Blue Line - Clean, No Neon) */}
+                  {/* Street Name Typography Along Roads */}
+                  <text x="250" y="254" fill="#64748B" fontSize="9" fontWeight="800" letterSpacing="1.2" textAnchor="middle" opacity="0.9">
+                    CENTRAL ARTERIAL BLVD
+                  </text>
+                  <text x="660" y="174" fill="#64748B" fontSize="9" fontWeight="800" letterSpacing="1.2" textAnchor="middle" opacity="0.9">
+                    MARKET EXPRESSWAY
+                  </text>
+                  <text x="490" y="384" fill="#64748B" fontSize="9" fontWeight="800" letterSpacing="1.2" textAnchor="middle" opacity="0.9">
+                    SECTOR 12 RING RD
+                  </text>
+
+                  {/* 3. ACTIVE DISPATCH ROUTE (FLOWING BLUE ANIMATED TRAIL TO B-102) */}
                   <path 
-                    d="M 130 260 L 360 260 L 560 180" 
+                    d="M 125 260 L 360 260 L 560 180" 
                     fill="none" 
-                    stroke="#087FD1" 
-                    strokeWidth="3.5" 
+                    stroke="#0284C7" 
+                    strokeWidth="5" 
                     strokeLinecap="round" 
                   />
+                  {/* Flowing Dashed Direction Pulse */}
+                  <path 
+                    d="M 125 260 L 360 260 L 560 180" 
+                    fill="none" 
+                    stroke="#38BDF8" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeDasharray="8 6"
+                  >
+                    <animate attributeName="stroke-dashoffset" values="28;0" dur="1s" repeatCount="indefinite" />
+                  </path>
 
-                  {/* Fleet Operations Depot Base Marker */}
-                  <g transform="translate(90, 260)">
-                    <rect x="-22" y="-12" width="44" height="24" rx="8" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="1.5" />
-                    <text x="0" y="3" fill="#64748B" fontSize="9" fontWeight="700" textAnchor="middle">DEPOT</text>
+                  {/* Active Route Waypoint Tag */}
+                  <g transform="translate(450, 215)">
+                    <rect x="-65" y="-10" width="130" height="20" rx="10" fill="#0077CC" filter="url(#mapShadow)" />
+                    <text x="0" y="3" fill="#FFFFFF" fontSize="8.5" fontWeight="800" textAnchor="middle" letterSpacing="0.4">
+                      ⚡ DISPATCH ROUTE &bull; 1.4 KM
+                    </text>
                   </g>
 
-                  {/* 3. SMART BIN NODES (CLEAN CIRCULAR MARKERS WITH OPERATION BADGES) */}
+                  {/* Municipal Fleet Operations Depot Marker */}
+                  <g transform="translate(90, 260)">
+                    <rect x="-35" y="-22" width="70" height="44" rx="12" fill="#FFFFFF" stroke="#0077CC" strokeWidth="2" filter="url(#mapShadow)" />
+                    <circle cx="-16" cy="-4" r="6" fill="#0077CC" />
+                    <text x="-16" y="-1" fill="#FFFFFF" fontSize="8" fontWeight="bold" textAnchor="middle">D</text>
+                    <text x="10" y="-7" fill="#0F172A" fontSize="9" fontWeight="900" textAnchor="middle">DEPOT</text>
+                    <text x="10" y="5" fill="#64748B" fontSize="7.5" fontWeight="bold" textAnchor="middle">BASE 01</text>
+                    <rect x="-26" y="11" width="52" height="6" rx="3" fill="#E2E8F0" />
+                  </g>
+
+                  {/* 4. SMART BIN NODES (PROMINENT BEACON PINS WITH LOCATION & TELEMETRY LABELS) */}
                   {nodes.map((node) => {
                     const isSelected = selectedNode.code === node.code;
                     const isB102 = node.code === 'B-102';
@@ -400,6 +496,7 @@ export const LandingHero: React.FC = () => {
                     const isWarning = node.status === 'WARNING';
 
                     const markerColor = isCollected ? '#10B981' : isCritical ? '#EF4444' : isWarning ? '#F59E0B' : '#10B981';
+                    const borderColor = isCritical ? '#DC2626' : isWarning ? '#D97706' : '#059669';
 
                     return (
                       <g 
@@ -408,71 +505,115 @@ export const LandingHero: React.FC = () => {
                         onClick={() => setSelectedNode(node)}
                         className="cursor-pointer group"
                       >
-                        {/* Subtle Pulsing Ring around B-102 */}
-                        {isB102 && (
-                          <circle cx="0" cy="0" r="22" fill="none" stroke="#087FD1" strokeWidth="2" opacity="0.6">
-                            <animate attributeName="r" values="16;28;16" dur="2.2s" repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="0.7;0.1;0.7" dur="2.2s" repeatCount="indefinite" />
-                          </circle>
+                        {/* Ground Shadow & Anchor Disc */}
+                        <ellipse cx="0" cy="4" rx="14" ry="6" fill="#000000" opacity="0.16" />
+
+                        {/* Critical Radar Shockwaves Pulsing outwards around B-102 */}
+                        {isCritical && (
+                          <g>
+                            <circle cx="0" cy="0" r="28" fill="none" stroke="#EF4444" strokeWidth="2.5" opacity="0.8">
+                              <animate attributeName="r" values="14;38;14" dur="1.8s" repeatCount="indefinite" />
+                              <animate attributeName="opacity" values="0.9;0.0;0.9" dur="1.8s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="0" cy="0" r="46" fill="#EF4444" opacity="0.12">
+                              <animate attributeName="r" values="14;48;14" dur="1.8s" repeatCount="indefinite" />
+                              <animate attributeName="opacity" values="0.25;0.0;0.25" dur="1.8s" repeatCount="indefinite" />
+                            </circle>
+                          </g>
                         )}
 
                         {/* Selected Node Ring */}
-                        {isSelected && !isB102 && (
-                          <circle cx="0" cy="0" r="18" fill="none" stroke="#087FD1" strokeWidth="2" strokeDasharray="3 3" />
+                        {isSelected && (
+                          <circle cx="0" cy="0" r="22" fill="none" stroke="#0077CC" strokeWidth="2.5" strokeDasharray="4 4" />
                         )}
 
-                        {/* Outer White Base Disc */}
-                        <circle cx="0" cy="0" r="11" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="2" />
+                        {/* Vertical Beacon Pin Stem (Connects Ground to Elevated Badge) */}
+                        <line x1="0" y1="0" x2="0" y2="-28" stroke={markerColor} strokeWidth="3" strokeLinecap="round" />
 
-                        {/* Circular Status Core */}
-                        <circle cx="0" cy="0" r="8" fill={markerColor} />
+                        {/* Circular Base Anchor Cap */}
+                        <circle cx="0" cy="0" r="8" fill="#FFFFFF" stroke={borderColor} strokeWidth="2.5" />
+                        <circle cx="0" cy="0" r="4.5" fill={markerColor} />
 
-                        {/* Callout Information Pill Above Node */}
-                        <g transform="translate(0, -22)">
+                        {/* HIGHLY LEGIBLE ELEVATED INFORMATION BADGE WITH LOCATION NAME */}
+                        <g transform="translate(0, -32)" filter="url(#mapShadow)">
+                          {/* Badge Background */}
                           <rect 
-                            x="-38" 
-                            y="-11" 
-                            width="76" 
-                            height="20" 
+                            x="-52" 
+                            y="-20" 
+                            width="104" 
+                            height="34" 
                             rx="10" 
                             fill="#FFFFFF" 
-                            stroke={isSelected ? '#087FD1' : '#E2E8F0'} 
-                            strokeWidth={isSelected ? '1.5' : '1'}
-                            className="shadow-xs" 
+                            stroke={isSelected ? '#0077CC' : borderColor} 
+                            strokeWidth={isSelected ? '2.5' : '1.8'}
                           />
-                          <circle cx="-26" cy="-1" r="3" fill={markerColor} />
-                          <text x="4" y="2" fill="#0F172A" fontSize="9" fontWeight="800" textAnchor="middle" fontFamily="monospace">
+                          
+                          {/* Top Row: Colored Status Dot + Code + Fill Percentage */}
+                          <circle cx="-38" cy="-8" r="4" fill={markerColor} />
+                          <text x="-6" y="-5" fill="#0F172A" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="monospace">
                             {node.code} &bull; {node.fill}%
                           </text>
+
+                          {/* Divider line inside badge */}
+                          <line x1="-44" y1="1" x2="44" y2="1" stroke="#F1F5F9" strokeWidth="1" />
+
+                          {/* Bottom Row: Clear Location Name */}
+                          <text x="0" y="10" fill="#475569" fontSize="8" fontWeight="800" textAnchor="middle" letterSpacing="0.2">
+                            {node.name}
+                          </text>
+
+                          {/* Urgent Warning Tag if Critical */}
+                          {isCritical && (
+                            <g transform="translate(0, -28)">
+                              <rect x="-38" y="-9" width="76" height="17" rx="8" fill="#EF4444" />
+                              <text x="0" y="3" fill="#FFFFFF" fontSize="8" fontWeight="900" textAnchor="middle" letterSpacing="0.4">
+                                ⚠️ OVERFLOW 95%
+                              </text>
+                            </g>
+                          )}
                         </g>
                       </g>
                     );
                   })}
 
-                  {/* 4. SANITATION COMPACTOR TRUCK (CLEAN BLUE ICON & SUBTLE MOVEMENT) */}
+                  {/* 5. AUTHENTIC SANITATION COMPACTOR TRUCK WITH ILLUMINATING HEADLIGHTS */}
                   <motion.g
                     animate={{ x: truckPos.x, y: truckPos.y }}
                     transition={{ duration: 1.6, ease: "easeInOut" }}
+                    filter="url(#mapShadow)"
                   >
-                    {/* Shadow */}
-                    <ellipse cx="0" cy="14" rx="20" ry="6" fill="#000000" opacity="0.12" />
+                    {/* Headlight Beam Cone illuminating the road forward */}
+                    <polygon points="18,-8 75,-24 75,24 18,8" fill="url(#headlightBeam)" />
 
-                    {/* Truck Base Badge */}
-                    <rect 
-                      x="-28" 
-                      y="-13" 
-                      width="56" 
-                      height="26" 
-                      rx="13" 
-                      fill="#087FD1" 
-                      stroke="#FFFFFF" 
-                      strokeWidth="2.5" 
-                      className="shadow-md"
-                    />
-                    
-                    <text x="0" y="3" fill="#FFFFFF" fontSize="9" fontWeight="800" textAnchor="middle">
-                      🚛 TRUCK #04
-                    </text>
+                    {/* Truck Ground Shadow */}
+                    <ellipse cx="0" cy="16" rx="26" ry="8" fill="#000000" opacity="0.2" />
+
+                    {/* Compactor Cargo Body (Rear Compartment in WasteSense Blue) */}
+                    <rect x="-24" y="-14" width="28" height="26" rx="5" fill="#0077CC" stroke="#004A80" strokeWidth="1.5" />
+                    {/* Rear Loading Hopper Door */}
+                    <line x1="-20" y1="-12" x2="-20" y2="10" stroke="#BAE6FD" strokeWidth="1.5" />
+
+                    {/* Truck Driver Cab (Front Compartment) */}
+                    <rect x="4" y="-12" width="18" height="22" rx="4" fill="#0284C7" stroke="#004A80" strokeWidth="1.5" />
+                    {/* Windshield Glass */}
+                    <rect x="10" y="-9" width="8" height="16" rx="2" fill="#BAE6FD" opacity="0.9" />
+
+                    {/* Flashing Amber Roof Beacon */}
+                    <circle cx="-6" cy="-15" r="3.5" fill="#F59E0B" stroke="#B45309" strokeWidth="1">
+                      <animate attributeName="opacity" values="1;0.2;1" dur="0.8s" repeatCount="indefinite" />
+                    </circle>
+
+                    {/* Wheels */}
+                    <circle cx="-16" cy="14" r="4.5" fill="#1E293B" stroke="#475569" strokeWidth="1.5" />
+                    <circle cx="12" cy="14" r="4.5" fill="#1E293B" stroke="#475569" strokeWidth="1.5" />
+
+                    {/* Floating Truck Badge */}
+                    <g transform="translate(0, -25)">
+                      <rect x="-48" y="-10" width="96" height="20" rx="10" fill="#0F172A" stroke="#38BDF8" strokeWidth="1.5" />
+                      <text x="0" y="3.5" fill="#FFFFFF" fontSize="8.5" fontWeight="900" textAnchor="middle" letterSpacing="0.4">
+                        🚛 TRUCK #04 &bull; EN ROUTE
+                      </text>
+                    </g>
                   </motion.g>
 
                 </svg>
