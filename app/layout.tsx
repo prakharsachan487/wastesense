@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[#F8FAFC] text-[#0F172A] antialiased font-satoshi selection:bg-[#0077CC] selection:text-white">
+      <body className="min-h-screen bg-[#F8FAFC] text-[#0F172A] antialiased font-sans selection:bg-[#0077CC] selection:text-white">
         <WasteSenseProvider>
           {children}
         </WasteSenseProvider>

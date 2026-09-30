@@ -148,39 +148,43 @@ export default function LoginPage() {
           <div className="bg-white p-7 sm:p-9 rounded-3xl border border-slate-200 shadow-xl space-y-6">
             {/* Header & Role Context */}
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-extrabold tracking-wider uppercase mb-2.5 bg-[#F0F9FF] border-[#BAE6FD] text-[#0077CC]">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-extrabold tracking-wider uppercase mb-2 bg-[#F0F9FF] border-[#BAE6FD] text-[#0077CC]">
                 <Sparkles className="w-3 h-3 text-[#0077CC]" />
                 <span dangerouslySetInnerHTML={{ __html: currentRole.badge }} />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#0F172A] leading-tight">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] text-[#0F172A] leading-[1.06] font-display">
                 {currentRole.title}
               </h1>
-              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed font-medium">
+              <p className="text-xs text-slate-500 mt-2 leading-relaxed font-normal">
                 {currentRole.subtitle}
               </p>
             </div>
 
             {/* WHO ARE YOU? Interactive 3-Card Role Selector */}
             <div className="space-y-2">
-              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">
-                WHO ARE YOU? &bull; SELECT DEMO ROLE
-              </span>
+              <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                <span>Select Workspace Role</span>
+                <span className="font-mono text-slate-400">/ 03 Portals</span>
+              </div>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2.5">
                 {/* 1. Admin */}
                 <button
                   type="button"
                   onClick={() => handleRoleSelect('admin')}
-                  className={`p-3 rounded-2xl border text-left transition-all relative ${
+                  className={`p-3.5 rounded-2xl border text-left transition-all relative group ${
                     selectedRole === 'admin'
                       ? 'border-[#0077CC] bg-[#F0F9FF] ring-2 ring-[#0077CC]/20 shadow-xs'
                       : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
-                  <div className="w-7 h-7 rounded-xl bg-[#0077CC] text-white flex items-center justify-center mb-2 shadow-xs">
-                    <Shield className="w-3.5 h-3.5" />
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[11px] font-mono font-medium text-slate-400">01</span>
+                    <div className="w-6 h-6 rounded-lg bg-[#0077CC] text-white flex items-center justify-center shadow-xs">
+                      <Shield className="w-3 h-3" />
+                    </div>
                   </div>
-                  <div className="font-black text-xs text-[#0F172A]">Admin</div>
+                  <div className="font-extrabold text-xs text-[#0F172A] tracking-tight">Admin</div>
                   <div className="text-[10px] text-slate-500 font-medium">Operations</div>
                 </button>
 
@@ -188,16 +192,19 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => handleRoleSelect('citizen')}
-                  className={`p-3 rounded-2xl border text-left transition-all relative ${
+                  className={`p-3.5 rounded-2xl border text-left transition-all relative group ${
                     selectedRole === 'citizen'
                       ? 'border-[#0EA5E9] bg-[#F0F9FF] ring-2 ring-[#0EA5E9]/20 shadow-xs'
                       : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
-                  <div className="w-7 h-7 rounded-xl bg-[#0EA5E9] text-white flex items-center justify-center mb-2 shadow-xs">
-                    <User className="w-3.5 h-3.5" />
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[11px] font-mono font-medium text-slate-400">02</span>
+                    <div className="w-6 h-6 rounded-lg bg-[#0EA5E9] text-white flex items-center justify-center shadow-xs">
+                      <User className="w-3 h-3" />
+                    </div>
                   </div>
-                  <div className="font-black text-xs text-[#0F172A]">Citizen</div>
+                  <div className="font-extrabold text-xs text-[#0F172A] tracking-tight">Citizen</div>
                   <div className="text-[10px] text-slate-500 font-medium">Resident</div>
                 </button>
 
@@ -205,16 +212,19 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => handleRoleSelect('worker')}
-                  className={`p-3 rounded-2xl border text-left transition-all relative ${
+                  className={`p-3.5 rounded-2xl border text-left transition-all relative group ${
                     selectedRole === 'worker'
                       ? 'border-[#004A80] bg-[#F0F9FF] ring-2 ring-[#004A80]/20 shadow-xs'
                       : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
-                  <div className="w-7 h-7 rounded-xl bg-[#004A80] text-white flex items-center justify-center mb-2 shadow-xs">
-                    <Truck className="w-3.5 h-3.5" />
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[11px] font-mono font-medium text-slate-400">03</span>
+                    <div className="w-6 h-6 rounded-lg bg-[#004A80] text-white flex items-center justify-center shadow-xs">
+                      <Truck className="w-3 h-3" />
+                    </div>
                   </div>
-                  <div className="font-black text-xs text-[#0F172A]">Worker</div>
+                  <div className="font-extrabold text-xs text-[#0F172A] tracking-tight">Worker</div>
                   <div className="text-[10px] text-slate-500 font-medium">Field Crew</div>
                 </button>
               </div>
