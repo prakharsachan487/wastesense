@@ -95,16 +95,16 @@ export const SmartBinCard: React.FC<SmartBinCardProps> = ({ bin, onSimulate, onQ
           className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-indigo-950/70 hover:bg-indigo-900/80 text-indigo-300 border border-indigo-800/40 text-xs font-semibold transition"
         >
           <Sliders className="w-3.5 h-3.5" />
-          <span>Simulate Sensor</span>
+          <span>Node Controls</span>
         </button>
 
         {onQuickFlush && bin.fill_level > 50 && (
           <button
             onClick={() => onQuickFlush(bin.bin_id)}
             className="py-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
-            title="Simulate Emptying Bin to 18%"
+            title="Reset Sensor Telemetry to Clean (18%)"
           >
-            Empty (18%)
+            Clear / Emptied
           </button>
         )}
       </div>

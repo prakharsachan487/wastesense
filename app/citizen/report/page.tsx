@@ -135,7 +135,7 @@ export default function CitizenReportPage() {
           />
         </div>
 
-        {/* Simulated Image Upload */}
+        {/* Image Upload */}
         <div>
           <label className="block text-xs font-semibold text-slate-300 mb-1.5">Attach Photographic Evidence</label>
           <label className="border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-xl p-6 text-center block cursor-pointer bg-slate-950/60 transition group">

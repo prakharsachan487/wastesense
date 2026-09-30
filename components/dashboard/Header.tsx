@@ -11,20 +11,13 @@ import { SmartBinSimulatorModal } from '../admin/SmartBinSimulatorModal';
 
 export const Header: React.FC = () => {
   const router = useRouter();
-  const { currentUser, logout, simulateSurgeB102, notifications, markNotificationRead } = useWasteSense();
+  const { currentUser, logout, notifications, markNotificationRead } = useWasteSense();
   const [showNotifs, setShowNotifs] = useState(false);
   const [showSimModal, setShowSimModal] = useState(false);
-  const [demoTriggered, setDemoTriggered] = useState(false);
 
   const role = currentUser.role; // 'admin' | 'citizen' | 'worker'
 
   const unreadCount = notifications.filter(n => !n.read).length;
-
-  const handleQuickDemo = () => {
-    simulateSurgeB102();
-    setDemoTriggered(true);
-    setTimeout(() => setDemoTriggered(false), 3000);
-  };
 
   const handleLogout = () => {
     logout();
@@ -33,30 +26,6 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      {/* Top Banner (Only for Admin to showcase IoT prototype transparency) */}
-      {role === 'admin' && (
-        <div className="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-950 text-slate-200 text-xs px-4 py-1.5 flex items-center justify-between border-b border-emerald-900/40 sticky top-0 z-50">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="font-semibold text-emerald-300">ADMINISTRATIVE OPS:</span>
-            <span className="hidden sm:inline text-slate-300">
-              Hardware simulated via <strong>IoT Digital Twin</strong>. Live sensor readings virtually generated.
-            </span>
-          </div>
-
-          <button
-            onClick={handleQuickDemo}
-            className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-full text-[11px] shadow-md shadow-amber-500/20 transition-transform active:scale-95"
-          >
-            <Zap className="w-3.5 h-3.5 fill-current" />
-            <span>{demoTriggered ? '⚡ Surge Active!' : '⚡ Hackathon Demo: Surge B-102 (95%)'}</span>
-          </button>
-        </div>
-      )}
-
       {/* Main Role-Specific Header */}
       <header className="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-6 py-3 flex items-center justify-between sticky top-0 z-40">
         {/* Brand with Role Context */}
@@ -92,16 +61,16 @@ export const Header: React.FC = () => {
           </Link>
         </div>
 
-        {/* Right Controls: Tailored specifically per Role (NO public switchers!) */}
+        {/* Right Controls: Tailored specifically per Role */}
         <div className="flex items-center gap-3">
-          {/* Admin Exclusive: Digital Twin Simulator trigger */}
+          {/* Admin Exclusive: Node Telemetry & Calibration trigger */}
           {role === 'admin' && (
             <button
               onClick={() => setShowSimModal(true)}
               className="hidden md:flex items-center gap-1.5 bg-indigo-950/70 hover:bg-indigo-900/80 text-indigo-300 border border-indigo-700/50 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm"
             >
               <Sliders className="w-3.5 h-3.5" />
-              <span>Digital Twin Simulator</span>
+              <span>Node Calibration</span>
             </button>
           )}
 

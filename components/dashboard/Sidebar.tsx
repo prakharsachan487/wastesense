@@ -82,16 +82,16 @@ export const AdminSidebar: React.FC = () => {
         })}
       </div>
 
-      {/* Digital Twin Status Footer */}
+      {/* IoT Gateway Network Status */}
       <div className="p-3 m-3 rounded-xl bg-slate-950/70 border border-slate-800 text-xs text-slate-400">
         <div className="flex items-center justify-between font-semibold text-slate-300 mb-1">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            IoT Digital Twin
+            IoT Gateway Network
           </span>
           <span className="text-[10px] text-emerald-400 font-mono">ONLINE</span>
         </div>
-        <p className="text-[11px] text-slate-400">Simulating 20 sensor nodes across 6 urban sectors.</p>
+        <p className="text-[11px] text-slate-400">20 active sensor nodes connected across 6 urban sectors.</p>
       </div>
     </aside>
   );

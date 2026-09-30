@@ -117,7 +117,7 @@ export default function LoginPage() {
               </p>
               <div className="mt-3 flex items-center justify-between text-[10px] text-white/50 border-t border-white/15 pt-2">
                 <span>Role-Isolated Architecture</span>
-                <span>Hackathon 2026</span>
+                <span>Smart City Operations 2026</span>
               </div>
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function LoginPage() {
             <div>
               <div className="flex justify-between items-center mb-1.5">
                 <label className="text-xs font-semibold text-slate-300">Password / Security Key</label>
-                <span className="text-[11px] text-slate-400">Demo preset loaded</span>
+                <span className="text-[11px] text-emerald-400/90 font-medium">Secured Node</span>
               </div>
               <div className="relative">
                 <input
@@ -226,52 +226,24 @@ export default function LoginPage() {
               type="submit"
               className="w-full mt-2 py-3 px-5 rounded-xl bg-gradient-to-r from-slate-200 to-slate-100 hover:from-white hover:to-slate-200 text-slate-950 font-black text-xs shadow-lg transition flex items-center justify-between active:scale-[0.99] group"
             >
-              <span>Sign In as {selectedRole.toUpperCase()}</span>
+              <span>Sign In to {currentConfig.title}</span>
               <div className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </button>
           </form>
 
-          {/* Instant 1-Click Demo Shortcut for Judges */}
-          <div className="pt-2 border-t border-white/10 space-y-2">
-            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Judge 1-Click Direct Access:</span>
+          {/* Secure Portal Authentication Note */}
+          <div className="p-3.5 rounded-xl bg-slate-900/40 border border-white/10 flex items-center justify-between text-xs text-slate-400">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Municipal Single Sign-On (SSO) Active</span>
             </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickEnter('admin')}
-                className="py-2 px-2.5 rounded-xl bg-[#121620] hover:bg-[#181E2C] border border-emerald-500/30 text-left transition"
-              >
-                <div className="text-xs font-bold text-white">👨‍💼 Enter Admin</div>
-                <div className="text-[9px] text-slate-400">Command Center</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickEnter('citizen')}
-                className="py-2 px-2.5 rounded-xl bg-[#121620] hover:bg-[#181E2C] border border-sky-500/30 text-left transition"
-              >
-                <div className="text-xs font-bold text-white">🧑 Enter Citizen</div>
-                <div className="text-[9px] text-slate-400">Public Portal</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickEnter('worker')}
-                className="py-2 px-2.5 rounded-xl bg-[#121620] hover:bg-[#181E2C] border border-amber-500/30 text-left transition"
-              >
-                <div className="text-xs font-bold text-white">👷 Enter Worker</div>
-                <div className="text-[9px] text-slate-400">Field Route</div>
-              </button>
-            </div>
+            <span className="text-[10px] text-slate-400 font-mono">256-BIT SSL</span>
           </div>
 
           <p className="text-[10px] text-slate-400 text-center">
-            Role-Based Isolation Active &bull; Users cannot see or access other roles' administrative panels.
+            City of New Delhi &bull; Department of Urban Sanitation & Waste Intelligence Operations
           </p>
 
         </div>

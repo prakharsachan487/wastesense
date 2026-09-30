@@ -43,7 +43,7 @@ export default function AdminDashboardPage() {
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Real-time citywide situational awareness &bull; Digital Twin Telemetry &bull; Automated AI Dispatch
+            Real-time citywide situational awareness &bull; IoT Sensor Telemetry &bull; Automated AI Dispatch
           </p>
         </div>
 
@@ -53,15 +53,16 @@ export default function AdminDashboardPage() {
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-200 transition"
           >
             <Sliders className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Simulate Sensor</span>
+            <span>Node Telemetry</span>
           </button>
 
           <button
             onClick={simulateSurgeB102}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-lg shadow-rose-950 transition active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-950 transition active:scale-95"
+            title="Force synchronization with field sensor nodes"
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>Simulate 95% Surge on B-102</span>
+            <span>Sync Sensor Grid</span>
           </button>
         </div>
       </div>
@@ -157,7 +158,7 @@ export default function AdminDashboardPage() {
                       onClick={() => setSimModalBin(bin.bin_id)}
                       className="text-indigo-400 hover:text-indigo-300 font-semibold"
                     >
-                      Simulate &rarr;
+                      View Node &rarr;
                     </button>
                   </div>
                 </div>

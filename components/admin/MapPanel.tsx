@@ -198,7 +198,7 @@ export const MapPanel: React.FC<MapPanelProps> = ({ onSimulate }) => {
                 className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-950 transition flex items-center justify-center gap-1.5"
               >
                 <Sliders className="w-4 h-4" />
-                <span>Simulate IoT Telemetry for {selectedBin.bin_id}</span>
+                <span>Configure Sensor Telemetry ({selectedBin.bin_id})</span>
               </button>
             )}
           </div>

@@ -6,7 +6,7 @@ import { BookOpen, CheckCircle2, AlertTriangle, Sparkles } from 'lucide-react';
 export default function CitizenAwarenessPage() {
   const [selectedItem, setSelectedItem] = useState('banana_peel');
 
-  const demoItems: Record<string, { name: string; stream: string; binColor: string; colorClass: string; tip: string }> = {
+  const segregationItems: Record<string, { name: string; stream: string; binColor: string; colorClass: string; tip: string }> = {
     banana_peel: {
       name: 'Fruit Peels & Food Waste',
       stream: 'Organic / Wet Waste',
@@ -37,7 +37,7 @@ export default function CitizenAwarenessPage() {
     }
   };
 
-  const active = demoItems[selectedItem];
+  const active = segregationItems[selectedItem];
 
   return (
     <div className="space-y-6 max-w-5xl">

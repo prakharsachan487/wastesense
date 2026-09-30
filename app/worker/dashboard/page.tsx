@@ -89,7 +89,7 @@ export default function WorkerDashboardPage() {
         </div>
       </div>
 
-      {/* Primary Hackathon Work Order Spotlight */}
+      {/* Priority Field Work Order */}
       <div className="p-6 rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-800 pb-3">
           <div>
@@ -128,7 +128,7 @@ export default function WorkerDashboardPage() {
           <strong>Field Instructions:</strong> {activeTask.instructions}
         </p>
 
-        {/* Dynamic Action Buttons for Demo */}
+        {/* Action Buttons */}
         <div className="pt-2">
           {activeTask.status === 'Assigned' && (
             <button
@@ -136,7 +136,7 @@ export default function WorkerDashboardPage() {
               className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-950 transition flex items-center justify-center gap-2 active:scale-95"
             >
               <Navigation className="w-4 h-4" />
-              <span>[Start Collection] - Mark In Route & Arrived</span>
+              <span>Start Collection &bull; Mark En Route</span>
             </button>
           )}
 
@@ -146,13 +146,13 @@ export default function WorkerDashboardPage() {
               className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-lg shadow-emerald-950 transition flex items-center justify-center gap-2 active:scale-95 animate-pulse"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>[Complete Collection] - Submit Verification Proof (18% Reset)</span>
+              <span>Complete Collection &bull; Submit Photographic Proof</span>
             </button>
           )}
 
           {activeTask.status === 'Completed' && (
             <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-center space-y-1">
-              <span className="text-emerald-400 font-bold text-sm block">🎉 Collection Verified & Synchronized with Admin Command Center</span>
+              <span className="text-emerald-400 font-bold text-sm block">✓ Collection Completed & Synchronized with Municipal Operations</span>
               <p className="text-xs text-slate-300">
                 Bin B-102 fill dropped from <strong>95%</strong> down to <strong>18%</strong>. Telemetry reset confirmed.
               </p>

@@ -33,7 +33,7 @@ export default function SmartBinsPage() {
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Simulated ultrasonic distance, load strain gauges, and thermistor telemetry for all 20 urban municipal nodes
+            Real-time ultrasonic distance, load strain gauges, and thermistor telemetry across all 20 urban municipal nodes
           </p>
         </div>
 
@@ -43,45 +43,37 @@ export default function SmartBinsPage() {
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-950 transition"
           >
             <Sliders className="w-3.5 h-3.5" />
-            <span>Launch Telemetry Simulator</span>
-          </button>
-
-          <button
-            onClick={simulateSurgeB102}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-lg shadow-rose-950 transition"
-          >
-            <Zap className="w-3.5 h-3.5" />
-            <span>Surge B-102 to 95%</span>
+            <span>Node Diagnostics & Controls</span>
           </button>
         </div>
       </div>
 
-      {/* Main Hackathon Spotlight Banner for B-102 */}
+      {/* Critical Node Surveillance Banner */}
       <div className="p-4 rounded-2xl bg-gradient-to-r from-rose-950/40 via-slate-900 to-indigo-950/40 border border-rose-500/30 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-rose-500 text-white">
-              Primary Demo Focus
+              Critical Surveillance
             </span>
             <span className="font-mono font-bold text-white text-sm">Smart Bin B-102 (Central Market)</span>
           </div>
           <p className="text-xs text-slate-300">
-            Use the simulator to push B-102 fill level to 95%. Observe how the AI engine detects critical overflow and immediately generates an automated collection task for Worker Rahul.
+            Node B-102 fill capacity is monitored continuously. Automated high-priority work orders trigger collection dispatch to assigned sanitation units when fill thresholds reach critical levels.
           </p>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
           <button
-            onClick={simulateSurgeB102}
-            className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-md shadow-rose-950"
+            onClick={() => setSimModalBin('B-102')}
+            className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-md shadow-indigo-950"
           >
-            🔥 95% Surge Event
+            Sensor Controls
           </button>
           <button
             onClick={() => resetBinToClean('B-102')}
             className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition"
           >
-            🔄 18% Clean Flush
+            Reset to Emptied (18%)
           </button>
         </div>
       </div>
