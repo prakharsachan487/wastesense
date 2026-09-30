@@ -34,3 +34,7 @@ export * from './citizen/CitizenSidebar';
 // Worker Portal Components
 export * from './worker/WorkerNav';
 export * from './worker/CompleteTaskModal';
+
+// Skiper UI Modular Box Components
+export * from './skiper-ui';
+
